@@ -133,8 +133,16 @@ class SRTRequestData:
     def update_parameter(self, id, value):
         return self._update(id, value, self.PARAMETERTAG)
 
+    def update_parameters(self, items):
+        for k, v in items.items():
+            self.update_parameter(k, v)
+
     def update_dataset(self, id, value):
         return self._update(id, value, self.DATATAG)
+
+    def update_datasets(self, items):
+        for k, v in items.items():
+            self.update_dataset(k, v)
 
     def update(self, id, value, tag_type='dataset'):
         if tag_type == 'dataset':

@@ -1,5 +1,6 @@
 import re
 import requests
+from request_data import SRTRequestData
 import response_parser
 import errors
 
@@ -175,11 +176,15 @@ class SRT:
             login_type = LOGIN_TYPES['MEMBERSHIP_ID']
 
         url = SRT_LOGIN
-        r = self._session.post(url=url,
-                               data=LOGIN_DATA.format(
-                                   login_type=login_type, srt_id=srt_id, srt_pw=srt_pw,
-                               ))
+        data = SRTRequestData()
+        data.update_datasets({
+            'strSvcID': 'login',
+            'srchDvCd': login_type,
+            'srchDvNm': srt_id,
+            'hmpgPwdCphd': srt_pw,
+        })
 
+        r = self._session.post(url=url, data=data.dump())
         status, data = response_parser.parse_login(r.text)
         result = status.get('strResult')
 
@@ -212,12 +217,14 @@ class SRT:
             return
 
         url = SRT_LOGOUT
-        r = self._session.post(url=url,
-                               data=LOGOUT_DATA.format(
-                                   kr_session_id=self.kr_session_id,
-                                   sr_session_id=self.sr_session_id,
-                               ).encode('utf-8'))
+        data = SRTRequestData()
+        data.update_datasets({
+            'strSvcID': 'login',
+            'KR_JSESSIONID': self.kr_session_id,
+            'SR_JSESSIONID': self.sr_session_id,
+        })
 
+        r = self._session.post(url=url, data=data.dump())
         status, data = response_parser.parse_login(r.text)
         result = status.get('strResult')
 
