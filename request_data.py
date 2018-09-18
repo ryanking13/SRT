@@ -16,6 +16,18 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
             <Column id="deviceKey" type="STRING" size="256"  />
             <Column id="deviceInfo" type="STRING" size="256"  />
             <Column id="mobileproducttype" type="STRING" size="256"  />
+            <Column id="chtnDvCd" type="STRING" size="256"  />
+            <Column id="dptDt" type="STRING" size="256"  />
+            <Column id="dptTm" type="STRING" size="256"  />
+            <Column id="dptRsStnCd" type="STRING" size="256"  />
+            <Column id="dptRsStnCdNm" type="STRING" size="256"  />
+            <Column id="arvRsStnCd" type="STRING" size="256"  />
+            <Column id="stlbTrnClsfCd" type="STRING" size="256"  />
+            <Column id="trnGpCd" type="STRING" size="256"  />
+            <Column id="psgNum" type="STRING" size="256"  />
+            <Column id="seatAttCd" type="STRING" size="256"  />
+            <Column id="arriveTime" type="STRING" size="256"  />
+            <Column id="trnNo" type="STRING" size="256"  />
         </ColumnInfo>
         <Rows>
             <Row>
@@ -25,6 +37,17 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
                 <Col id="deviceKey"></Col>
                 <Col id="deviceInfo"></Col>
                 <Col id="mobileproducttype"></Col>
+                <Col id="chtnDvCd"></Col>
+                <Col id="dptDt"></Col>
+                <Col id="dptTm"></Col>
+                <Col id="dptRsStnCd"></Col>
+                <Col id="dptRsStnCdNm"></Col>
+                <Col id="arvRsStnCd"></Col>
+                <Col id="stlbTrnClsfCd"></Col>
+                <Col id="trnGpCd"></Col>
+                <Col id="psgNum"></Col>
+                <Col id="seatAttCd"></Col>
+                <Col id="arriveTime"></Col>
             </Row>
         </Rows>
     </Dataset>

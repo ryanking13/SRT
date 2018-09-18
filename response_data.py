@@ -10,9 +10,11 @@ class SRTResponseData():
     NAMESPACE = '{http://www.nexacro.com/platform/dataset}'
     DATASETTAG = NAMESPACE + 'Dataset'
     DATATAG = NAMESPACE + 'Col'
+    ROWTAG = NAMESPACE + 'Row'
 
     STATUS_OUTPUT_ID = 'dsOutput0'
-    DATA_OUTPUT_ID = 'dsCmcOutput0'
+    RESULT_OUTPUT_ID = 'dsCmcOutput0'
+    DATA_OUTPUT_ID = 'dsOutput1'
 
     STATUS_SUCCESS = 'SUCC'
     STATUS_FAIL = 'FAIL'
@@ -20,7 +22,8 @@ class SRTResponseData():
     def __init__(self, response):
         self._xml = ET.fromstring(response)
         self._status = {}
-        self._data = {}
+        self._result = {}
+        self._data = []
 
         # parse response data
         self._parse()
@@ -41,10 +44,17 @@ class SRTResponseData():
                 for row in dataset.iter(self.DATATAG):
                     self._status[row.get('id')] = row.text
 
+            # result check
+            elif tag_id == self.RESULT_OUTPUT_ID:
+                for row in dataset.iter(self.DATATAG):
+                    self._result[row.get('id')] = row.text
+
             # data check
             elif tag_id == self.DATA_OUTPUT_ID:
-                for row in dataset.iter(self.DATATAG):
-                    self._data[row.get('id')] = row.text
+                for row in dataset.iter(self.ROWTAG):
+                    self._data.append({})
+                    for col in dataset.iter(self.DATATAG):
+                        self._data[-1][col.get('id')] = col.text
 
     def success(self):
         result = self._status.get('strResult', None)
@@ -58,8 +68,8 @@ class SRTResponseData():
             raise errors.SRTResponseError('Undefined result status "{}"'.format(result))
 
     def message(self):
-        if 'MSG' in self._data:
-            return self._data['MSG']
+        if 'MSG' in self._result:
+            return self._result['MSG']
         elif 'msgTxt' in self._status:
             return self._status['msgTxt']
         else:
@@ -67,4 +77,4 @@ class SRTResponseData():
 
     # get parse result
     def get_data(self):
-        return self._status.copy(), self._data.copy()
+        return self._status.copy(), self._result.copy(), self._data.copy()

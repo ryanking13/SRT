@@ -1,7 +1,11 @@
+from datetime import datetime
 import re
 import requests
+from constants import STATION_CODE
+import errors
 from request_data import SRTRequestData
 from response_data import SRTResponseData
+from train import SRTTrain
 
 EMAIL_REGEX = re.compile(r'[^@]+@[^@]+\.[^@]+')
 PHONE_NUMBER_REGEX = re.compile(r'(\d{3})-(\d{3,4})-(\d{4})')
@@ -13,6 +17,7 @@ SRT_PORT = '443'
 SRT_MOBILE = '{scheme}://{host}:{port}'.format(scheme=SCHEME, host=SRT_HOST, port=SRT_PORT)
 SRT_LOGIN = '{}/apb/selectListApb01080.do'.format(SRT_MOBILE)
 SRT_LOGOUT = '{}/apb/selectListApb01081.do'.format(SRT_MOBILE)
+SRT_SEARCH_SCHEDULE = '{}/ara/selectListAra10007.do'.format(SRT_MOBILE)
 
 STATUS_SUCCESS = 'SUCC'
 STATUS_FAIL = 'FAIL'
@@ -58,9 +63,6 @@ class SRT:
         if self.verbose:
             print('[*] ' + msg)
 
-    def _error(self, msg):
-        print('[-] ' + msg)
-
     def login(self, srt_id=None, srt_pw=None):
 
         if srt_id is None:
@@ -100,25 +102,24 @@ class SRT:
         parser = SRTResponseData(r.text)
 
         if parser.success():
-            status, data = parser.get_data()
+            status, result, data = parser.get_data()
             self.kr_session_id = status.get('KR_JSESSIONID')
             self.sr_session_id = status.get('SR_JSESSIONID')
-            self.user_name = data.get('CUST_NM')
-            self.user_membership_number = data.get('MB_CRD_NO')
-            self.user_phone_number = data.get('MBL_PHONE')
-            self.user_type = data.get('CUST_MG_SRT_NM')  # 개인고객 or ...
-            self.user_level = data.get('CUST_DTL_SRT_NM')  # 일반회원 or ...
-            self.user_sex = data.get('SEX_CDV_NM')
-            self._session.cookies.update({'gs_loginCrdNo': data.get('MB_CRD_NO')})
+            self.user_name = result.get('CUST_NM')
+            self.user_membership_number = result.get('MB_CRD_NO')
+            self.user_phone_number = result.get('MBL_PHONE')
+            self.user_type = result.get('CUST_MG_SRT_NM')  # 개인고객 or ...
+            self.user_level = result.get('CUST_DTL_SRT_NM')  # 일반회원 or ...
+            self.user_sex = result.get('SEX_CDV_NM')
+            self._session.cookies.update({'gs_loginCrdNo': result.get('MB_CRD_NO')})
 
             self._log(parser.message())
             self.is_login = True
             return True
 
         else:
-            self._error(parser.message())
             self.is_login = False
-            return False
+            raise errors.SRTResponseError(parser.message())
 
     def logout(self):
         if not self.is_login:
@@ -140,8 +141,61 @@ class SRT:
             self.is_login = False
             return True
         else:
-            self._error(parser.message())
-            return False
+            raise errors.SRTResponseError(parser.message())
+
+    def search_train(self, dep, arr, date=None, time=None):
+        if not self.is_login:
+            raise errors.SRTNotLoggedInError()
+
+        if dep not in STATION_CODE:
+            raise ValueError('Station "{}" not exists'.format(dep))
+        if arr not in STATION_CODE:
+            raise ValueError('Station "{}" not exists'.format(arr))
+
+        dep_code = STATION_CODE[dep]
+        arr_code = STATION_CODE[arr]
+
+        if date is None:
+            date = datetime.now().strftime("%Y%m%d")
+        if time is None:
+            time = datetime.now().strftime("%H%M%S")
+
+        url = SRT_SEARCH_SCHEDULE
+        data = SRTRequestData()
+        data.update_datasets({
+            # course (1: 직통, 2: 환승, 3: 왕복)
+            # TODO: support 환승, 왕복
+            'chtnDvCd': '1',
+            # departure date
+            'dptDt': date,
+            # departure time
+            'dptTm': time,
+            # departure station code
+            'dptRsStnCd': dep_code,
+            # arrival station code
+            'arvRsStnCd': arr_code,
+            # train type (05: 전체, 17: SRT)
+            'stlbTrnClsfCd': '17',
+            # train group (109: 전체, 300: SRT, 900: SRT+KTX)
+            'trnGpCd': '300',
+
+            'psgNum': '1',
+            'seatAttCd': '015',
+            'arriveTime': 'N',
+        })
+
+        r = self._session.post(url=url, data=data.dump().encode('utf-8'))
+        parser = SRTResponseData(r.text)
+        status, result, data = parser.get_data()
+
+        if parser.success():
+            self._log(parser.message())
+            trains = []
+            for d in data:
+                trains.append(SRTTrain(d))
+            print(trains)
+        else:
+            raise errors.SRTResponseError(parser.message())
 
 
 f = open('login_info.txt', 'r')
@@ -150,4 +204,4 @@ password = f.readline().strip()
 f.close()
 
 s = SRT(username, password, verbose=True)
-s.logout()
+s.search_train(dep='수서', arr='부산', date='20180924', time='000000')
