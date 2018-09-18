@@ -14,16 +14,16 @@ class SRTResponseData():
 
     STATUS_OUTPUT_ID = 'dsOutput0'
     RESULT_OUTPUT_ID = 'dsCmcOutput0'
-    DATA_OUTPUT_ID = 'dsOutput1'
 
     STATUS_SUCCESS = 'SUCC'
     STATUS_FAIL = 'FAIL'
 
-    def __init__(self, response):
+    def __init__(self, response, data_output_id='dsOutput1'):
         self._xml = ET.fromstring(response)
         self._status = {}
         self._result = {}
         self._data = []
+        self.DATA_OUTPUT_ID = data_output_id
 
         # parse response data
         self._parse()

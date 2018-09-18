@@ -3,6 +3,7 @@ import re
 import requests
 from constants import STATION_CODE
 import errors
+import passenger
 from request_data import SRTRequestData
 from response_data import SRTResponseData
 from train import SRTTrain
@@ -18,6 +19,7 @@ SRT_MOBILE = '{scheme}://{host}:{port}'.format(scheme=SCHEME, host=SRT_HOST, por
 SRT_LOGIN = '{}/apb/selectListApb01080.do'.format(SRT_MOBILE)
 SRT_LOGOUT = '{}/apb/selectListApb01081.do'.format(SRT_MOBILE)
 SRT_SEARCH_SCHEDULE = '{}/ara/selectListAra10007.do'.format(SRT_MOBILE)
+SRT_RESERVE = '{}/arc/selectListArc05013.do'.format(SRT_MOBILE)
 
 STATUS_SUCCESS = 'SUCC'
 STATUS_FAIL = 'FAIL'
@@ -92,13 +94,12 @@ class SRT:
         url = SRT_LOGIN
         data = SRTRequestData()
         data.update_datasets({
-            'strSvcID': 'login',
             'srchDvCd': login_type,
             'srchDvNm': srt_id,
             'hmpgPwdCphd': srt_pw,
         })
 
-        r = self._session.post(url=url, data=data.dump())
+        r = self._session.post(url=url, data=data.dump().encode('utf-8'))
         parser = SRTResponseData(r.text)
 
         if parser.success():
@@ -110,7 +111,7 @@ class SRT:
             self.user_phone_number = result.get('MBL_PHONE')
             self.user_type = result.get('CUST_MG_SRT_NM')  # 개인고객 or ...
             self.user_level = result.get('CUST_DTL_SRT_NM')  # 일반회원 or ...
-            self.user_sex = result.get('SEX_CDV_NM')
+            self.user_sex = result.get('SEX_DV_NM')
             self._session.cookies.update({'gs_loginCrdNo': result.get('MB_CRD_NO')})
 
             self._log(parser.message())
@@ -128,12 +129,11 @@ class SRT:
         url = SRT_LOGOUT
         data = SRTRequestData()
         data.update_datasets({
-            'strSvcID': 'login',
             'KR_JSESSIONID': self.kr_session_id,
             'SR_JSESSIONID': self.sr_session_id,
         })
 
-        r = self._session.post(url=url, data=data.dump())
+        r = self._session.post(url=url, data=data.dump().encode('utf-8'))
         parser = SRTResponseData(r.text)
 
         if parser.success():
@@ -142,6 +142,19 @@ class SRT:
             return True
         else:
             raise errors.SRTResponseError(parser.message())
+
+    def get_userinfo(self):
+        if not self.is_login:
+            return errors.SRTNotLoggedInError()
+
+        return {
+            'name': self.user_name,
+            'membership_number': self.user_membership_number,
+            'phone_number': self.user_phone_number,
+            'type': self.user_type,
+            'level': self.user_level,
+            'sex': self.user_sex,
+        }
 
     def search_train(self, dep, arr, date=None, time=None):
         if not self.is_login:
@@ -193,6 +206,60 @@ class SRT:
             trains = []
             for d in data:
                 trains.append(SRTTrain(d))
-            print(trains)
+
+            return trains
+        else:
+            raise errors.SRTResponseError(parser.message())
+
+    def reserve(self, train, passengers=None, special_seat=False):
+        if not self.is_login:
+            raise errors.SRTNotLoggedInError()
+
+        if not isinstance(train, SRTTrain):
+            raise TypeError('"train" parameter must be SRTTrain instance')
+
+        if train.train_name != 'SRT':
+            raise ValueError('"SRT" expected for train name, {} given'.format(train.train_name))
+
+        if passengers is None:
+            passengers = [passenger.Adult()]
+        passengers = passenger.Passenger.combine(passengers)
+
+        url = SRT_RESERVE
+        data = SRTRequestData()
+        data.update_datasets({
+            'dptDt1': train.dep_date,
+            'dptTm1': train.dep_time,
+            'runDt1': train.dep_date,
+            'trnNo1': '%05d' % int(train.train_number),
+            'dptRsStnCd1': train.dep_station_code,
+            'dptRsStnCdNm1': train.dep_station_name,
+            'arvRsStnCd1': train.arr_station_code,
+            'arvRsStnCdNm1': train.arr_station_name,
+
+            # seat location ('000': 기본, '012': 창측, '013': 복도측)
+            # TODO: 선택 가능하게
+            'locSeatAttCd1': '000',
+            # seat requirement ('015': 일반, '021': 휠체어)
+            # TODO: 선택 가능하게
+            'rqSeatAttCd1': '015',
+
+            # seat type: ('1': 일반실, '2': 특실)
+            'psrmClCd1': '2' if special_seat else '1',
+
+            'MB_CRD_NO': self.user_membership_number,
+            'KR_JSESSIONID': self.kr_session_id,
+            'SR_JSESSIONID': self.sr_session_id,
+        })
+
+        data.update_datasets(passenger.Passenger.get_passenger_dict(passengers))
+
+        r = self._session.post(url=url, data=data.dump().encode('utf-8'))
+        parser = SRTResponseData(r.text)
+        status, result, data = parser.get_data()
+
+        if parser.success():
+            self._log(parser.message())
+
         else:
             raise errors.SRTResponseError(parser.message())
