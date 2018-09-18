@@ -196,12 +196,3 @@ class SRT:
             print(trains)
         else:
             raise errors.SRTResponseError(parser.message())
-
-
-f = open('login_info.txt', 'r')
-username = f.readline().strip()
-password = f.readline().strip()
-f.close()
-
-s = SRT(username, password, verbose=True)
-s.search_train(dep='수서', arr='부산', date='20180924', time='000000')
