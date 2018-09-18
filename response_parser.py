@@ -7,7 +7,7 @@ DATATAG = NAMESPACE + 'Col'
 
 def parse_login(response):
     tree = ET.fromstring(response)
-    datasets = filter(lambda e: e.tag == DATASETTAG, tree.getchildren())
+    datasets = filter(lambda e: e.tag == DATASETTAG, list(tree))
 
     status = {}
     data = {}
@@ -16,12 +16,12 @@ def parse_login(response):
 
         # status check
         if set_id == 'dsOutput0':
-            for row in dataset.getiterator(DATATAG):
+            for row in dataset.iter(DATATAG):
                 status[row.get('id')] = row.text
 
         # data check
         elif set_id == 'dsCmcOutput0':
-            for row in dataset.getiterator(DATATAG):
+            for row in dataset.iter(DATATAG):
                 data[row.get('id')] = row.text
 
     return status, data
