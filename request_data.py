@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import errors
 
 XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
 <Root xmlns="http://www.nexacroplatform.com/platform/dataset">
@@ -101,7 +102,11 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
 </Root>
 '''
 
+
 class SRTRequestData:
+    """SRT Request data class
+    dinamically construct XML data for API request
+    """
 
     XML_PREFIX = '<?xml version="1.0" encoding="UTF-8"?>\n'
     NAMESPACE = '{http://www.nexacroplatform.com/platform/dataset}'
@@ -126,9 +131,8 @@ class SRTRequestData:
             if elem.tag == tag and elem.get('id') == id:
                 elem.text = value
                 return True
-
-        # TODO: raise error?
-        return False
+        else:
+            raise KeyError('Tag id "{}" not exists in xml element'.format(id))
 
     def update_parameter(self, id, value):
         return self._update(id, value, self.PARAMETERTAG)
@@ -150,5 +154,4 @@ class SRTRequestData:
         elif tag_type == 'parameter':
             return self.update_parameter(id, value)
         else:
-            # TODO: raise error
-            pass
+            raise ValueError('tag_type must be dataset or parameter')

@@ -6,6 +6,6 @@ class SRTError(Exception):
         return self.msg
 
 
-class UndefinedResponseError(SRTError):
+class SRTResponseError(SRTError):
     def __init__(self, msg):
         super(msg)

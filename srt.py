@@ -1,8 +1,7 @@
 import re
 import requests
 from request_data import SRTRequestData
-import response_parser
-import errors
+from response_data import SRTResponseData
 
 EMAIL_REGEX = re.compile(r'[^@]+@[^@]+\.[^@]+')
 PHONE_NUMBER_REGEX = re.compile(r'(\d{3})-(\d{3,4})-(\d{4})')
@@ -98,10 +97,10 @@ class SRT:
         })
 
         r = self._session.post(url=url, data=data.dump())
-        status, data = response_parser.parse_login(r.text)
-        result = status.get('strResult')
+        parser = SRTResponseData(r.text)
 
-        if result == STATUS_SUCCESS:
+        if parser.success():
+            status, data = parser.get_data()
             self.kr_session_id = status.get('KR_JSESSIONID')
             self.sr_session_id = status.get('SR_JSESSIONID')
             self.user_name = data.get('CUST_NM')
@@ -112,18 +111,14 @@ class SRT:
             self.user_sex = data.get('SEX_CDV_NM')
             self._session.cookies.update({'gs_loginCrdNo': data.get('MB_CRD_NO')})
 
-            self._log(data.get('MSG'))
+            self._log(parser.message())
             self.is_login = True
             return True
 
-        elif result == STATUS_FAIL:
-            self._error(data.get('MSG'))
+        else:
+            self._error(parser.message())
             self.is_login = False
             return False
-
-        else:
-            self.is_login = False
-            raise errors.UndefinedResponseError(result)
 
     def logout(self):
         if not self.is_login:
@@ -138,21 +133,15 @@ class SRT:
         })
 
         r = self._session.post(url=url, data=data.dump())
-        status, data = response_parser.parse_login(r.text)
-        result = status.get('strResult')
+        parser = SRTResponseData(r.text)
 
-        if result == STATUS_SUCCESS:
-            self._log(status.get('msgTxt'))
+        if parser.success():
+            self._log(parser.message())
+            self.is_login = False
             return True
-
-        elif result == STATUS_FAIL:
-            self._error(status.get('msgTxt'))
-            self.is_login = False
-            return False
-
         else:
-            self.is_login = False
-            raise errors.UndefinedResponseError(result)
+            self._error(parser.message())
+            return False
 
 
 f = open('login_info.txt', 'r')
