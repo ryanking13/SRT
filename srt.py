@@ -1,5 +1,6 @@
 import re
 import requests
+from request_data import SRTRequestData
 import response_parser
 import errors
 
@@ -24,93 +25,6 @@ DEFAULT_HEADERS = {
 DEFAULT_COOKIES = {
     'gs_loginCrdNo': '0000000000',
 }
-
-LOGIN_DATA='''<?xml version="1.0" encoding="UTF-8"?>
-<Root xmlns="http://www.nexacroplatform.com/platform/dataset">
-    <Dataset id="dsInput1">
-        <ColumnInfo>
-            <Column id="srchDvCd" type="STRING" size="256"  />
-            <Column id="srchDvNm" type="STRING" size="256"  />
-            <Column id="hmpgPwdCphd" type="STRING" size="256"  />
-        </ColumnInfo>
-        <Rows>
-            <Row>
-                <Col id="srchDvCd">{login_type}</Col>
-                <Col id="srchDvNm">{srt_id}</Col>
-                <Col id="hmpgPwdCphd">{srt_pw}</Col>
-            </Row>
-        </Rows>
-    </Dataset>
-    <Dataset id="__DS_TRANS_INFO__">
-        <ColumnInfo>
-            <Column id="strSvcID" type="STRING" size="256"  />
-            <Column id="strURL" type="STRING" size="256"  />
-            <Column id="strInDatasets" type="STRING" size="256"  />
-            <Column id="strOutDatasets" type="STRING" size="256"  />
-        </ColumnInfo>
-        <Rows>
-            <Row>
-                <Col id="strSvcID">login</Col>
-                <Col id="strURL">apb/selectListApb01080.do</Col>
-                <Col id="strInDatasets">dsInput1</Col>
-                <Col id="strOutDatasets">dsOutput0&#32;ds_outCmc</Col>
-            </Row>
-        </Rows>
-    </Dataset>
-</Root>
-'''
-
-LOGOUT_DATA='''<?xml version="1.0" encoding="UTF-8"?>
-<Root xmlns="http://www.nexacroplatform.com/platform/dataset">
-    <Parameters>
-        <Parameter id="gs_loginCrdNo">0000000000</Parameter>
-        <Parameter id="WMONID">GIAgiHeSKoy</Parameter>
-        <Parameter id="JSESSIONID_ETK_MB">JBSJhvuZkDxNyji1FcgPe2u1o0eSHZe10NWFG5NqUFkjptQo0C2he1VD5uWTbMlp.ZXRrcC9FVEtfTUJDT04wMi0x</Parameter>
-    </Parameters>
-    <Dataset id="dsInput1">
-        <ColumnInfo>
-            <Column id="Column0" type="STRING" size="256"  />
-        </ColumnInfo>
-        <Rows>
-            <Row>
-            </Row>
-        </Rows>
-    </Dataset>
-    <Dataset id="__DS_PARAM_INFO__">
-        <ColumnInfo />
-        <Rows>
-        </Rows>
-    </Dataset>
-    <Dataset id="__DS_TRANS_INFO__">
-        <ColumnInfo>
-            <Column id="strSvcID" type="STRING" size="256"  />
-            <Column id="strURL" type="STRING" size="256"  />
-            <Column id="strInDatasets" type="STRING" size="256"  />
-            <Column id="strOutDatasets" type="STRING" size="256"  />
-        </ColumnInfo>
-        <Rows>
-            <Row>
-                <Col id="strSvcID">logout</Col>
-                <Col id="strURL">apb/selectListApb01081.do</Col>
-                <Col id="strInDatasets">dsInput1</Col>
-                <Col id="strOutDatasets">dsOutput0</Col>
-            </Row>
-        </Rows>
-    </Dataset>
-    <Dataset id="gds_userInfo">
-        <ColumnInfo>
-            <Column id="KR_JSESSIONID" type="STRING" size="256"  />
-            <Column id="SR_JSESSIONID" type="STRING" size="256"  />
-        </ColumnInfo>
-        <Rows>
-            <Row>
-                <Col id="KR_JSESSIONID">{kr_session_id}</Col>
-                <Col id="SR_JSESSIONID">{sr_session_id}</Col>
-            </Row>
-        </Rows>
-    </Dataset>
-</Root>
-'''
 
 
 class SRT:
@@ -175,11 +89,15 @@ class SRT:
             login_type = LOGIN_TYPES['MEMBERSHIP_ID']
 
         url = SRT_LOGIN
-        r = self._session.post(url=url,
-                               data=LOGIN_DATA.format(
-                                   login_type=login_type, srt_id=srt_id, srt_pw=srt_pw,
-                               ))
+        data = SRTRequestData()
+        data.update_datasets({
+            'strSvcID': 'login',
+            'srchDvCd': login_type,
+            'srchDvNm': srt_id,
+            'hmpgPwdCphd': srt_pw,
+        })
 
+        r = self._session.post(url=url, data=data.dump())
         status, data = response_parser.parse_login(r.text)
         result = status.get('strResult')
 
@@ -212,12 +130,14 @@ class SRT:
             return
 
         url = SRT_LOGOUT
-        r = self._session.post(url=url,
-                               data=LOGOUT_DATA.format(
-                                   kr_session_id=self.kr_session_id,
-                                   sr_session_id=self.sr_session_id,
-                               ).encode('utf-8'))
+        data = SRTRequestData()
+        data.update_datasets({
+            'strSvcID': 'login',
+            'KR_JSESSIONID': self.kr_session_id,
+            'SR_JSESSIONID': self.sr_session_id,
+        })
 
+        r = self._session.post(url=url, data=data.dump())
         status, data = response_parser.parse_login(r.text)
         result = status.get('strResult')
 
