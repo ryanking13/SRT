@@ -8,4 +8,9 @@ class SRTError(Exception):
 
 class SRTResponseError(SRTError):
     def __init__(self, msg):
-        super(msg)
+        super().__init__(msg)
+
+
+class SRTNotLoggedInError(SRTError):
+    def __init__(self):
+        super().__init__('Not logged in')
