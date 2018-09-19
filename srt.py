@@ -22,6 +22,7 @@ SRT_LOGOUT = '{}/apb/selectListApb01081.do'.format(SRT_MOBILE)
 SRT_SEARCH_SCHEDULE = '{}/ara/selectListAra10007.do'.format(SRT_MOBILE)
 SRT_RESERVE = '{}/arc/selectListArc05013.do'.format(SRT_MOBILE)
 SRT_TICKETS = '{}/atc/selectListAtc14016.do'.format(SRT_MOBILE)
+SRT_CANCEL = '{}/ard/selectListArd02045.do'.format(SRT_MOBILE)
 
 STATUS_SUCCESS = 'SUCC'
 STATUS_FAIL = 'FAIL'
@@ -262,7 +263,7 @@ class SRT:
 
         if parser.success():
             self._log(parser.message())
-            return data['pnrNo']
+            return data[0]['pnrNo']
         else:
             raise errors.SRTResponseError(parser.message())
 
@@ -290,5 +291,33 @@ class SRT:
                 reservations.append(SRTReservation(ticket, data))
 
             return reservations
+        else:
+            raise errors.SRTResponseError(parser.message())
+
+    def _ticket_info(self, reservation_id):
+        # TODO: get specific ticket info
+        pass
+
+    def cancel(self, reservation):
+        if not self.is_login:
+            raise errors.SRTNotLoggedInError()
+
+        if isinstance(reservation, SRTReservation):
+            reservation = reservation.reservation_number
+
+        url = SRT_CANCEL
+        data = SRTRequestData()
+        data.update_datasets({
+            'pnrNo': reservation,
+            'MB_CRD_NO': self.user_membership_number,
+            'KR_JSESSIONID': self.kr_session_id,
+            'SR_JSESSIONID': self.sr_session_id,
+        })
+
+        r = self._session.post(url=url, data=data.dump().encode('utf-8'))
+        parser = SRTResponseData(r.text)
+
+        if parser.success():
+            self._log(parser.message())
         else:
             raise errors.SRTResponseError(parser.message())

@@ -142,7 +142,11 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
             <Column id="nonMbPwd" type="STRING" size="256"  />
             <Column id="abrdDtFrom" type="STRING" size="256"  />
             <Column id="abrdDtTo" type="STRING" size="256"  />
-            <Column id="deviceId" type="STRING" size="256"  />            
+            <Column id="deviceId" type="STRING" size="256"  />
+            
+            <Column id="pnrNo" type="STRING" size="256"  />
+            <Column id="chgTrnDvCd" type="STRING" size="256"  />
+            <Column id="rsvChgTno" type="STRING" size="256"  />
         </ColumnInfo>
         <Rows>
             <Row>
@@ -222,6 +226,10 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
                 <Col id="go_seatDsXml" />
                 
                 <Col id="pageNo"></Col>
+                
+                <Col id="pnrNo"></Col>
+                <Col id="chgTrnDvCd"></Col>
+                <Col id="rsvChgTno"></Col>
             </Row>
         </Rows>
     </Dataset>
