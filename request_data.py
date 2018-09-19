@@ -132,6 +132,17 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
             <Column id="go_seatDsXml" type="STRING" size="256"  />
             <Column id="mutMrkVrfCd" type="STRING" size="256"  />
             <Column id="koYn" type="STRING" size="256"  />
+            
+            <Column id="ctlDvCd" type="STRING" size="256"  />
+            <Column id="pageNo" type="STRING" size="256"  />
+            <Column id="telno1" type="STRING" size="256"  />
+            <Column id="telno2" type="STRING" size="256"  />
+            <Column id="telno3" type="STRING" size="256"  />
+            <Column id="custNm" type="STRING" size="256"  />
+            <Column id="nonMbPwd" type="STRING" size="256"  />
+            <Column id="abrdDtFrom" type="STRING" size="256"  />
+            <Column id="abrdDtTo" type="STRING" size="256"  />
+            <Column id="deviceId" type="STRING" size="256"  />            
         </ColumnInfo>
         <Rows>
             <Row>
@@ -209,6 +220,8 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
                 <Col id="back_dptDtTmNm1"></Col>
                 <Col id="go_baseDsXml" />
                 <Col id="go_seatDsXml" />
+                
+                <Col id="pageNo"></Col>
             </Row>
         </Rows>
     </Dataset>

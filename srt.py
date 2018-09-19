@@ -5,6 +5,7 @@ from constants import STATION_CODE
 import errors
 import passenger
 from request_data import SRTRequestData
+from reservation import SRTReservation
 from response_data import SRTResponseData
 from train import SRTTrain
 
@@ -20,6 +21,7 @@ SRT_LOGIN = '{}/apb/selectListApb01080.do'.format(SRT_MOBILE)
 SRT_LOGOUT = '{}/apb/selectListApb01081.do'.format(SRT_MOBILE)
 SRT_SEARCH_SCHEDULE = '{}/ara/selectListAra10007.do'.format(SRT_MOBILE)
 SRT_RESERVE = '{}/arc/selectListArc05013.do'.format(SRT_MOBILE)
+SRT_TICKETS = '{}/atc/selectListAtc14016.do'.format(SRT_MOBILE)
 
 STATUS_SUCCESS = 'SUCC'
 STATUS_FAIL = 'FAIL'
@@ -103,7 +105,7 @@ class SRT:
         parser = SRTResponseData(r.text)
 
         if parser.success():
-            status, result, data = parser.get_data()
+            status, result, _, __ = parser.get_all()
             self.kr_session_id = status.get('KR_JSESSIONID')
             self.sr_session_id = status.get('SR_JSESSIONID')
             self.user_name = result.get('CUST_NM')
@@ -199,7 +201,7 @@ class SRT:
 
         r = self._session.post(url=url, data=data.dump().encode('utf-8'))
         parser = SRTResponseData(r.text)
-        status, result, data = parser.get_data()
+        data = parser.get_data1()
 
         if parser.success():
             self._log(parser.message())
@@ -256,10 +258,37 @@ class SRT:
 
         r = self._session.post(url=url, data=data.dump().encode('utf-8'))
         parser = SRTResponseData(r.text)
-        status, result, data = parser.get_data()
+        data = parser.get_data1()
 
         if parser.success():
             self._log(parser.message())
+            return data['pnrNo']
+        else:
+            raise errors.SRTResponseError(parser.message())
 
+    def get_tickets(self):
+        if not self.is_login:
+            raise errors.SRTNotLoggedInError()
+
+        url = SRT_TICKETS
+        data = SRTRequestData()
+        data.update_datasets({
+            'pageNo': '0',
+            'MB_CRD_NO': self.user_membership_number,
+            'KR_JSESSIONID': self.kr_session_id,
+            'SR_JSESSIONID': self.sr_session_id,
+        })
+
+        r = self._session.post(url=url, data=data.dump().encode('utf-8'))
+        parser = SRTResponseData(r.text)
+        tickets = parser.get_data1()
+        ticket_data = parser.get_data2()
+        if parser.success():
+            self._log(parser.message())
+            reservations = []
+            for ticket, data in zip(tickets, ticket_data):
+                reservations.append(SRTReservation(ticket, data))
+
+            return reservations
         else:
             raise errors.SRTResponseError(parser.message())

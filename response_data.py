@@ -14,16 +14,18 @@ class SRTResponseData():
 
     STATUS_OUTPUT_ID = 'dsOutput0'
     RESULT_OUTPUT_ID = 'dsCmcOutput0'
+    DATA1_OUTPUT_ID = 'dsOutput1'
+    DATA2_OUTPUT_ID = 'dsOutput2'
 
     STATUS_SUCCESS = 'SUCC'
     STATUS_FAIL = 'FAIL'
 
-    def __init__(self, response, data_output_id='dsOutput1'):
+    def __init__(self, response):
         self._xml = ET.fromstring(response)
         self._status = {}
         self._result = {}
-        self._data = []
-        self.DATA_OUTPUT_ID = data_output_id
+        self._data1 = []
+        self._data2 = []
 
         # parse response data
         self._parse()
@@ -50,11 +52,18 @@ class SRTResponseData():
                     self._result[row.get('id')] = row.text
 
             # data check
-            elif tag_id == self.DATA_OUTPUT_ID:
+            elif tag_id == self.DATA1_OUTPUT_ID:
                 for row in dataset.iter(self.ROWTAG):
-                    self._data.append({})
-                    for col in dataset.iter(self.DATATAG):
-                        self._data[-1][col.get('id')] = col.text
+                    self._data1.append({})
+                    for col in row.iter(self.DATATAG):
+                        self._data1[-1][col.get('id')] = col.text
+
+            # data check
+            elif tag_id == self.DATA2_OUTPUT_ID:
+                for row in dataset.iter(self.ROWTAG):
+                    self._data2.append({})
+                    for col in row.iter(self.DATATAG):
+                        self._data2[-1][col.get('id')] = col.text
 
     def success(self):
         result = self._status.get('strResult', None)
@@ -76,5 +85,14 @@ class SRTResponseData():
             return ''
 
     # get parse result
-    def get_data(self):
-        return self._status.copy(), self._result.copy(), self._data.copy()
+    def get_all(self):
+        return self._status.copy(), self._result.copy(), self._data1.copy(), self._data2.copy()
+
+    def get_status(self):
+        return self._status.copy()
+
+    def get_data1(self):
+        return self._data1.copy()
+
+    def get_data2(self):
+        return self._data2.copy()
