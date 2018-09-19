@@ -1,0 +1,5 @@
+certifi==2018.8.24
+chardet==3.0.4
+idna==2.7
+requests==2.19.1
+urllib3==1.23
