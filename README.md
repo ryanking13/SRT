@@ -1,5 +1,7 @@
 # SRT
 
+[![CircleCI](https://circleci.com/gh/ryanking13/SRT.svg?style=svg)](https://circleci.com/gh/ryanking13/SRT)
+
 SRT(Super Rapid Train) application python wrapper
 
 This project was inspired from [korail2](https://github.com/carpedm20/korail2) of [carpedm20](https://github.com/carpedm20).
@@ -112,5 +114,5 @@ Use `cancel` method.
 
 ## TODO
 
-- CI
+- Add tests for CI
 - PyPI
