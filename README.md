@@ -96,7 +96,7 @@ Use `get_reservations()` method.
 # 18호차 10D (일반실) 장애 4~6급 [26100원(26800원 할인)]]
 ```
 
-### 5. Reservation cancel
+### 5. Canceling reservation
 
 Use `cancel` method.
 
@@ -112,6 +112,5 @@ Use `cancel` method.
 
 ## TODO
 
-- Reservation passenger 별 상세 정보 저장
 - CI
 - PyPI
