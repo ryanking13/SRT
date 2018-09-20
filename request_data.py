@@ -144,6 +144,7 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
             <Column id="deviceId" type="STRING" size="256"  />
             
             <Column id="pnrNo" type="STRING" size="256"  />
+            <Column id="jrnySqno" type="STRING" size="256"  />
             <Column id="chgTrnDvCd" type="STRING" size="256"  />
             <Column id="rsvChgTno" type="STRING" size="256"  />
         </ColumnInfo>
@@ -227,6 +228,7 @@ XML_BASE = '''<?xml version="1.0" encoding="UTF-8"?>
                 <Col id="pageNo"></Col>
                 
                 <Col id="pnrNo"></Col>
+                <Col id="jrnySqno"></Col>
                 <Col id="chgTrnDvCd"></Col>
                 <Col id="rsvChgTno"></Col>
             </Row>

@@ -77,19 +77,19 @@ class Passenger(metaclass=abc.ABCMeta):
 class Adult(Passenger):
     def __init__(self, count=1):
         super().__init__()
-        super().__init_internal__("어른/청소년(만13세이상)", '1', count)
+        super().__init_internal__("어른/청소년", '1', count)
 
 
 class Child(Passenger):
     def __init__(self, count=1):
         super().__init__()
-        super().__init_internal__("어린이(만4세~12세)", '5', count)
+        super().__init_internal__("어린이", '5', count)
 
 
 class Senior(Passenger):
     def __init__(self, count=1):
         super().__init__()
-        super().__init_internal__("경로(만65세이상)", '4', count)
+        super().__init_internal__("경로", '4', count)
 
 
 class Disability1To3(Passenger):

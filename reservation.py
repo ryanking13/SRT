@@ -1,12 +1,61 @@
 from constants import *
 
 
+class SRTTicket:
+
+    SEAT_TYPE = {
+        '1': '일반실',
+        '2': '특실',
+    }
+
+    PASSENGER_TYPE = {
+        '1': '어른/청소년',
+        '2': '장애 1~3급',
+        '3': '장애 4~6급',
+        '4': '경로',
+        '5': '어린이',
+    }
+
+    def __init__(self, data):
+        self.car = data['scarNo']
+        self.seat = data['seatNo']
+        self.seat_type_code = data['psrmClCd']
+        self.seat_type = self.SEAT_TYPE[self.seat_type_code]
+        self.passenger_type_code = data['psgTpCd']
+        self.passenger_type = self.PASSENGER_TYPE[self.passenger_type_code]
+
+        self.price = int(data['rcvdAmt'])
+        self.original_price = int(data['stdrPrc'])
+        self.discount = int(data['dcntPrc'])
+
+    def __str__(self):
+        return self.dump()
+
+    def __repr__(self):
+        return self.dump()
+
+    def dump(self):
+        d = (
+            '{car}호차 {seat} ({seat_type}) {passenger_type} '
+            '[{price}원({discount}원 할인)]'
+        ).format(
+            car=self.car,
+            seat=self.seat,
+            seat_type=self.seat_type,
+            passenger_type=self.passenger_type,
+            price=self.price,
+            discount=self.discount
+        )
+
+        return d
+
+
 class SRTReservation:
 
-    def __init__(self, ticket, data):
-        self.reservation_number = ticket['pnrNo']
-        self.total_cost = ticket['rcvdAmt']
-        self.seat_count = ticket['tkSpecNum']
+    def __init__(self, reservation, data, tickets):
+        self.reservation_number = reservation['pnrNo']
+        self.total_cost = reservation['rcvdAmt']
+        self.seat_count = reservation['tkSpecNum']
 
         self.train_code = data['stlbTrnClsfCd']
         self.train_name = TRAIN_NAME[self.train_code]
@@ -20,6 +69,8 @@ class SRTReservation:
         self.arr_station_name = STATION_NAME[self.arr_station_code]
         self.payment_date = data['iseLmtDt']
         self.payment_time = data['iseLmtTm']
+
+        self._tickets = tickets
 
     def __str__(self):
         return self.dump()
@@ -54,3 +105,7 @@ class SRTReservation:
         )
 
         return d
+
+    @property
+    def tickets(self):
+        return self._tickets

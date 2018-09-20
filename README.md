@@ -83,26 +83,31 @@ Highly inspired by [@dotaitch](https://github.com/dotaitch)'s [Passenger](https:
 
 ### 4. Getting reserved tickets
 
-Use `get_tickets()` method.
+Use `get_reservations()` method.
 
 ```python
->>> tickets = srt.get_tickets()
->>> tickets
+>>> reservations = srt.get_reservations()
+>>> reservations
 # [[SRT] 09월 30일, 수서~부산(15:30~18:06) 130700원(3석), 구입기한 09월 19일 19:11]
+
+>>> reservations[0].tickets
+# [18호차 9C (일반실) 어른/청소년 [52300원(600원 할인)],
+# 18호차 10C (일반실) 어른/청소년 [52300원(600원 할인)],
+# 18호차 10D (일반실) 장애 4~6급 [26100원(26800원 할인)]]
 ```
 
 ### 5. Reservation cancel
 
 Use `cancel` method.
 
-- reservation: `SRTreservation` object returned by `reserve()` or  returned by `get_tickets()`
+- reservation: `SRTreservation` object returned by `reserve()` or  returned by `get_reservations()`
 
 ```python
 >>> reservation = srt.reserve(train)
 >>> srt.cancel(reservation)
 
->>> tickets = srt.get_tickets()
->>> srt.cancel(tickets[0])
+>>> reservations = srt.get_reservations()
+>>> srt.cancel(reservations[0])
 ```
 
 ## TODO
