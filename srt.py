@@ -263,7 +263,14 @@ class SRT:
 
         if parser.success():
             self._log(parser.message())
-            return data[0]['pnrNo']
+            # find corresponding ticket and return it
+            tickets = self.get_tickets()
+            for ticket in tickets:
+                if ticket.reservation_number == data[0]['pnrNo']:
+                    return ticket
+            # if ticket not found, it's an error
+            else:
+                errors.SRTError('Ticket not found: 예약 내역을 확인하세요')
         else:
             raise errors.SRTResponseError(parser.message())
 

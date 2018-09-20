@@ -63,9 +63,9 @@ use `reserve` method.
 - passengers (optional, default is one Adult)
 ```python
 >>> trains = srt.search_train(dep, arr, date, time)
->>> reservation_id = srt.reserve(trains[0])
->>> reservation_id
-# 320180994220098
+>>> reservation = srt.reserve(trains[0])
+>>> reservation
+# [SRT] 09월 30일, 수서~부산(15:30~18:06) 130700원(3석), 구입기한 09월 20일 23:38
 
 >>> from passengers import Adult, Child
 >>> srt.reserve(trains[1], passengers=[Adult(), Adult(), Child()])
@@ -95,11 +95,11 @@ Use `get_tickets()` method.
 
 Use `cancel` method.
 
-- reservation: reservation number returned by `reserve()` or `SRTreservation` object returned by `get_tickets()`
+- reservation: `SRTreservation` object returned by `reserve()` or  returned by `get_tickets()`
 
 ```python
->>> reservation_id = srt.reserve(train)
->>> srt.cancel(reservation_id)
+>>> reservation = srt.reserve(train)
+>>> srt.cancel(reservation)
 
 >>> tickets = srt.get_tickets()
 >>> srt.cancel(tickets[0])
@@ -107,8 +107,6 @@ Use `cancel` method.
 
 ## TODO
 
-- reserve 후 Reservation 객체가 리턴되도록 하기
 - Reservation passenger 별 상세 정보 저장
-- flake8
 - CI
 - PyPI
