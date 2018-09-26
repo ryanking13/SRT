@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-import errors
+from .errors import *
 
 
 class SRTResponseData():
@@ -68,13 +68,13 @@ class SRTResponseData():
     def success(self):
         result = self._status.get('strResult', None)
         if result is None:
-            raise errors.SRTResponseError('Response status is not given')
+            raise SRTResponseError('Response status is not given')
         if result == self.STATUS_SUCCESS:
             return True
         elif result == self.STATUS_FAIL:
             return False
         else:
-            raise errors.SRTResponseError('Undefined result status "{}"'.format(result))
+            raise SRTResponseError('Undefined result status "{}"'.format(result))
 
     def message(self):
         if 'MSG' in self._result:

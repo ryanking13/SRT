@@ -1,13 +1,13 @@
 from datetime import datetime
 import re
 import requests
-from constants import STATION_CODE
-import errors
-import passenger
-from request_data import SRTRequestData
-from reservation import SRTReservation, SRTTicket
-from response_data import SRTResponseData
-from train import SRTTrain
+from .constants import STATION_CODE
+from .errors import *
+from .passenger import *
+from .request_data import SRTRequestData
+from .reservation import SRTReservation, SRTTicket
+from .response_data import SRTResponseData
+from .train import SRTTrain
 
 EMAIL_REGEX = re.compile(r'[^@]+@[^@]+\.[^@]+')
 PHONE_NUMBER_REGEX = re.compile(r'(\d{3})-(\d{3,4})-(\d{4})')
@@ -124,7 +124,7 @@ class SRT:
 
         else:
             self.is_login = False
-            raise errors.SRTResponseError(parser.message())
+            raise SRTResponseError(parser.message())
 
     def logout(self):
         if not self.is_login:
@@ -145,11 +145,11 @@ class SRT:
             self.is_login = False
             return True
         else:
-            raise errors.SRTResponseError(parser.message())
+            raise SRTResponseError(parser.message())
 
     def get_userinfo(self):
         if not self.is_login:
-            return errors.SRTNotLoggedInError()
+            return SRTNotLoggedInError()
 
         return {
             'name': self.user_name,
@@ -162,7 +162,7 @@ class SRT:
 
     def search_train(self, dep, arr, date=None, time=None):
         if not self.is_login:
-            raise errors.SRTNotLoggedInError()
+            raise SRTNotLoggedInError()
 
         if dep not in STATION_CODE:
             raise ValueError('Station "{}" not exists'.format(dep))
@@ -213,11 +213,11 @@ class SRT:
 
             return trains
         else:
-            raise errors.SRTResponseError(parser.message())
+            raise SRTResponseError(parser.message())
 
     def reserve(self, train, passengers=None, special_seat=False):
         if not self.is_login:
-            raise errors.SRTNotLoggedInError()
+            raise SRTNotLoggedInError()
 
         if not isinstance(train, SRTTrain):
             raise TypeError('"train" parameter must be SRTTrain instance')
@@ -226,8 +226,8 @@ class SRT:
             raise ValueError('"SRT" expected for train name, {} given'.format(train.train_name))
 
         if passengers is None:
-            passengers = [passenger.Adult()]
-        passengers = passenger.Passenger.combine(passengers)
+            passengers = [Adult()]
+        passengers = Passenger.combine(passengers)
 
         url = SRT_RESERVE
         data = SRTRequestData()
@@ -256,7 +256,7 @@ class SRT:
             'SR_JSESSIONID': self.sr_session_id,
         })
 
-        data.update_datasets(passenger.Passenger.get_passenger_dict(passengers))
+        data.update_datasets(Passenger.get_passenger_dict(passengers))
 
         r = self._session.post(url=url, data=data.dump().encode('utf-8'))
         parser = SRTResponseData(r.text)
@@ -271,13 +271,13 @@ class SRT:
                     return ticket
             # if ticket not found, it's an error
             else:
-                errors.SRTError('Ticket not found: 예약 내역을 확인하세요')
+                SRTError('Ticket not found: 예약 내역을 확인하세요')
         else:
-            raise errors.SRTResponseError(parser.message())
+            raise SRTResponseError(parser.message())
 
     def get_reservations(self):
         if not self.is_login:
-            raise errors.SRTNotLoggedInError()
+            raise SRTNotLoggedInError()
 
         url = SRT_TICKETS
         data = SRTRequestData()
@@ -302,11 +302,11 @@ class SRT:
 
             return reservations
         else:
-            raise errors.SRTResponseError(parser.message())
+            raise SRTResponseError(parser.message())
 
     def _ticket_info(self, reservation_id):
         if not self.is_login:
-            raise errors.SRTNotLoggedInError()
+            raise SRTNotLoggedInError()
 
         url = SRT_TICKET_INFO
         data = SRTRequestData()
@@ -328,11 +328,11 @@ class SRT:
                 tickets.append(SRTTicket(data))
             return tickets
         else:
-            raise errors.SRTResponseError(parser.message())
+            raise SRTResponseError(parser.message())
 
     def cancel(self, reservation):
         if not self.is_login:
-            raise errors.SRTNotLoggedInError()
+            raise SRTNotLoggedInError()
 
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
@@ -352,4 +352,4 @@ class SRT:
         if parser.success():
             self._log(parser.message())
         else:
-            raise errors.SRTResponseError(parser.message())
+            raise SRTResponseError(parser.message())
