@@ -12,9 +12,8 @@ This project was inspired from [korail2](https://github.com/carpedm20/korail2) o
 
 ## Installation
 
-```sh
-$ git clone https://github.com/ryanking13/SRT
-$ pip install -r requirements.txt
+```
+pip install SRTrain
 ```
 
 ## Usage
@@ -22,7 +21,7 @@ $ pip install -r requirements.txt
 ### 1. Login
 
 ```python
->>> from srt import SRT
+>>> from SRT import SRT
 
 >>> srt = SRT("1234567890", YOUR_PASSWORD) # with membership number
 >>> srt = SRT("def6488@gmail.com", YOUR_PASSWORD) # with email
