@@ -160,7 +160,7 @@ class SRT:
             'sex': self.user_sex,
         }
 
-    def search_train(self, dep, arr, date=None, time=None):
+    def search_train(self, dep, arr, date=None, time=None, available_only=True):
         if not self.is_login:
             raise SRTNotLoggedInError()
 
@@ -210,6 +210,9 @@ class SRT:
             trains = []
             for d in data:
                 trains.append(SRTTrain(d))
+
+            if available_only:
+                trains = filter(lambda t: t.seat_available(), trains)
 
             return trains
         else:
