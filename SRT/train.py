@@ -51,10 +51,10 @@ class SRTTrain(Train):
         return d
 
     def general_seat_available(self):
-        return '예약하기' in self.general_seat_state
+        return '예약가능' in self.general_seat_state
 
     def special_seat_available(self):
-        return '예약하기' in self.special_seat_state
+        return '예약가능' in self.special_seat_state
 
     def seat_available(self):
         return self.general_seat_available() or self.special_seat_available()

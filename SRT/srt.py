@@ -212,7 +212,7 @@ class SRT:
                 trains.append(SRTTrain(d))
 
             if available_only:
-                trains = filter(lambda t: t.seat_available(), trains)
+                trains = list(filter(lambda t: t.seat_available(), trains))
 
             return trains
         else:
