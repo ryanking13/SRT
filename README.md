@@ -42,6 +42,7 @@ use `search_train` method.
 - arr : A arrival station in Korean ex) '부산'
 - date : (optional) A departure date in yyyyMMdd format
 - time : (optional) A departure time in hhmmss format
+- available_only: (optional) (default: True) return trains with available seats only 
 
 ```python
 >>> dep = '수서'
@@ -111,7 +112,10 @@ Use `cancel` method.
 >>> srt.cancel(reservations[0])
 ```
 
+## Changelog
+
+- 0.1.3 (2019/02/15): `search_train()` 에서 매진되지 않은 좌석만 리턴하는 옵션을 디폴트로 추가
+
 ## TODO
 
 - Add tests for CI
-- PyPI
