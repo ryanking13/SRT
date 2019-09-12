@@ -40,14 +40,14 @@ use `search_train` method.
 
 - dep : A departure station in Korean ex) '수서'
 - arr : A arrival station in Korean ex) '부산'
-- date : (optional) A departure date in yyyyMMdd format
-- time : (optional) A departure time in hhmmss format
+- date : (optional) (default: today) A departure date in yyyyMMdd format 
+- time : (optional) (default: 000000) A departure time in hhmmss format 
 - available_only: (optional) (default: True) return trains with available seats only 
 
 ```python
 >>> dep = '수서'
 >>> arr = '부산'
->>> date = '20180930'
+>>> date = '20190913'
 >>> time = '144000'
 >>> trains = srt.search_train(dep, arr, date, time)
 >>> trains
@@ -74,6 +74,8 @@ use `reserve` method.
 ```
 
 #### Passenger class
+
+__WARNING: 충분히 테스트되지 않음__
 
 Highly inspired by [@dotaitch](https://github.com/dotaitch)'s [Passenger](https://github.com/dotaitch/SRTpy/blob/master/SRTpy/srt.py#L221) class
 
