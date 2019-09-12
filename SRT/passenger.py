@@ -6,6 +6,7 @@ class Passenger(metaclass=abc.ABCMeta):
     <https://github.com/dotaitch/SRTpy/blob/master/SRTpy/srt.py>`
     by `dotaitch`
     """
+
     @abc.abstractmethod
     def __init__(self, *args, **kwargs):
         pass
@@ -33,7 +34,9 @@ class Passenger(metaclass=abc.ABCMeta):
         combined_passengers = []
         while tmp_passengers:
             passenger = tmp_passengers.pop()
-            same_class = list(filter(lambda x: isinstance(x, passenger.__class__), tmp_passengers))
+            same_class = list(
+                filter(lambda x: isinstance(x, passenger.__class__), tmp_passengers)
+            )
             new_passenger = None
             if not same_class:
                 new_passenger = passenger
@@ -59,17 +62,30 @@ class Passenger(metaclass=abc.ABCMeta):
         return str(total_count)
 
     @staticmethod
-    def get_passenger_dict(passengers):
+    def get_passenger_dict(passengers, special_seat=False):
         if list(filter(lambda x: not isinstance(x, Passenger), passengers)):
             raise TypeError("Passengers must be based on Passenger")
 
         data = {
-            'totPrnb': Passenger.total_count(passengers),
-            'psgGridcnt': str(len(passengers)),
+            "totPrnb": Passenger.total_count(passengers),
+            "psgGridcnt": str(len(passengers)),
         }
         for i, passenger in enumerate(passengers):
-            data['psgTpCd{}'.format(i + 1)] = passenger.type_code
-            data['psgInfoPerPrnb{}'.format(i + 1)] = str(passenger.count)
+            data["psgTpCd{}".format(i + 1)] = passenger.type_code
+            data["psgInfoPerPrnb{}".format(i + 1)] = str(passenger.count)
+            # seat location ('000': 기본, '012': 창측, '013': 복도측)
+            # TODO: 선택 가능하게
+            data["locSeatAttCd{}".format(i + 1)] = "000"
+            # seat requirement ('015': 일반, '021': 휠체어)
+            # TODO: 선택 가능하게
+            data["rqSeatAttCd{}".format(i + 1)] = "015"
+            # seat direction ('009': 정방향)
+            data["dirSeatAttCd{}".format(i + 1)] = "009"
+
+            data["smkSeatAttCd{}".format(i + 1)] = "000"
+            data["etcSeatAttCd{}".format(i + 1)] = "000"
+            # seat type: ('1': 일반실, '2': 특실)
+            data["psrmClCd{}".format(i + 1)] = "2" if special_seat else "1"
 
         return data
 
@@ -77,28 +93,28 @@ class Passenger(metaclass=abc.ABCMeta):
 class Adult(Passenger):
     def __init__(self, count=1):
         super().__init__()
-        super().__init_internal__("어른/청소년", '1', count)
+        super().__init_internal__("어른/청소년", "1", count)
 
 
 class Child(Passenger):
     def __init__(self, count=1):
         super().__init__()
-        super().__init_internal__("어린이", '5', count)
+        super().__init_internal__("어린이", "5", count)
 
 
 class Senior(Passenger):
     def __init__(self, count=1):
         super().__init__()
-        super().__init_internal__("경로", '4', count)
+        super().__init_internal__("경로", "4", count)
 
 
 class Disability1To3(Passenger):
     def __init__(self, count=1):
         super().__init__()
-        super().__init_internal__("장애 1~3급", '2', count)
+        super().__init_internal__("장애 1~3급", "2", count)
 
 
 class Disability4To6(Passenger):
     def __init__(self, count=1):
         super().__init__()
-        super().__init_internal__("장애 4~6급", '3', count)
+        super().__init_internal__("장애 4~6급", "3", count)
