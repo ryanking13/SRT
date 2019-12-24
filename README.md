@@ -8,7 +8,7 @@ This project was inspired from [korail2](https://github.com/carpedm20/korail2) o
 
 ## Requirements
 
-- Python >= 3.2
+- Python >= 3.5
 
 ## Installation
 
