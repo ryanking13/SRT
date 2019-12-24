@@ -96,7 +96,8 @@ class SRT:
         }
 
         r = self._session.post(url=url, data=data)
-        if "login_Fail" in r.text:
+        self._log(r.text)
+        if "비밀번호 오류입니다" in r.text:
             self.is_login = False
             raise SRTLoginError()
 
