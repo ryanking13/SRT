@@ -1,6 +1,6 @@
 # SRT
 
-[![CircleCI](https://circleci.com/gh/ryanking13/SRT.svg?style=svg)](https://circleci.com/gh/ryanking13/SRT)
+![github actions badge](https://github.com/ryanking13/SRT/workflows/Python%20package/badge.svg)
 
 SRT(Super Rapid Train) application python wrapper
 
