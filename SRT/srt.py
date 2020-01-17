@@ -97,6 +97,10 @@ class SRT:
 
         r = self._session.post(url=url, data=data)
         self._log(r.text)
+        if "존재하지않는 회원입니다" in r.text:
+            self.is_login = False
+            raise SRTLoginError()
+
         if "비밀번호 오류입니다" in r.text:
             self.is_login = False
             raise SRTLoginError()
