@@ -124,3 +124,7 @@ Use `cancel` method.
 ## TODO
 
 - Add tests for CI
+
+## Sea Also
+
+- [go-SRT](https://github.com/ryanking13/go-SRT): SRT golang wrapper
