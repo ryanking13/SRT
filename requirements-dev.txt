@@ -4,7 +4,7 @@ flake8==3.5.0
 idna==2.9
 mccabe==0.6.1
 pycodestyle==2.5.0
-pyflakes==1.6.0
+pyflakes==2.1.1
 requests>=2.20.0
 urllib3==1.25.8
 pytest==5.4.1
