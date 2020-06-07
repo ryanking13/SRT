@@ -6,5 +6,5 @@ mccabe==0.6.1
 pycodestyle==2.5.0
 pyflakes==1.6.0
 requests>=2.20.0
-urllib3==1.25.8
+urllib3==1.25.9
 pytest==5.4.1
