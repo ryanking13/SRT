@@ -22,7 +22,7 @@ def test_login_faile():
 def test_login():
     config = configparser.ConfigParser()
     print(os.getcwd())
-    config.read('dev_config.ini')
+    config.read('config.ini')
 
     username = config['DEFAULT']['SRT_USERNAME']
     password = config['DEFAULT']['SRT_PASSWORD']
