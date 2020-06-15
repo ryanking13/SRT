@@ -61,8 +61,11 @@ use `search_train` method.
 
 use `reserve` method.
 
-- train: `SRTTrain` object returned by `search_train()`
-- passengers (optional, default is one Adult)
+- train : `SRTTrain` object returned by `search_train()`
+- passengers : (optional) (default: None)
+- special_seat : (optional) (default: `False`)  `True` = 특실, `False` = 일반실 or 특실
+- window_seat : (optional) (default: `None`) `None` = 창측 or 내측, `True` = 창측, `False` = 내측
+
 ```python
 >>> trains = srt.search_train(dep, arr, date, time)
 >>> reservation = srt.reserve(trains[0])

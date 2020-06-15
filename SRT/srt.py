@@ -212,7 +212,7 @@ class SRT:
 
         return trains
 
-    def reserve(self, train, passengers=None, special_seat=False):
+    def reserve(self, train, passengers=None, special_seat=False, window_seat=None):
         if not self.is_login:
             raise SRTNotLoggedInError()
 
@@ -248,7 +248,11 @@ class SRT:
             "arvRsStnCdNm1": train.arr_station_name,
         }
 
-        data.update(Passenger.get_passenger_dict(passengers))
+        data.update(
+            Passenger.get_passenger_dict(
+                passengers, special_seat=special_seat, window_seat=window_seat
+            )
+        )
 
         r = self._session.post(url=url, data=data)
         parser = SRTResponseData(r.text)
