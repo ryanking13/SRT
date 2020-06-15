@@ -1,6 +1,5 @@
 import os
 import pytest
-import configparser
 from SRT import SRT, SRTLoginError
 
 
@@ -11,19 +10,9 @@ def test_login_success():
     SRT(username, password)
 
 
-def test_login_faile():
+def test_login_fail():
     username = os.environ["SRT_USERNAME"]
     wrong_password = "deadbeef"
 
     with pytest.raises(SRTLoginError):
         SRT(username, wrong_password)
-
-
-def test_login():
-    config = configparser.ConfigParser()
-    print(os.getcwd())
-    config.read('config.ini')
-
-    username = config['DEFAULT']['SRT_USERNAME']
-    password = config['DEFAULT']['SRT_PASSWORD']
-    SRT(username, password)
