@@ -1,4 +1,5 @@
 import abc
+from .constants import *
 
 
 class Passenger(metaclass=abc.ABCMeta):
@@ -62,7 +63,7 @@ class Passenger(metaclass=abc.ABCMeta):
         return str(total_count)
 
     @staticmethod
-    def get_passenger_dict(passengers, special_seat=False):
+    def get_passenger_dict(passengers, special_seat=False, window_seat=None):
         if list(filter(lambda x: not isinstance(x, Passenger), passengers)):
             raise TypeError("Passengers must be based on Passenger")
 
@@ -74,8 +75,7 @@ class Passenger(metaclass=abc.ABCMeta):
             data["psgTpCd{}".format(i + 1)] = passenger.type_code
             data["psgInfoPerPrnb{}".format(i + 1)] = str(passenger.count)
             # seat location ('000': 기본, '012': 창측, '013': 복도측)
-            # TODO: 선택 가능하게
-            data["locSeatAttCd{}".format(i + 1)] = "000"
+            data["locSeatAttCd{}".format(i + 1)] = WINDOW_SEAT[window_seat]
             # seat requirement ('015': 일반, '021': 휠체어)
             # TODO: 선택 가능하게
             data["rqSeatAttCd{}".format(i + 1)] = "015"

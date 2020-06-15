@@ -33,3 +33,9 @@ TRAIN_NAME = {
     "09": "ITX-청춘",
     "17": "SRT",
 }
+
+WINDOW_SEAT = {
+    None: "000",
+    True: "012",
+    False: "013"
+}
