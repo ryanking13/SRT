@@ -12,21 +12,21 @@ EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 PHONE_NUMBER_REGEX = re.compile(r"(\d{3})-(\d{3,4})-(\d{4})")
 
 SCHEME = "https"
-SRT_HOST = "app.srail.co.kr"
+SRT_HOST = "app.srail.or.kr"
 SRT_PORT = "443"
 
 SRT_MOBILE = "{scheme}://{host}:{port}".format(
     scheme=SCHEME, host=SRT_HOST, port=SRT_PORT
 )
 
-SRT_MAIN = "{}/neo/main/main.do".format(SRT_MOBILE)
-SRT_LOGIN = "{}/neo/apb/selectListApb01080_n.do".format(SRT_MOBILE)
-SRT_LOGOUT = "{}/neo/login/loginOut.do".format(SRT_MOBILE)
-SRT_SEARCH_SCHEDULE = "{}/neo/ara/selectListAra10007_n.do".format(SRT_MOBILE)
-SRT_RESERVE = "{}/neo/arc/selectListArc05013_n.do".format(SRT_MOBILE)
-SRT_TICKETS = "{}/neo/atc/selectListAtc14016_n.do".format(SRT_MOBILE)
-SRT_TICKET_INFO = "{}/neo/ard/selectListArd02017_n.do?".format(SRT_MOBILE)
-SRT_CANCEL = "{}/neo/ard/selectListArd02045_n.do".format(SRT_MOBILE)
+SRT_MAIN = "{}/main/main.do".format(SRT_MOBILE)
+SRT_LOGIN = "{}/apb/selectListApb01080_n.do".format(SRT_MOBILE)
+SRT_LOGOUT = "{}/login/loginOut.do".format(SRT_MOBILE)
+SRT_SEARCH_SCHEDULE = "{}/ara/selectListAra10007_n.do".format(SRT_MOBILE)
+SRT_RESERVE = "{}/arc/selectListArc05013_n.do".format(SRT_MOBILE)
+SRT_TICKETS = "{}/atc/selectListAtc14016_n.do".format(SRT_MOBILE)
+SRT_TICKET_INFO = "{}/ard/selectListArd02017_n.do?".format(SRT_MOBILE)
+SRT_CANCEL = "{}/ard/selectListArd02045_n.do".format(SRT_MOBILE)
 
 DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Linux; Android 5.1.1; LGM-V300K Build/N2G47H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/39.0.0.0 Mobile Safari/537.36SRT-APP-Android V.1.0.6",
