@@ -10,7 +10,7 @@ def srt():
     try:
         username = os.environ["SRT_USERNAME"]
         password = os.environ["SRT_PASSWORD"]
-    except:
+    except KeyError:
         pytest.fail(KeyError("You should specify SRT_USERNAME and SRT_PASSWORD"))
 
     return SRT(username, password)
@@ -64,9 +64,8 @@ def test_reserve_and_cancel(srt, pytestconfig):
 
         if reservation is not None:
             break
-    
+
     if reservation is None:
         pytest.warns(Warning("Empty seat not found, skipping reservation test"))
-    
-    srt.cancel(reservation)
 
+    srt.cancel(reservation)
