@@ -34,8 +34,4 @@ TRAIN_NAME = {
     "17": "SRT",
 }
 
-WINDOW_SEAT = {
-    None: "000",
-    True: "012",
-    False: "013"
-}
+WINDOW_SEAT = {None: "000", True: "012", False: "013"}

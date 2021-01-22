@@ -11,7 +11,7 @@ setup(
     name="SRTrain",
     author="ryanking13",
     author_email="def6488@gmail.com",
-    version="1.0.3",
+    version="2.0.0",
     description="SRT(Super Rapid Train) wrapper for python",
     long_description=long_descrtiption(),
     long_description_content_type="text/markdown",

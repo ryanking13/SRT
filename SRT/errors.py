@@ -7,8 +7,8 @@ class SRTError(Exception):
 
 
 class SRTLoginError(SRTError):
-    def __init__(self):
-        super().__init__("Login failed, please check ID/PW")
+    def __init__(self, msg="Login failed, please check ID/PW"):
+        super().__init__(msg)
 
 
 class SRTResponseError(SRTError):
