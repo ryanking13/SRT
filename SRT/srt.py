@@ -99,11 +99,11 @@ class SRT:
         self._log(r.text)
         if "존재하지않는 회원입니다" in r.text:
             self.is_login = False
-            raise SRTLoginError()
+            raise SRTLoginError(r.json()["MSG"])
 
-        if "비밀번호 오류입니다" in r.text:
+        if "비밀번호 오류" in r.text:
             self.is_login = False
-            raise SRTLoginError()
+            raise SRTLoginError(r.json()["MSG"])
 
         self.is_login = True
         return True
