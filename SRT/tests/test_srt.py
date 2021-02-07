@@ -34,7 +34,7 @@ def test_search_train(srt):
     time = "000000"
     date = (datetime.now() + timedelta(days=3)).strftime("%Y%m%d")
 
-    trains = srt.search_train(dep, arr, date, time)
+    trains = srt.search_train(dep, arr, date, time, available_only=False)
     assert len(trains) != 0
 
 
