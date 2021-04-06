@@ -5,6 +5,12 @@ idna==2.10
 mccabe==0.6.1
 pycodestyle==2.6.0
 pyflakes==2.2.0
-requests>=2.20.0
+prompt-toolkit==1.0.14
+Pygments==2.8.1
+PyInquirer==1.0.3
+regex==2021.4.4
+requests==2.25.1
+six==1.15.0
 urllib3==1.26.4
+wcwidth==0.2.5
 pytest==6.1.2

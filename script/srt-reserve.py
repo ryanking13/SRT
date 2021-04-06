@@ -1,7 +1,7 @@
-from SRT import SRT
-from rich import print
-from rich.prompt import Prompt
-from PyInquirer import prompt as prompt_choice
+from datetime import datetime, timedelta
+
+from SRT import SRT, passenger
+from PyInquirer import prompt
 
 SRT_STATIONS = (
     "수서",
@@ -23,129 +23,140 @@ SRT_STATIONS = (
     "부산",
 )
 
+not_empty = lambda s: len(s) > 0
+
 
 def hi():
-    print("""
+    print(
+        """
 ░██████╗██████╗░████████╗
 ██╔════╝██╔══██╗╚══██╔══╝
 ╚█████╗░██████╔╝░░░██║░░░
 ░╚═══██╗██╔══██╗░░░██║░░░
 ██████╔╝██║░░██║░░░██║░░░
 ╚═════╝░╚═╝░░╚═╝░░░╚═╝░░░
-""")
+"""
+    )
 
 
 def login():
-    username = ""
-    password = ""
+    questions = [
+        {
+            "type": "input",
+            "name": "username",
+            "message": "SRT ID (username, e-mail, phone):",
+            "validate": not_empty,
+        },
+        {
+            "type": "password",
+            "name": "password",
+            "message": "SRT Password:",
+            "validate": not_empty,
+        },
+    ]
 
-    while not username:
-        username = Prompt.ask("[bold magenta]Username")
-    
-    while not password:
-        password = Prompt.ask("[bold magenta]Password", password=True)
-
-    return SRT(username, password)
+    inputs = prompt(questions)
+    return SRT(inputs["username"], inputs["password"])
 
 
-def select_train(client):
-    station_dep = ""
-    station_arr = ""
-    date_dep = ""
-
+def select_station():
     questions = [
         {
             "type": "list",
-            "name": "station_dep",
-            "message": "출발역",
+            "name": "dep",
+            "message": "출발역:",
             "choices": SRT_STATIONS,
         },
         {
             "type": "list",
-            "name": "station_arr",
-            "message": "도착역",
-            "choices": SRT_STATIONS,
-        },
-        {
-            "type": "list",
-            "name": "station_arr",
-            "message": "도착역",
+            "name": "arr",
+            "message": "도착역:",
             "choices": SRT_STATIONS,
         },
     ]
 
-    station_dep = prompt_choice(questions)["station_dep"]
-    print(answers)
-
-	# // Step 3) Select Date
-
-	# nextCnt := 0
-	# numDays := 10
-	# toPrev := "이전 날짜로"
-	# toNext := "다음 날짜로"
-	# for {
-	# 	isNext := nextCnt > 0
-	# 	days := make([]string, 0)
-
-	# 	if isNext {
-	# 		days = append(days, toPrev)
-	# 	}
-
-	# 	date := today().NextDay(nextCnt * numDays)
-	# 	for i := 0; i < numDays; i++ {
-	# 		days = append(days, date.String())
-	# 		date = date.NextDay(1)
-	# 	}
-	# 	days = append(days, toNext)
-
-	# 	err = survey.AskOne(
-	# 		&survey.Select{
-	# 			Message: "날짜:",
-	# 			Options: days,
-	# 			Default: days[0],
-	# 		},
-	# 		&dateDep,
-	# 	)
-
-	# 	if err != nil {
-	# 		return nil, err
-	# 	}
-
-	# 	if dateDep == toPrev {
-	# 		nextCnt--
-	# 		continue
-	# 	} else if dateDep == toNext {
-	# 		nextCnt++
-	# 		continue
-	# 	}
-	# 	break
-	# }
-
-	# if err != nil {
-	# 	return nil, err
-	# }
-
-	# return &srt.SearchParams{
-	# 	Dep:  stationDep,
-	# 	Arr:  stationArr,
-	# 	Date: dateDep,
-	# }, nil
+    stations = prompt(questions)
+    return stations["dep"], stations["arr"]
 
 
-def search_train(client, params):
-    pass
+def select_date():
+    next_cnt = 0
+    num_days = 10
+    to_prev = "이전 날짜로"
+    to_next = "다음 날짜로"
+
+    while True:
+        not_first = next_cnt > 0
+
+        start_date = datetime.now() + timedelta(days=next_cnt * num_days)
+        dates = [
+            (start_date + timedelta(days=i)).strftime("%Y%m%d") for i in range(num_days)
+        ]
+
+        if not_first:
+            dates = [to_prev] + dates
+
+        dates += [to_next]
+
+        questions = [
+            {
+                "type": "list",
+                "name": "date",
+                "message": "출발 날짜:",
+                "choices": dates,
+            }
+        ]
+
+        date = prompt(questions)["date"]
+
+        if date == to_prev:
+            next_cnt -= 1
+            continue
+        elif date == to_next:
+            next_cnt += 1
+            continue
+        else:
+            return date
 
 
-def reserve(client, params):
-    pass
+def search_train(client, dep, arr, date):
+
+    trains = client.search_train(dep, arr, date, "000000")
+    trains = [
+        {
+            "name": repr(train),
+            "value": train,
+        } for train in trains
+    ]
+    questions = [
+        {
+            "type": "list",
+            "name": "train",
+            "message": "열차 선택:",
+            "choices": trains,
+        },
+    ]
+
+    train = prompt(questions)["train"]
+    return train
+
+
+def reserve(client, train):
+    return client.reserve(train)
 
 
 def main():
     hi()
+
     srt = login()
+    station_dep, station_arr = select_station()
+    date_dep = select_date()
 
-    select_train(srt)
+    train = search_train(srt, station_dep, station_arr, date_dep)
+    reservation = reserve(srt, train)
 
+    print("예약 완료! 홈페이지에서 결제를 완료하세요.")
+    print(reservation)
 
 
 if __name__ == "__main__":
