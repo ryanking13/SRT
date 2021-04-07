@@ -207,6 +207,9 @@ class SRT:
             _all_trains = parser.get_all()["outDataSets"]["dsOutput1"]
             trains.extend([SRTTrain(train) for train in _all_trains])
 
+        # Filter SRT only, drop KTX, ITX, ...
+        trains = list(filter(lambda t: t.train_name == "SRT", trains))
+
         if available_only:
             trains = list(filter(lambda t: t.seat_available(), trains))
 
