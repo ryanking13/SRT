@@ -3,7 +3,7 @@ chardet==3.0.4
 flake8==3.8.4
 idna==2.10
 mccabe==0.6.1
-pycodestyle==2.6.0
+pycodestyle==2.7.0
 pyflakes==2.2.0
 prompt-toolkit==1.0.14
 Pygments==2.8.1
