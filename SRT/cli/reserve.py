@@ -1,7 +1,10 @@
+import os
 from datetime import datetime, timedelta
 
 from SRT import SRT, passenger
 from PyInquirer import prompt
+
+VERBOSE = os.environ.get("DEBUG") is not None
 
 SRT_STATIONS = (
     "수서",
@@ -56,7 +59,7 @@ def login():
     ]
 
     inputs = prompt(questions)
-    return SRT(inputs["username"], inputs["password"])
+    return SRT(inputs["username"], inputs["password"], verbose=VERBOSE)
 
 
 def select_station():
