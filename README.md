@@ -74,7 +74,7 @@ use `reserve` method.
 >>> reservation
 # [SRT] 09월 30일, 수서~부산(15:30~18:06) 130700원(3석), 구입기한 09월 20일 23:38
 
->>> from passengers import Adult, Child
+>>> from SRT.passenger import Adult, Child
 >>> srt.reserve(trains[1], passengers=[Adult(), Adult(), Child()])
 ```
 
