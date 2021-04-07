@@ -1,5 +1,5 @@
 certifi==2020.12.5
-chardet==3.0.4
+chardet==4.0.0
 flake8==3.8.4
 idna==2.10
 mccabe==0.6.1
