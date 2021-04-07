@@ -126,6 +126,7 @@ Use `cancel` method.
 - 1.0.0 (2019/09/13): SRT 앱 NEO 업데이트에 맞추어 API 전체 완전 수정 (#1)
 - 1.0.2 (2019/12/24): 기본 테스트 추가, CI 도구 CircleCI에서 Github Actions로 교체
 - 2.0.0 (2021/01/22): 업데이트된 SRT API URL 반영, 테스트 추가
+- 2.0.1 (2021/04/07): 검색 결과 필터링, `srt-reserve` 스크립트 추가
 
 ## How to test
 
