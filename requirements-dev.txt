@@ -5,7 +5,7 @@ idna==2.10
 mccabe==0.6.1
 pycodestyle==2.6.0
 pyflakes==2.2.0
-prompt-toolkit==1.0.14
+prompt-toolkit==3.0.18
 Pygments==2.8.1
 PyInquirer==1.0.3
 regex==2021.4.4
