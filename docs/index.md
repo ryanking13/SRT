@@ -5,6 +5,7 @@
 ![github actions badge](https://github.com/ryanking13/SRT/workflows/Python%20package/badge.svg)
 [![Downloads](https://pepy.tech/badge/srtrain)](https://pepy.tech/project/srtrain)
 [![Downloads](https://pepy.tech/badge/srtrain/month)](https://pepy.tech/project/srtrain)
+[![Documentation Status](https://readthedocs.org/projects/srtrain/badge/?version=latest)](https://srtrain.readthedocs.io/en/latest/?badge=latest)
 
 `SRTrain` is a python wrapper of SRT(Super Rapid Train: [https://etk.srail.kr/](https://etk.srail.kr/)).
 
@@ -52,10 +53,11 @@ pip install SRTrain
 
 ```{eval-rst}
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    installation
    srt
    advanced
    contribution
+   changelog
 ```
