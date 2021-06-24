@@ -53,10 +53,11 @@ pip install SRTrain
 
 ```{eval-rst}
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    installation
    srt
    advanced
    contribution
+   changelog
 ```
