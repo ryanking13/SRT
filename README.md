@@ -119,34 +119,6 @@ Use `cancel` method.
 >>> srt.cancel(reservations[0])
 ```
 
-## Changelog
-
-- 0.1.3 (2019/02/15): `search_train()` 에서 매진되지 않은 좌석만 리턴하는 옵션을 디폴트로 추가
-- 0.1.5 (2019/02/15): 매진 확인 오류 수정
-- 1.0.0 (2019/09/13): SRT 앱 NEO 업데이트에 맞추어 API 전체 완전 수정 (#1)
-- 1.0.2 (2019/12/24): 기본 테스트 추가, CI 도구 CircleCI에서 Github Actions로 교체
-- 2.0.0 (2021/01/22): 업데이트된 SRT API URL 반영, 테스트 추가
-- 2.0.1 (2021/04/07): 검색 결과 필터링, `srt-reserve` 스크립트 추가
-
-## How to test
-
-```sh
-export SRT_USERNAME=<YOUR_SRT_USERNAME>
-export SRT_PASSWORD=<YOUR_SRT_PASSWORD>
-
-# For Windows
-# set SRT_USERNAME=<YOUR_SRT_USERNAME>
-# set SRT_PASSWORD=<YOUR_SRT_PASSWORD>
-
-pip install -r requirements-dev.txt
-
-pytest SRT -v -x
-
-# For full test
-# Warning: 아래 테스트에는 실제로 표를 예약/취소하는 테스트가 포함되어 있습니다
-pytest SRT -v -x --full
-```
-
-## Sea Also
+## See Also
 
 - [go-SRT](https://github.com/ryanking13/go-SRT): SRT golang wrapper
