@@ -40,7 +40,18 @@ RESULT_FAIL = "FAIL"
 
 
 class SRT:
-    """SRT object"""
+    """SRT 클라이언트 클래스
+
+    Args:
+        srt_id (str): SRT 계정 아이디 (멤버십 번호, 이메일, 전화번호)
+        srt_pw (str): SRT 계정 패스워드
+        auto_login (bool): :func:`login` 함수 호출 여부
+        verbose (bool): 디버깅용 로그 출력 여부
+
+    >>> srt = SRT("1234567890", YOUR_PASSWORD) # with membership number
+    >>> srt = SRT("def6488@gmail.com", YOUR_PASSWORD) # with email
+    >>> srt = SRT("010-1234-xxxx", YOUR_PASSWORD) # with phone number
+    """
 
     def __init__(self, srt_id, srt_pw, auto_login=True, verbose=False):
         self._session = requests.session()
@@ -61,7 +72,18 @@ class SRT:
             print("[*] " + msg)
 
     def login(self, srt_id=None, srt_pw=None):
+        """SRT 서버에 로그인합니다.
 
+        일반적인 경우에는 인스턴스가 생성될 때에 자동으로 로그인 되므로,
+        이 함수를 직접 호출할 필요가 없습니다.
+
+        Args:
+            srt_id (str, optional): SRT 계정 아이디
+            srt_pwd (str, optional): SRT 계정 패스워드
+
+        Returns:
+            bool: 로그인 성공 여부
+        """
         if srt_id is None:
             srt_id = self.srt_id
         else:
@@ -130,6 +152,8 @@ class SRT:
         #     raise SRTResponseError(parser.message())
 
     def logout(self):
+        """SRT 서버에서 로그아웃합니다."""
+
         if not self.is_login:
             return
 
@@ -143,6 +167,19 @@ class SRT:
         return True
 
     def search_train(self, dep, arr, date=None, time=None, available_only=True):
+        """주어진 출발지에서 도착지로 향하는 SRT 열차를 검색합니다.
+
+        Args:
+            dep (str): 출발역
+            arr (str): 도착역
+            date (str, optional): 출발 날짜 (yyyyMMdd) (default: 당일)
+            time (str, optional): 출발 시각 (hhmmss) (default: 0시 0분 0초)
+            available_only (bool, optional): 매진되지 않은 열차만 검색합니다 (default: True)
+
+        Returns:
+            list[:class:`SRTTrain`]: 열차 리스트
+        """
+
         if not self.is_login:
             raise SRTNotLoggedInError()
 
@@ -216,6 +253,20 @@ class SRT:
         return trains
 
     def reserve(self, train, passengers=None, special_seat=False, window_seat=None):
+        """열차를 예약합니다.
+
+        >>> trains = srt.search_train("수서", "부산", "210101", "000000")
+        >>> srt.reserve(trains[0])
+        
+        Args:
+            train (:class:`SRTrain`): 예약할 열차
+            passengers (list[:class:`Passenger`], optional): 예약 인원 (default: 어른 1명)
+            special_seat (bool, optional): 특실 포함 여부
+            window_seat (bool, optional): 창가 자리 우선 예약 여부
+
+        Returns:
+            :class:`SRTReservation`: 예약 내역
+        """
         if not self.is_login:
             raise SRTNotLoggedInError()
 
@@ -279,6 +330,11 @@ class SRT:
             SRTError("Ticket not found: check reservation status")
 
     def get_reservations(self):
+        """전체 예약 정보를 얻습니다.
+        
+        Returns:
+            list[:class:`SRTReservation`]: 예약 리스트
+        """
         if not self.is_login:
             raise SRTNotLoggedInError()
 
@@ -304,6 +360,22 @@ class SRT:
         return reservations
 
     def ticket_info(self, reservation):
+        """예약에 포함된 티켓 정보를 반환합니다.
+
+        >>> reservations = srt.get_reservations()
+        >>> reservations
+        # [[SRT] 09월 30일, 수서~부산(15:30~18:06) 130700원(3석), 구입기한 09월 19일 19:11]
+        >>> reservations[0].tickets
+        # [18호차 9C (일반실) 어른/청소년 [52300원(600원 할인)],
+        # 18호차 10C (일반실) 어른/청소년 [52300원(600원 할인)],
+        # 18호차 10D (일반실) 장애 4~6급 [26100원(26800원 할인)]]
+
+        Args:
+            reservation (:class:`SRTReservation` or int): 예약 번호
+
+        Returns:
+            list[:class:`SRTTicket`]
+        """
         if not self.is_login:
             raise SRTNotLoggedInError()
 
@@ -324,6 +396,19 @@ class SRT:
         return tickets
 
     def cancel(self, reservation):
+        """예약을 취소합니다.
+
+        >>> reservation = srt.reserve(train)
+        >>> srt.cancel(reservation)
+        >>> reservations = srt.get_reservations()
+        >>> srt.cancel(reservations[0]) 
+
+        Args:
+            reservation (:class:`SRTReservation` or int): 예약 번호
+        
+        Returns:
+            bool: 예약 취소 성공 여부
+        """
         if not self.is_login:
             raise SRTNotLoggedInError()
 
@@ -342,3 +427,4 @@ class SRT:
         self._log(parser.message())
 
         return True
+
