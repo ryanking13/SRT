@@ -1,0 +1,15 @@
+name: Run standard checks on push/pull request
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      # Linter
+      - uses: psf/black@stable
+        with:
+          options: "--check --verbose"
+          src: "./SRT"
