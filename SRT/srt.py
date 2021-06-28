@@ -257,7 +257,7 @@ class SRT:
 
         >>> trains = srt.search_train("수서", "부산", "210101", "000000")
         >>> srt.reserve(trains[0])
-        
+
         Args:
             train (:class:`SRTrain`): 예약할 열차
             passengers (list[:class:`Passenger`], optional): 예약 인원 (default: 어른 1명)
@@ -331,7 +331,7 @@ class SRT:
 
     def get_reservations(self):
         """전체 예약 정보를 얻습니다.
-        
+
         Returns:
             list[:class:`SRTReservation`]: 예약 리스트
         """
@@ -401,11 +401,11 @@ class SRT:
         >>> reservation = srt.reserve(train)
         >>> srt.cancel(reservation)
         >>> reservations = srt.get_reservations()
-        >>> srt.cancel(reservations[0]) 
+        >>> srt.cancel(reservations[0])
 
         Args:
             reservation (:class:`SRTReservation` or int): 예약 번호
-        
+
         Returns:
             bool: 예약 취소 성공 여부
         """
@@ -427,4 +427,3 @@ class SRT:
         self._log(parser.message())
 
         return True
-

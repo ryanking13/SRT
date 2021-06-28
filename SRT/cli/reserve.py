@@ -129,7 +129,8 @@ def search_train(client, dep, arr, date):
         {
             "name": repr(train),
             "value": train,
-        } for train in trains
+        }
+        for train in trains
     ]
     questions = [
         {
