@@ -2,7 +2,7 @@ from .errors import SRTError, SRTResponseError, SRTNotLoggedInError, SRTLoginErr
 from .passenger import Passenger, Adult, Child, Senior, Disability1To3, Disability4To6
 from .srt import SRT
 
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 
 __all__ = [
     "SRT",
