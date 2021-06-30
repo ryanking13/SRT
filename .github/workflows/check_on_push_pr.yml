@@ -46,5 +46,14 @@ jobs:
         run: |
           pip install pytest
           pytest SRT -x
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docs
+        uses: ammaraskar/sphinx-action@master
+        with:
+          pre-build-command: "pip install -r requirements/docs.txt"
+          docs-folder: "docs/"
 
         
