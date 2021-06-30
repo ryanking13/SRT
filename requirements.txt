@@ -7,5 +7,5 @@ PyInquirer==1.0.3
 regex==2021.4.4
 requests==2.25.1
 six==1.16.0
-urllib3==1.26.4
+urllib3==1.26.5
 wcwidth==0.2.5
