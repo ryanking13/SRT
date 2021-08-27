@@ -1,5 +1,5 @@
 certifi==2021.5.30
-chardet==3.0.4
+chardet==4.0.0
 idna==2.10
 prompt-toolkit==1.0.14
 Pygments==2.9.0
