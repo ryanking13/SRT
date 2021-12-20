@@ -32,9 +32,11 @@ def test_search_train(srt):
     dep = "수서"
     arr = "부산"
     time = "000000"
+    time_limit = "120000"
     date = (datetime.now() + timedelta(days=3)).strftime("%Y%m%d")
 
-    trains = srt.search_train(dep, arr, date, time, available_only=False)
+    trains = srt.search_train(dep, arr, date, time, time_limit, available_only=False)
+    print(trains)
     assert len(trains) != 0
 
 

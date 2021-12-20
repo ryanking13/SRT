@@ -166,7 +166,7 @@ class SRT:
 
         return True
 
-    def search_train(self, dep, arr, date=None, time=None, available_only=True):
+    def search_train(self, dep, arr, date=None, time=None, time_limit=None, available_only=True):
         """주어진 출발지에서 도착지로 향하는 SRT 열차를 검색합니다.
 
         Args:
@@ -174,6 +174,7 @@ class SRT:
             arr (str): 도착역
             date (str, optional): 출발 날짜 (yyyyMMdd) (default: 당일)
             time (str, optional): 출발 시각 (hhmmss) (default: 0시 0분 0초)
+            time_limit (srt, optional): 출발 시각 조회 한도 (hhmmss)
             available_only (bool, optional): 매진되지 않은 열차만 검색합니다 (default: True)
 
         Returns:
@@ -249,6 +250,9 @@ class SRT:
 
         if available_only:
             trains = list(filter(lambda t: t.seat_available(), trains))
+
+        if time_limit:
+            trains = list(filter(lambda t: t.dep_time <= time_limit, trains))
 
         return trains
 
