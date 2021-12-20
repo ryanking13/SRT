@@ -36,10 +36,6 @@ def test_search_train(srt):
     date = (datetime.now() + timedelta(days=3)).strftime("%Y%m%d")
 
     trains = srt.search_train(dep, arr, date, time, time_limit, available_only=False)
-<<<<<<< HEAD
-=======
-    print(trains)
->>>>>>> f49f501a714a7773ba0bd9ef5892a5bc1aed842d
     assert len(trains) != 0
 
 
