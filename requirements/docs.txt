@@ -7,7 +7,7 @@ chardet==4.0.0
 click==8.0.1
 colorama==0.4.4
 css-html-js-minify==2.5.5
-docutils==0.16
+docutils==0.18.1
 idna==2.10
 imagesize==1.2.0
 Jinja2==3.0.1
