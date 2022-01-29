@@ -1,6 +1,6 @@
 certifi==2021.5.30
 chardet==3.0.4
-idna==2.10
+idna==3.3
 prompt-toolkit==1.0.14
 Pygments==2.9.0
 PyInquirer==1.0.3
