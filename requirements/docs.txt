@@ -24,7 +24,7 @@ python-slugify==5.0.2
 pytz==2021.1
 PyYAML==5.4.1
 requests==2.26.0
-snowballstemmer==2.1.0
+snowballstemmer==2.2.0
 soupsieve==2.2.1
 Sphinx==3.5.4
 sphinx-book-theme==0.1.0
