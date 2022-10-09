@@ -55,5 +55,3 @@ jobs:
         with:
           pre-build-command: "pip install -r requirements/docs.txt"
           docs-folder: "docs/"
-
-

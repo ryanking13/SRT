@@ -1,6 +1,6 @@
 import json
 
-from .errors import *
+from .errors import SRTResponseError
 
 
 class SRTResponseData:

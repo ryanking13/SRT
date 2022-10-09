@@ -1,6 +1,6 @@
 import abc
 
-from .constants import *
+from .constants import WINDOW_SEAT
 
 
 class Passenger(metaclass=abc.ABCMeta):
@@ -37,7 +37,12 @@ class Passenger(metaclass=abc.ABCMeta):
         while tmp_passengers:
             passenger = tmp_passengers.pop()
             same_class = list(
-                filter(lambda x: isinstance(x, passenger.__class__), tmp_passengers)
+                filter(
+                    lambda x, base_passenger=passenger: isinstance(
+                        x, base_passenger.__class__
+                    ),
+                    tmp_passengers,
+                )
             )
             new_passenger = None
             if not same_class:

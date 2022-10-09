@@ -1,4 +1,4 @@
-from .constants import *
+from .constants import STATION_NAME, TRAIN_NAME
 
 
 class SRTTicket:
