@@ -1,5 +1,5 @@
-from .errors import SRTError, SRTResponseError, SRTNotLoggedInError, SRTLoginError
-from .passenger import Passenger, Adult, Child, Senior, Disability1To3, Disability4To6
+from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
+from .passenger import Adult, Child, Disability1To3, Disability4To6, Passenger, Senior
 from .srt import SRT
 
 __version__ = "2.0.3"

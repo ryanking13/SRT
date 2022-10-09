@@ -2,7 +2,7 @@
 
 You can contribute to `SRTrain` by:
 
-- **Reporting bugs**: please report when bug occured through [github issue](https://github.com/ryanking13/SRT/issues).
+- **Reporting bugs**: please report when bug occurred through [github issue](https://github.com/ryanking13/SRT/issues).
 - **Fixing bugs**: when you fixes a bug, please run tests before submitting a PR.
 - **Enhancing documentations**: SRTrain uses Sphinx + Markdown for documentation.
 - **Adding/Proposing new features**

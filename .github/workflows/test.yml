@@ -15,18 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Run linter
-        uses: psf/black@stable
+      - uses: actions/setup-python@v3
         with:
-          options: "--check --verbose"
-          src: "./SRT"
+          python-version: 3.10.2
+      - uses: pre-commit/action@v2.0.3
   check:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6]
+        python-version: ["3.8", "3.9", "3.10"]
 
     steps:
       - uses: actions/checkout@v2
@@ -57,5 +55,3 @@ jobs:
         with:
           pre-build-command: "pip install -r requirements/docs.txt"
           docs-folder: "docs/"
-
-        

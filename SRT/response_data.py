@@ -1,5 +1,6 @@
 import json
-from .errors import *
+
+from .errors import SRTResponseError
 
 
 class SRTResponseData:
@@ -35,7 +36,7 @@ class SRTResponseData:
         elif result == self.STATUS_FAIL:
             return False
         else:
-            raise SRTResponseError('Undefined result status "{}"'.format(result))
+            raise SRTResponseError(f'Undefined result status "{result}"')
 
     def message(self):
         return self._status.get("msgTxt", "")
