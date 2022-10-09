@@ -1,6 +1,8 @@
-from datetime import datetime, timedelta
 import re
+from datetime import datetime, timedelta
+
 import requests
+
 from .constants import STATION_CODE
 from .errors import *
 from .passenger import *
@@ -19,14 +21,14 @@ SRT_MOBILE = "{scheme}://{host}:{port}".format(
     scheme=SCHEME, host=SRT_HOST, port=SRT_PORT
 )
 
-SRT_MAIN = "{}/main/main.do".format(SRT_MOBILE)
-SRT_LOGIN = "{}/apb/selectListApb01080_n.do".format(SRT_MOBILE)
-SRT_LOGOUT = "{}/login/loginOut.do".format(SRT_MOBILE)
-SRT_SEARCH_SCHEDULE = "{}/ara/selectListAra10007_n.do".format(SRT_MOBILE)
-SRT_RESERVE = "{}/arc/selectListArc05013_n.do".format(SRT_MOBILE)
-SRT_TICKETS = "{}/atc/selectListAtc14016_n.do".format(SRT_MOBILE)
-SRT_TICKET_INFO = "{}/ard/selectListArd02017_n.do?".format(SRT_MOBILE)
-SRT_CANCEL = "{}/ard/selectListArd02045_n.do".format(SRT_MOBILE)
+SRT_MAIN = f"{SRT_MOBILE}/main/main.do"
+SRT_LOGIN = f"{SRT_MOBILE}/apb/selectListApb01080_n.do"
+SRT_LOGOUT = f"{SRT_MOBILE}/login/loginOut.do"
+SRT_SEARCH_SCHEDULE = f"{SRT_MOBILE}/ara/selectListAra10007_n.do"
+SRT_RESERVE = f"{SRT_MOBILE}/arc/selectListArc05013_n.do"
+SRT_TICKETS = f"{SRT_MOBILE}/atc/selectListAtc14016_n.do"
+SRT_TICKET_INFO = f"{SRT_MOBILE}/ard/selectListArd02017_n.do?"
+SRT_CANCEL = f"{SRT_MOBILE}/ard/selectListArd02045_n.do"
 
 DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Linux; Android 5.1.1; LGM-V300K Build/N2G47H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/39.0.0.0 Mobile Safari/537.36SRT-APP-Android V.1.0.6",
@@ -187,9 +189,9 @@ class SRT:
             raise SRTNotLoggedInError()
 
         if dep not in STATION_CODE:
-            raise ValueError('Station "{}" not exists'.format(dep))
+            raise ValueError(f'Station "{dep}" not exists')
         if arr not in STATION_CODE:
-            raise ValueError('Station "{}" not exists'.format(arr))
+            raise ValueError(f'Station "{arr}" not exists')
 
         dep_code = STATION_CODE[dep]
         arr_code = STATION_CODE[arr]
@@ -281,7 +283,7 @@ class SRT:
 
         if train.train_name != "SRT":
             raise ValueError(
-                '"SRT" expected for a train name, {} given'.format(train.train_name)
+                f'"SRT" expected for a train name, {train.train_name} given'
             )
 
         if passengers is None:

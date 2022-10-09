@@ -1,4 +1,5 @@
 import abc
+
 from .constants import *
 
 
@@ -18,7 +19,7 @@ class Passenger(metaclass=abc.ABCMeta):
         self.count = count
 
     def __repr__(self):
-        return "{} {}명".format(self.name, self.count)
+        return f"{self.name} {self.count}명"
 
     def __add__(self, other):
         assert isinstance(other, self.__class__)
@@ -72,20 +73,20 @@ class Passenger(metaclass=abc.ABCMeta):
             "psgGridcnt": str(len(passengers)),
         }
         for i, passenger in enumerate(passengers):
-            data["psgTpCd{}".format(i + 1)] = passenger.type_code
-            data["psgInfoPerPrnb{}".format(i + 1)] = str(passenger.count)
+            data[f"psgTpCd{i + 1}"] = passenger.type_code
+            data[f"psgInfoPerPrnb{i + 1}"] = str(passenger.count)
             # seat location ('000': 기본, '012': 창측, '013': 복도측)
-            data["locSeatAttCd{}".format(i + 1)] = WINDOW_SEAT[window_seat]
+            data[f"locSeatAttCd{i + 1}"] = WINDOW_SEAT[window_seat]
             # seat requirement ('015': 일반, '021': 휠체어)
             # TODO: 선택 가능하게
-            data["rqSeatAttCd{}".format(i + 1)] = "015"
+            data[f"rqSeatAttCd{i + 1}"] = "015"
             # seat direction ('009': 정방향)
-            data["dirSeatAttCd{}".format(i + 1)] = "009"
+            data[f"dirSeatAttCd{i + 1}"] = "009"
 
-            data["smkSeatAttCd{}".format(i + 1)] = "000"
-            data["etcSeatAttCd{}".format(i + 1)] = "000"
+            data[f"smkSeatAttCd{i + 1}"] = "000"
+            data[f"etcSeatAttCd{i + 1}"] = "000"
             # seat type: ('1': 일반실, '2': 특실)
-            data["psrmClCd{}".format(i + 1)] = "2" if special_seat else "1"
+            data[f"psrmClCd{i + 1}"] = "2" if special_seat else "1"
 
         return data
 
