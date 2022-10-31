@@ -1,3 +1,12 @@
+## v2.0.4 (2022/10/31)
+
+- SRT 중복 예약 오류 반환 로직 제거 ([#193](https://github.com/ryanking13/SRT/pull/193))
+
+## v2.0.3 (2022/06/11)
+
+- search_train() 함수에 time_limit parameter 추가 ([#130](https://github.com/ryanking13/SRT/pull/130))
+- 서대구 코드 추가 ([#166](https://github.com/ryanking13/SRT/pull/166))
+
 ## v2.0.2 (2021/06/28)
 
 - 공식 문서 추가
