@@ -4,9 +4,6 @@ on:
   push:
       branches:
       - master
-  pull_request:
-      branches:
-      - master
   pull_request_target:
       types: [labeled]
 
@@ -45,7 +42,7 @@ jobs:
           SRT_USERNAME: ${{ secrets.SRT_USERNAME }}
         run: |
           pip install pytest
-          pytest SRT -x
+          pytest SRT -x -v
   docs:
     runs-on: ubuntu-latest
     steps:
