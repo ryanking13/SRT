@@ -4,12 +4,7 @@ from datetime import datetime, timedelta
 import requests  # type: ignore
 
 from .constants import STATION_CODE
-from .errors import (
-    SRTError,
-    SRTLoginError,
-    SRTNotLoggedInError,
-    SRTResponseError,
-)
+from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
 from .passenger import Adult, Passenger
 from .reservation import SRTReservation, SRTTicket
 from .response_data import SRTResponseData
