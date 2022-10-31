@@ -4,13 +4,7 @@ from datetime import datetime, timedelta
 import requests  # type: ignore
 
 from .constants import STATION_CODE
-from .errors import (
-    SRTDuplicateError,
-    SRTError,
-    SRTLoginError,
-    SRTNotLoggedInError,
-    SRTResponseError,
-)
+from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
 from .passenger import Adult, Passenger
 from .reservation import SRTReservation, SRTTicket
 from .response_data import SRTResponseData
@@ -325,11 +319,8 @@ class SRT:
         r = self._session.post(url=url, data=data)
         parser = SRTResponseData(r.text)
 
-        dup_msg = "요청하신 승차권과 동일한 시간대에 예약 또는 발권하신 승차권이 존재합니다."
         if not parser.success():
             raise SRTResponseError(parser.message())
-        elif dup_msg in parser.message():
-            raise SRTDuplicateError(parser.message())
 
         self._log(parser.message())
         reservation_result = parser.get_all()["reservListMap"][0]
