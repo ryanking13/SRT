@@ -261,7 +261,13 @@ class SRT:
 
         return trains
 
-    def reserve(self, train, passengers=None, special_seat=ReserveOption.GENERAL_FIRST, window_seat=None):
+    def reserve(
+        self,
+        train,
+        passengers=None,
+        special_seat=ReserveOption.GENERAL_FIRST,
+        window_seat=None,
+    ):
         """열차를 예약합니다.
 
         >>> trains = srt.search_train("수서", "부산", "210101", "000000")
