@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class SeatType(Enum):
     GENERAL_FIRST = 1  # 일반실 우선
     GENERAL_ONLY = 2  # 일반실만
