@@ -293,16 +293,16 @@ class SRT:
 
         # 일반식 / 특실 좌석 선택 옵션에 따라 결정.
         is_special_seat = None
-        if special_seat == ReserveOption.GENERAL_ONLY.value:  # 일반실 우선
+        if special_seat == ReserveOption.GENERAL_ONLY.value:  # 일반실만
             is_special_seat = False
-        elif special_seat == ReserveOption.SPECIAL_ONLY.value:  # 특실 우선
+        elif special_seat == ReserveOption.SPECIAL_ONLY.value:  # 특실만
             is_special_seat = True
-        elif special_seat == ReserveOption.GENERAL_FIRST.value:  # 일반실만
+        elif special_seat == ReserveOption.GENERAL_FIRST.value:  # 일반실 우선
             if train.general_seat_available():
                 is_special_seat = False
             else:
                 is_special_seat = True
-        elif special_seat == ReserveOption.SPECIAL_FIRST.value:  # 특실만
+        elif special_seat == ReserveOption.SPECIAL_FIRST.value:  # 특실 우선
             if train.special_seat_available():
                 is_special_seat = True
             else:
