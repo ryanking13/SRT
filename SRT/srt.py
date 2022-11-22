@@ -270,7 +270,7 @@ class SRT:
         Args:
             train (:class:`SRTrain`): 예약할 열차
             passengers (list[:class:`Passenger`], optional): 예약 인원 (default: 어른 1명)
-            special_seat (bool, optional): 일반실/특실 선택 유형 (default: 일반실 우선)
+            special_seat (:class:`SeatType`): 일반실/특실 선택 유형 (default: 일반실 우선)
             window_seat (bool, optional): 창가 자리 우선 예약 여부
 
         Returns:
