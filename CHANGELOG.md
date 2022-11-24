@@ -1,3 +1,8 @@
+## Unreleased
+## v2.0.5 (2022/11/24)
+
+- SRT 좌석 유형 옵션 기능 추가 ([#201](https://github.com/ryanking13/SRT/pull/201))
+
 ## v2.0.4 (2022/10/31)
 
 - SRT 중복 예약 오류 반환 로직 제거 ([#193](https://github.com/ryanking13/SRT/pull/193))
