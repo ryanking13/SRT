@@ -8,6 +8,7 @@ from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseErr
 from .passenger import Adult, Passenger
 from .reservation import SRTReservation, SRTTicket
 from .response_data import SRTResponseData
+from .seat_type import SeatType
 from .train import SRTTrain
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -260,7 +261,13 @@ class SRT:
 
         return trains
 
-    def reserve(self, train, passengers=None, special_seat=False, window_seat=None):
+    def reserve(
+        self,
+        train,
+        passengers=None,
+        special_seat=SeatType.GENERAL_FIRST,
+        window_seat=None,
+    ):
         """열차를 예약합니다.
 
         >>> trains = srt.search_train("수서", "부산", "210101", "000000")
@@ -269,7 +276,7 @@ class SRT:
         Args:
             train (:class:`SRTrain`): 예약할 열차
             passengers (list[:class:`Passenger`], optional): 예약 인원 (default: 어른 1명)
-            special_seat (bool, optional): 특실 포함 여부
+            special_seat (:class:`SeatType`): 일반실/특실 선택 유형 (default: 일반실 우선)
             window_seat (bool, optional): 창가 자리 우선 예약 여부
 
         Returns:
@@ -289,6 +296,23 @@ class SRT:
         if passengers is None:
             passengers = [Adult()]
         passengers = Passenger.combine(passengers)
+
+        # 일반식 / 특실 좌석 선택 옵션에 따라 결정.
+        is_special_seat = None
+        if special_seat == SeatType.GENERAL_ONLY:  # 일반실만
+            is_special_seat = False
+        elif special_seat == SeatType.SPECIAL_ONLY:  # 특실만
+            is_special_seat = True
+        elif special_seat == SeatType.GENERAL_FIRST:  # 일반실 우선
+            if train.general_seat_available():
+                is_special_seat = False
+            else:
+                is_special_seat = True
+        elif special_seat == SeatType.SPECIAL_FIRST:  # 특실 우선
+            if train.special_seat_available():
+                is_special_seat = True
+            else:
+                is_special_seat = False
 
         url = SRT_RESERVE
         data = {
@@ -312,7 +336,7 @@ class SRT:
 
         data.update(
             Passenger.get_passenger_dict(
-                passengers, special_seat=special_seat, window_seat=window_seat
+                passengers, special_seat=is_special_seat, window_seat=window_seat
             )
         )
 
