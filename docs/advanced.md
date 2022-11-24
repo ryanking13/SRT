@@ -31,7 +31,7 @@ Highly inspired by [@dotaitch](https://github.com/dotaitch).
 예시) 일반실 우선 예약
 ```python
 >>> from SRT import SeatType
->>> srt.reserve(self, trains[0], special_seat=SeatType.GENERAL_FIRST.value)
+>>> srt.reserve(self, trains[0], special_seat=SeatType.GENERAL_FIRST)
 ```
 
 - SeatType.GENERAL_FIRST : 일반실 우선
