@@ -10,7 +10,7 @@ VERBOSE = os.environ.get("DEBUG") is not None
 SRT_STATIONS = (
     "수서",
     "동탄",
-    "지제",
+    "평택지제",
     "천안아산",
     "오송",
     "대전",
