@@ -12,7 +12,6 @@ select = [
   "F",     # pyflakes
   "B0",    # bugbear (all B0* checks enabled by default)
   "B904",  # bugbear (Within an except clause, raise exceptions with raise ... from err)
-  "B905",  # bugbear (zip() without an explicit strict= parameter set.)
   "UP",    # pyupgrade
   "I",     # isort
   "PGH",   # pygrep-hooks

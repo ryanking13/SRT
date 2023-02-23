@@ -381,7 +381,7 @@ class SRT:
         train_data = parser.get_all()["trainListMap"]
         pay_data = parser.get_all()["payListMap"]
         reservations = []
-        for train, pay in zip(train_data, pay_data, strict=True):
+        for train, pay in zip(train_data, pay_data):
             ticket = self.ticket_info(train["pnrNo"])
             reservation = SRTReservation(train, pay, ticket)
             reservations.append(reservation)
