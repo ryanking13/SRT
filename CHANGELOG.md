@@ -1,4 +1,9 @@
 ## Unreleased
+
+## v2.0.6 (2023/02/23)
+
+- 지제역 이름 변경 반영 ([#221](https://github.com/ryanking13/SRT/pull/221))
+
 ## v2.0.5 (2022/11/24)
 
 - SRT 좌석 유형 옵션 기능 추가 ([#201](https://github.com/ryanking13/SRT/pull/201))
