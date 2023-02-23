@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, timedelta
 
-import requests
+import requests  # type: ignore[import]
 
 from .constants import STATION_CODE
 from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
