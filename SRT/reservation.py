@@ -2,7 +2,6 @@ from .constants import STATION_NAME, TRAIN_NAME
 
 
 class SRTTicket:
-
     SEAT_TYPE = {"1": "일반실", "2": "특실"}
 
     PASSENGER_TYPE = {
