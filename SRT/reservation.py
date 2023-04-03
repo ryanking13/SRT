@@ -12,7 +12,7 @@ class SRTTicket:
         "5": "어린이",
     }
 
-    def __init__(self, data):
+    def __init__(self, reservation_number, data):
         self.car = data["scarNo"]
         self.seat = data["seatNo"]
         self.seat_type_code = data["psrmClCd"]
@@ -23,6 +23,8 @@ class SRTTicket:
         self.price = int(data["rcvdAmt"])
         self.original_price = int(data["stdrPrc"])
         self.discount = int(data["dcntPrc"])
+
+        self.reservation_number = reservation_number
 
     def __str__(self):
         return self.dump()

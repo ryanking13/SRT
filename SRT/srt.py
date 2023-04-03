@@ -382,11 +382,41 @@ class SRT:
         pay_data = parser.get_all()["payListMap"]
         reservations = []
         for train, pay in zip(train_data, pay_data):
+            if pay['stlFlg'] == 'Y':  # 결제완료된 예약 내역은 넘어가기
+               continue
             ticket = self.ticket_info(train["pnrNo"])
             reservation = SRTReservation(train, pay, ticket)
             reservations.append(reservation)
 
         return reservations
+
+    def get_tickets(self):
+        """소유한 티켓 정보들을 얻습니다.
+
+        Returns:
+            list[:class:`SRTTicket`]: 티켓 리스트
+        """
+        if not self.is_login:
+            raise SRTNotLoggedInError()
+
+        url = SRT_TICKETS
+        data = {"pageNo": "0"}
+
+        r = self._session.post(url=url, data=data)
+        parser = SRTResponseData(r.text)
+
+        if not parser.success():
+            raise SRTResponseError(parser.message())
+
+        self._log(parser.message())
+
+        rs_data = parser.get_all()["rsListMap"]
+        tickets = []
+        for data in rs_data:
+            ticket = self.ticket_info(data["pnrNo"])[0]
+            tickets.append(ticket)
+
+        return tickets
 
     def ticket_info(self, reservation):
         """예약에 포함된 티켓 정보를 반환합니다.
@@ -420,7 +450,7 @@ class SRT:
         if not parser.success():
             raise SRTResponseError(parser.message())
 
-        tickets = [SRTTicket(ticket) for ticket in parser.get_all()["trainListMap"]]
+        tickets = [SRTTicket(reservation, ticket) for ticket in parser.get_all()["trainListMap"]]
 
         return tickets
 
