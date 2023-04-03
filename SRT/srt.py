@@ -382,8 +382,8 @@ class SRT:
         pay_data = parser.get_all()["payListMap"]
         reservations = []
         for train, pay in zip(train_data, pay_data):
-            if pay['stlFlg'] == 'Y':  # 결제완료된 예약 내역은 넘어가기
-               continue
+            if pay["stlFlg"] == "Y":  # 결제완료된 예약 내역은 넘어가기
+                continue
             ticket = self.ticket_info(train["pnrNo"])
             reservation = SRTReservation(train, pay, ticket)
             reservations.append(reservation)
@@ -450,7 +450,10 @@ class SRT:
         if not parser.success():
             raise SRTResponseError(parser.message())
 
-        tickets = [SRTTicket(reservation, ticket) for ticket in parser.get_all()["trainListMap"]]
+        tickets = [
+            SRTTicket(reservation, ticket)
+            for ticket in parser.get_all()["trainListMap"]
+        ]
 
         return tickets
 
