@@ -410,11 +410,12 @@ class SRT:
 
         self._log(parser.message())
 
-        rs_data = parser.get_all()["rsListMap"]
         tickets = []
-        for data in rs_data:
-            ticket = self.ticket_info(data["pnrNo"])[0]
-            tickets.append(ticket)
+        rs_data = parser.get_all()["rsListMap"]
+        if rs_data is not None:
+            for data in rs_data:
+                ticket = self.ticket_info(data["pnrNo"])[0]
+                tickets.append(ticket)
 
         return tickets
 
