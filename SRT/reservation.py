@@ -12,7 +12,7 @@ class SRTTicket:
         "5": "어린이",
     }
 
-    def __init__(self, reservation_number, data):
+    def __init__(self, data):
         self.car = data["scarNo"]
         self.seat = data["seatNo"]
         self.seat_type_code = data["psrmClCd"]
@@ -23,8 +23,6 @@ class SRTTicket:
         self.price = int(data["rcvdAmt"])
         self.original_price = int(data["stdrPrc"])
         self.discount = int(data["dcntPrc"])
-
-        self.reservation_number = reservation_number
 
     def __str__(self):
         return self.dump()
@@ -67,6 +65,7 @@ class SRTReservation:
         self.payment_date = pay["iseLmtDt"]
         self.payment_time = pay["iseLmtTm"]
 
+        self.paid = (pay["stlFlg"] == "Y")  # 결제 여부
         self._tickets = tickets
 
     def __str__(self):
@@ -81,8 +80,7 @@ class SRTReservation:
             "{month}월 {day}일, "
             "{dep}~{arr}"
             "({dep_hour}:{dep_min}~{arr_hour}:{arr_min}) "
-            "{cost}원({seats}석), "
-            "구입기한 {pay_month}월 {pay_day}일 {pay_hour}:{pay_min}"
+            "{cost}원({seats}석)"
         ).format(
             name=self.train_name,
             month=self.dep_date[4:6],
@@ -95,12 +93,16 @@ class SRTReservation:
             arr_min=self.arr_time[2:4],
             cost=self.total_cost,
             seats=self.seat_count,
-            pay_month=self.payment_date[4:6],
-            pay_day=self.payment_date[6:8],
-            pay_hour=self.payment_time[0:2],
-            pay_min=self.payment_time[2:4],
         )
-
+        if not self.paid:
+            d += (
+                ", 구입기한 {pay_month}월 {pay_day}일 {pay_hour}:{pay_min}"
+            ).format(
+                pay_month=self.payment_date[4:6],
+                pay_day=self.payment_date[6:8],
+                pay_hour=self.payment_time[0:2],
+                pay_min=self.payment_time[2:4],
+            )
         return d
 
     @property

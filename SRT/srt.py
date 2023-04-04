@@ -358,8 +358,11 @@ class SRT:
         else:
             SRTError("Ticket not found: check reservation status")
 
-    def get_reservations(self):
+    def get_reservations(self, paid_only: bool = False):
         """전체 예약 정보를 얻습니다.
+
+        Args:
+            paid_only (bool): 결제된 예약 내역만 가져올지 여부
 
         Returns:
             list[:class:`SRTReservation`]: 예약 리스트
@@ -382,42 +385,13 @@ class SRT:
         pay_data = parser.get_all()["payListMap"]
         reservations = []
         for train, pay in zip(train_data, pay_data):
-            if pay["stlFlg"] == "Y":  # 결제완료된 예약 내역은 넘어가기
+            if paid_only and pay['stlFlg'] == 'N':  # paid_only가 참이면 결제된 예약내역만 보여줌
                 continue
             ticket = self.ticket_info(train["pnrNo"])
             reservation = SRTReservation(train, pay, ticket)
             reservations.append(reservation)
 
         return reservations
-
-    def get_tickets(self):
-        """소유한 티켓 정보들을 얻습니다.
-
-        Returns:
-            list[:class:`SRTTicket`]: 티켓 리스트
-        """
-        if not self.is_login:
-            raise SRTNotLoggedInError()
-
-        url = SRT_TICKETS
-        data = {"pageNo": "0"}
-
-        r = self._session.post(url=url, data=data)
-        parser = SRTResponseData(r.text)
-
-        if not parser.success():
-            raise SRTResponseError(parser.message())
-
-        self._log(parser.message())
-
-        tickets = []
-        rs_data = parser.get_all()["rsListMap"]
-        if rs_data is not None:
-            for data in rs_data:
-                ticket = self.ticket_info(data["pnrNo"])[0]
-                tickets.append(ticket)
-
-        return tickets
 
     def ticket_info(self, reservation):
         """예약에 포함된 티켓 정보를 반환합니다.
@@ -452,7 +426,7 @@ class SRT:
             raise SRTResponseError(parser.message())
 
         tickets = [
-            SRTTicket(reservation, ticket)
+            SRTTicket(ticket)
             for ticket in parser.get_all()["trainListMap"]
         ]
 
