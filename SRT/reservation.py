@@ -65,7 +65,7 @@ class SRTReservation:
         self.payment_date = pay["iseLmtDt"]
         self.payment_time = pay["iseLmtTm"]
 
-        self.paid = (pay["stlFlg"] == "Y")  # 결제 여부
+        self.paid = pay["stlFlg"] == "Y"  # 결제 여부
         self._tickets = tickets
 
     def __str__(self):
@@ -95,9 +95,7 @@ class SRTReservation:
             seats=self.seat_count,
         )
         if not self.paid:
-            d += (
-                ", 구입기한 {pay_month}월 {pay_day}일 {pay_hour}:{pay_min}"
-            ).format(
+            d += (", 구입기한 {pay_month}월 {pay_day}일 {pay_hour}:{pay_min}").format(
                 pay_month=self.payment_date[4:6],
                 pay_day=self.payment_date[6:8],
                 pay_hour=self.payment_time[0:2],
