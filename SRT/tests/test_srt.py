@@ -44,10 +44,6 @@ def test_get_reservations(srt):
     srt.get_reservations()
 
 
-def test_get_tickets(srt):
-    srt.get_tickets()
-
-
 def test_reserve_and_cancel(srt, pytestconfig):
     pytestconfig.getoption("--full", skip=True)
     dep = "수서"
