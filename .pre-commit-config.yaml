@@ -30,13 +30,11 @@ repos:
     rev: "v1.1.1"
     hooks:
       - id: mypy
-        exclude: auditwheel_emscripten/emscripten_tools
         additional_dependencies: &mypy-deps
-          - packaging
+          - types-requests
           - types-docutils
           - types-pyyaml
           - types-setuptools
-          - numpy
           - pytest
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
