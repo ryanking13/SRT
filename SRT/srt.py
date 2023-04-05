@@ -358,8 +358,11 @@ class SRT:
         else:
             SRTError("Ticket not found: check reservation status")
 
-    def get_reservations(self):
+    def get_reservations(self, paid_only: bool = False):
         """전체 예약 정보를 얻습니다.
+
+        Args:
+            paid_only (bool): 결제된 예약 내역만 가져올지 여부
 
         Returns:
             list[:class:`SRTReservation`]: 예약 리스트
@@ -382,6 +385,8 @@ class SRT:
         pay_data = parser.get_all()["payListMap"]
         reservations = []
         for train, pay in zip(train_data, pay_data):
+            if paid_only and pay["stlFlg"] == "N":  # paid_only가 참이면 결제된 예약내역만 보여줌
+                continue
             ticket = self.ticket_info(train["pnrNo"])
             reservation = SRTReservation(train, pay, ticket)
             reservations.append(reservation)
