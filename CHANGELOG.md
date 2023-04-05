@@ -1,5 +1,8 @@
 ## Unreleased
 
+- Public API에 대한 static typing 추가
+  ([#234](https://github.com/ryanking13/SRT/pull/234))
+
 ## v2.0.7 (2023/04/05)
 
 - get_reservations() 메소드에 결제된 예약 내역만 반환하도록 하는 payed_only 옵션 추가
