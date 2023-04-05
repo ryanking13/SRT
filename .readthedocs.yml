@@ -5,6 +5,10 @@ sphinx:
 
 formats: all
 
+python:
+  install:
+    - requirements: requirements/docs.txt
+
 build:
   os: ubuntu-22.04
   tools:
