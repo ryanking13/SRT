@@ -1,5 +1,10 @@
 ## Unreleased
 
+## v2.0.7 (2023/04/05)
+
+- get_reservations() 메소드에 결제된 예약 내역만 반환하도록 하는 payed_only 옵션 추가
+  ([#228](https://github.com/ryanking13/SRT/pull/228))
+
 ## v2.0.6 (2023/02/23)
 
 - 지제역 이름 변경 반영 ([#221](https://github.com/ryanking13/SRT/pull/221))
