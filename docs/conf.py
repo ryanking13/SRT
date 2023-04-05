@@ -21,7 +21,7 @@ from SRT import __version__
 # -- Project information -----------------------------------------------------
 
 project = "SRTrain"
-copyright = "2021, ryanking13"
+copyright = "2023, ryanking13"
 author = "ryanking13"
 
 # The short X.Y version

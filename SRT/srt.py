@@ -57,24 +57,26 @@ class SRT:
     >>> srt = SRT("010-1234-xxxx", YOUR_PASSWORD) # with phone number
     """
 
-    def __init__(self, srt_id, srt_pw, auto_login=True, verbose=False):
+    def __init__(
+        self, srt_id: str, srt_pw: str, auto_login: bool = True, verbose: bool = False
+    ) -> None:
         self._session = requests.session()
         self._session.headers.update(DEFAULT_HEADERS)
 
-        self.srt_id = srt_id
-        self.srt_pw = srt_pw
-        self.verbose = verbose
+        self.srt_id: str = srt_id
+        self.srt_pw: str = srt_pw
+        self.verbose: bool = verbose
 
-        self.is_login = False
+        self.is_login: bool = False
 
         if auto_login:
             self.login(srt_id, srt_pw)
 
-    def _log(self, msg):
+    def _log(self, msg: str) -> None:
         if self.verbose:
             print("[*] " + msg)
 
-    def login(self, srt_id=None, srt_pw=None):
+    def login(self, srt_id: str | None = None, srt_pw: str | None = None):
         """SRT 서버에 로그인합니다.
 
         일반적인 경우에는 인스턴스가 생성될 때에 자동으로 로그인 되므로,
@@ -97,7 +99,11 @@ class SRT:
         else:
             self.srt_pw = srt_pw
 
-        LOGIN_TYPES = {"MEMBERSHIP_ID": "1", "EMAIL": "2", "PHONE_NUMBER": "3"}
+        LOGIN_TYPES: dict[str, str] = {
+            "MEMBERSHIP_ID": "1",
+            "EMAIL": "2",
+            "PHONE_NUMBER": "3",
+        }
 
         if EMAIL_REGEX.match(srt_id):
             login_type = LOGIN_TYPES["EMAIL"]
@@ -108,7 +114,7 @@ class SRT:
             login_type = LOGIN_TYPES["MEMBERSHIP_ID"]
 
         url = SRT_LOGIN
-        data = {
+        data: dict[str, str] = {
             "auto": "Y",
             "check": "Y",
             "page": "menu",
@@ -131,34 +137,14 @@ class SRT:
             raise SRTLoginError(r.json()["MSG"])
 
         self.is_login = True
+
         return True
-        # parser = SRTResponseData(r.text)
 
-        # if parser.success():
-        #     status, result, _, __ = parser.get_all()
-        #     self.kr_session_id = status.get("KR_JSESSIONID")
-        #     self.sr_session_id = status.get("SR_JSESSIONID")
-        #     self.user_name = result.get("CUST_NM")
-        #     self.user_membership_number = result.get("MB_CRD_NO")
-        #     self.user_phone_number = result.get("MBL_PHONE")
-        #     self.user_type = result.get("CUST_MG_SRT_NM")  # 개인고객 or ...
-        #     self.user_level = result.get("CUST_DTL_SRT_NM")  # 일반회원 or ...
-        #     self.user_sex = result.get("SEX_DV_NM")
-        #     self._session.cookies.update({"gs_loginCrdNo": result.get("MB_CRD_NO")})
-
-        #     self._log(parser.message())
-        #     self.is_login = True
-        #     return True
-
-        # else:
-        #     self.is_login = False
-        #     raise SRTResponseError(parser.message())
-
-    def logout(self):
+    def logout(self) -> bool:
         """SRT 서버에서 로그아웃합니다."""
 
         if not self.is_login:
-            return
+            return True
 
         url = SRT_LOGOUT
 
@@ -170,8 +156,14 @@ class SRT:
         return True
 
     def search_train(
-        self, dep, arr, date=None, time=None, time_limit=None, available_only=True
-    ):
+        self,
+        dep: str,
+        arr: str,
+        date: str | None = None,
+        time: str | None = None,
+        time_limit: str | None = None,
+        available_only: bool = True,
+    ) -> list[SRTTrain]:
         """주어진 출발지에서 도착지로 향하는 SRT 열차를 검색합니다.
 
         Args:
@@ -263,11 +255,11 @@ class SRT:
 
     def reserve(
         self,
-        train,
-        passengers=None,
-        special_seat=SeatType.GENERAL_FIRST,
-        window_seat=None,
-    ):
+        train: SRTTrain,
+        passengers: list[Passenger] | None = None,
+        special_seat: SeatType = SeatType.GENERAL_FIRST,
+        window_seat: bool | None = None,
+    ) -> SRTReservation:
         """열차를 예약합니다.
 
         >>> trains = srt.search_train("수서", "부산", "210101", "000000")
@@ -354,11 +346,11 @@ class SRT:
         for ticket in tickets:
             if ticket.reservation_number == reservation_result["pnrNo"]:
                 return ticket
-        # if ticket not found, it's an error
-        else:
-            SRTError("Ticket not found: check reservation status")
 
-    def get_reservations(self, paid_only: bool = False):
+        # if ticket not found, it's an error
+        raise SRTError("Ticket not found: check reservation status")
+
+    def get_reservations(self, paid_only: bool = False) -> list[SRTReservation]:
         """전체 예약 정보를 얻습니다.
 
         Args:
@@ -393,7 +385,7 @@ class SRT:
 
         return reservations
 
-    def ticket_info(self, reservation):
+    def ticket_info(self, reservation: SRTReservation | int) -> list[SRTTicket]:
         """예약에 포함된 티켓 정보를 반환합니다.
 
         >>> reservations = srt.get_reservations()
@@ -429,7 +421,7 @@ class SRT:
 
         return tickets
 
-    def cancel(self, reservation):
+    def cancel(self, reservation: SRTReservation | int) -> bool:
         """예약을 취소합니다.
 
         >>> reservation = srt.reserve(train)
