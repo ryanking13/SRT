@@ -178,9 +178,6 @@ class SRT:
             list[:class:`SRTTrain`]: 열차 리스트
         """
 
-        if not self.is_login:
-            raise SRTNotLoggedInError()
-
         if dep not in STATION_CODE:
             raise ValueError(f'Station "{dep}" not exists')
         if arr not in STATION_CODE:
