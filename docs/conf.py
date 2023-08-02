@@ -10,14 +10,13 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-from importlib import metadata as importlib_metadata
 import os
 import sys
+from importlib import metadata as importlib_metadata
 
 PATH_HERE = os.path.abspath(os.path.dirname(__file__))
 PATH_ROOT = os.path.join(PATH_HERE, "..")
 sys.path.insert(0, os.path.abspath(PATH_ROOT))
-from SRT import __version__
 
 # -- Project information -----------------------------------------------------
 
