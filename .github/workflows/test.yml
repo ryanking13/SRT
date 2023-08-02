@@ -1,4 +1,4 @@
-name: Run standard checks on push/pull request
+name: Test
 
 on:
   push:
