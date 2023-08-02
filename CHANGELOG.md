@@ -1,5 +1,7 @@
 ## Unreleased
 
+## v2.0.8 (2023/08/02)
+
 - `search_train()` 메소드가 더이상 사용자의 로그인 여부를 확인하지 않음.
   ([#238](https://github.com/ryanking13/SRT/pull/238))
 
