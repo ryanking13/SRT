@@ -12,11 +12,11 @@
 #
 import os
 import sys
+from importlib import metadata as importlib_metadata
 
 PATH_HERE = os.path.abspath(os.path.dirname(__file__))
 PATH_ROOT = os.path.join(PATH_HERE, "..")
 sys.path.insert(0, os.path.abspath(PATH_ROOT))
-from SRT import __version__
 
 # -- Project information -----------------------------------------------------
 
@@ -24,10 +24,13 @@ project = "SRTrain"
 copyright = "2023, ryanking13"
 author = "ryanking13"
 
-# The short X.Y version
-version = __version__
-# The full version, including alpha/beta/rc tags
-release = __version__
+try:
+    release = importlib_metadata.version("SRT")
+except importlib_metadata.PackageNotFoundError:
+    print("Could not find package version, please install SRT to build docs")
+    release = "0.0.0"
+
+version = release
 
 # -- General configuration ---------------------------------------------------
 

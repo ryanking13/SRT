@@ -1,9 +1,34 @@
 [build-system]
-requires = [
-    "setuptools",
-    "wheel",
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "SRTrain"
+authors = [
+    { name = "Gyeongjae Choi", email = "def6488@gmail.com" },
 ]
-build-backend = "setuptools.build_meta"
+description = "SRT(Super Rapid Train) wrapper for python"
+readme = "README.md"
+requires-python = ">= 3.10"
+dependencies = [
+    "requests",
+    "PyInquirer",
+]
+dynamic = [
+    "version",
+]
+license.file = "LICENSE"
+
+[project.urls]
+Homepage = "https://github.com/ryanking13/SRT"
+"Bug Tracker" = "https://github.com/ryanking13/SRT/issues"
+Changelog = "https://github.com/ryanking13/SRT/blob/master/CHANGELOG.md"
+
+[project.scripts]
+srt-reserve = "SRT.cli.reserve:main"
+
+[tool.hatch.version]
+source = "vcs"
 
 [tool.ruff]
 select = [
