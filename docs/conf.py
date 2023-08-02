@@ -10,6 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+from importlib import metadata as importlib_metadata
 import os
 import sys
 
@@ -24,10 +25,13 @@ project = "SRTrain"
 copyright = "2023, ryanking13"
 author = "ryanking13"
 
-# The short X.Y version
-version = __version__
-# The full version, including alpha/beta/rc tags
-release = __version__
+try:
+    release = importlib_metadata.version("SRT")
+except importlib_metadata.PackageNotFoundError:
+    print("Could not find package version, please install SRT to build docs")
+    release = "0.0.0"
+
+version = release
 
 # -- General configuration ---------------------------------------------------
 
