@@ -39,7 +39,7 @@ SRT_STATIONS = (
     "창원",
     "창원중앙",
     "천안아산",
-    "포항"
+    "포항",
 )
 
 not_empty = lambda s: len(s) > 0

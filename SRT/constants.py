@@ -30,7 +30,7 @@ STATION_CODE = {
     "창원": "0057",
     "창원중앙": "0512",
     "천안아산": "0502",
-    "포항": "0515"
+    "포항": "0515",
 }
 
 STATION_NAME = {v: k for (k, v) in STATION_CODE.items()}
