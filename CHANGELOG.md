@@ -1,5 +1,7 @@
 ## Unreleased
 
+## v2.1.0 (2023/08/15)
+
 - [SRT 열차운행 조정 알림](https://etk.srail.kr/cms/article/view.do?postNo=554&pageId=TK0502000000)에 따른 신규 정차역 코드 및 이름 추가.
   ([#243](https://github.com/ryanking13/SRT/pull/243))
 
