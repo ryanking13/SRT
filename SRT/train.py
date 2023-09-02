@@ -29,13 +29,14 @@ class SRTTrain(Train):
 
     def dump(self):
         d = (
-            "[{name}] "
+            "[{name} {number}] "
             "{month}월 {day}일, "
             "{dep}~{arr}"
             "({dep_hour}:{dep_min}~{arr_hour}:{arr_min}) "
             "특실 {special_state}, 일반실 {general_state}"
         ).format(
             name=self.train_name,
+            number=self.train_number,
             month=self.dep_date[4:6],
             day=self.dep_date[6:8],
             dep=self.dep_station_name,
