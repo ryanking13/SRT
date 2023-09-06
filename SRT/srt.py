@@ -406,43 +406,43 @@ class SRT:
 
         url = SRT_RESERVE
         data = {
-            "jobId": "1102", # 예약대기 jobID
+            "jobId": "1102",  # 예약대기 jobID
             "jrnyCnt": "1",
             "jrnyTpCd": "11",
             "jrnySqno1": "001",
             "stndFlg": "N",
-            "trnGpCd1": "300", # 열차그룹코드 (좌석선택은 SRT만 가능하기때문에 무조건 300을 셋팅한다)"
-            "trnGpCd": "109", # 열차그룹코드
-            "grpDv": "0", # 단체 구분 (1: 단체)
-            "rtnDv": "0", # 편도 구분 (0: 편도, 1: 왕복)
-            "stlbTrnClsfCd1": train.train_code, # 역무열차종별코드1 (열차 목록 값)
-            "dptRsStnCd1": train.dep_station_code, # 출발역코드1 (열차 목록 값)
-            "dptRsStnCdNm1": train.dep_station_name, # 출발역이름1 (열차 목록 값)
-            "arvRsStnCd1": train.arr_station_code, # 도착역코드1 (열차 목록 값)
-            "arvRsStnCdNm1": train.arr_station_name, # 도착역이름1 (열차 목록 값)
-            "dptDt1": train.dep_date, # 출발일자1 (열차 목록 값)
-            "dptTm1": train.dep_time, # 출발일자1 (열차 목록 값)
-            "arvTm1": train.arr_time, # 도착일자1 (열차 목록 값)
-            "totPrnb": passengersCount, # 승차인원
-            "psgGridcnt": passengersCount, # 승차인원
-            "psgTpCd1": passengersCount, # 승차인원
-            "psgInfoPerPrnb1": passengersCount, # 승차인원
-            "trnNo1": "%05d" % int(train.train_number), # 열차번호1 (열차 목록 값)
-            "runDt1": train.dep_date, # 운행일자1 (열차 목록 값)
-            "psrmClCd1": "2" if is_special_seat == True else "1",
-            "dptStnConsOrdr1": train.dep_station_constitution_order, # 출발역구성순서1 (열차 목록 값)
-            "arvStnConsOrdr1": train.arr_station_constitution_order, # 도착역구성순서1 (열차 목록 값)
-            "dptStnRunOrdr1": train.dep_station_run_order, # 출발역운행순서1 (열차 목록 값)
-            "arvStnRunOrdr1": train.arr_station_run_order, # 도착역운행순서1 (열차 목록 값)
-            "smkSeatAttCd1": "000", # 흡연좌석속성코드1
-            "dirSeatAttCd1": "009", # 방향좌석속성코드
-            "locSeatAttCd1": "000", # 위치좌석속성코드1
-            "rqSeatAttCd1": "015", # 요구좌석속성코드1
-            "etcSeatAttCd1": "000", # 기타좌석속성코드1
-            "smkSeatAttCd2": "000", # 흡연좌석속성코드2
-            "dirSeatAttCd2": "009", # 방향좌석속성코드2
-            "rqSeatAttCd2": "015", # 요구좌석속성코드2
-            "mblPhone": mblPhone
+            "trnGpCd1": "300",  # 열차그룹코드 (좌석선택은 SRT만 가능하기때문에 무조건 300을 셋팅한다)"
+            "trnGpCd": "109",  # 열차그룹코드
+            "grpDv": "0",  # 단체 구분 (1: 단체)
+            "rtnDv": "0",  # 편도 구분 (0: 편도, 1: 왕복)
+            "stlbTrnClsfCd1": train.train_code,  # 역무열차종별코드1 (열차 목록 값)
+            "dptRsStnCd1": train.dep_station_code,  # 출발역코드1 (열차 목록 값)
+            "dptRsStnCdNm1": train.dep_station_name,  # 출발역이름1 (열차 목록 값)
+            "arvRsStnCd1": train.arr_station_code,  # 도착역코드1 (열차 목록 값)
+            "arvRsStnCdNm1": train.arr_station_name,  # 도착역이름1 (열차 목록 값)
+            "dptDt1": train.dep_date,  # 출발일자1 (열차 목록 값)
+            "dptTm1": train.dep_time,  # 출발일자1 (열차 목록 값)
+            "arvTm1": train.arr_time,  # 도착일자1 (열차 목록 값)
+            "totPrnb": passengersCount,  # 승차인원
+            "psgGridcnt": passengersCount,  # 승차인원
+            "psgTpCd1": passengersCount,  # 승차인원
+            "psgInfoPerPrnb1": passengersCount,  # 승차인원
+            "trnNo1": "%05d" % int(train.train_number),  # 열차번호1 (열차 목록 값)
+            "runDt1": train.dep_date,  # 운행일자1 (열차 목록 값)
+            "psrmClCd1": "2" if is_special_seat is True else "1",
+            "dptStnConsOrdr1": train.dep_station_constitution_order,  # 출발역구성순서1 (열차 목록 값)
+            "arvStnConsOrdr1": train.arr_station_constitution_order,  # 도착역구성순서1 (열차 목록 값)
+            "dptStnRunOrdr1": train.dep_station_run_order,  # 출발역운행순서1 (열차 목록 값)
+            "arvStnRunOrdr1": train.arr_station_run_order,  # 도착역운행순서1 (열차 목록 값)
+            "smkSeatAttCd1": "000",  # 흡연좌석속성코드1
+            "dirSeatAttCd1": "009",  # 방향좌석속성코드
+            "locSeatAttCd1": "000",  # 위치좌석속성코드1
+            "rqSeatAttCd1": "015",  # 요구좌석속성코드1
+            "etcSeatAttCd1": "000",  # 기타좌석속성코드1
+            "smkSeatAttCd2": "000",  # 흡연좌석속성코드2
+            "dirSeatAttCd2": "009",  # 방향좌석속성코드2
+            "rqSeatAttCd2": "015",  # 요구좌석속성코드2
+            "mblPhone": mblPhone,
         }
 
         r = self._session.post(url=url, data=data)
