@@ -30,6 +30,7 @@ SRT_RESERVE = f"{SRT_MOBILE}/arc/selectListArc05013_n.do"
 SRT_TICKETS = f"{SRT_MOBILE}/atc/selectListAtc14016_n.do"
 SRT_TICKET_INFO = f"{SRT_MOBILE}/ard/selectListArd02017_n.do?"
 SRT_CANCEL = f"{SRT_MOBILE}/ard/selectListArd02045_n.do"
+SRT_STANDBY_OPTION = f"{SRT_MOBILE}/ata/selectListAta01135_n.do"
 
 DEFAULT_HEADERS = {
     "User-Agent": (
@@ -346,6 +347,151 @@ class SRT:
 
         # if ticket not found, it's an error
         raise SRTError("Ticket not found: check reservation status")
+
+    def reserve_standby(
+        self,
+        train: SRTTrain,
+        passengers: list[Passenger] | None = None,
+        special_seat: SeatType = SeatType.GENERAL_FIRST,
+        mblPhone: str | None = None,
+    ) -> SRTReservation:
+        """예약대기 신청 합니다.
+
+        >>> trains = srt.search_train("수서", "부산", "210101", "000000")
+        >>> srt.reserve_standby(trains[0])
+
+        Args:
+            train (:class:`SRTrain`): 예약할 열차
+            passengers (list[:class:`Passenger`], optional): 예약 인원 (default: 어른 1명)
+            special_seat (:class:`SeatType`): 일반실/특실 선택 유형 (default: 일반실 우선)
+            mblPhone (str, optional): 휴대폰 번호
+
+        Returns:
+            :class:`SRTReservation`: 예약 내역
+        """
+        if not self.is_login:
+            raise SRTNotLoggedInError()
+
+        if not isinstance(train, SRTTrain):
+            raise TypeError('"train" parameter must be a SRTTrain instance')
+
+        if train.train_name != "SRT":
+            raise ValueError(
+                f'"SRT" expected for a train name, {train.train_name} given'
+            )
+
+        if passengers is None:
+            passengers = [Adult()]
+        passengers = Passenger.combine(passengers)
+
+        # 일반식 / 특실 좌석 선택 옵션에 따라 결정.
+        is_special_seat = None
+        if special_seat == SeatType.GENERAL_ONLY:  # 일반실만
+            is_special_seat = False
+        elif special_seat == SeatType.SPECIAL_ONLY:  # 특실만
+            is_special_seat = True
+        elif special_seat == SeatType.GENERAL_FIRST:  # 일반실 우선
+            if train.general_seat_available():
+                is_special_seat = False
+            else:
+                is_special_seat = True
+        elif special_seat == SeatType.SPECIAL_FIRST:  # 특실 우선
+            if train.special_seat_available():
+                is_special_seat = True
+            else:
+                is_special_seat = False
+
+        url = SRT_RESERVE
+        data = {
+            "type": "1",
+            "jobId": "1102",                                          # 예약대기
+            "jrnyTpCd": "11",
+            "jrnyCnt": "1",
+            "stlbTrnClsfCd1": train.train_code,      	              # 역무열차종별코드1 (열차 목록 값)
+            "stlbTrnClsfCd2": "05",
+            "stndFlg": "N",
+            "jrnySqno1": "001",
+            "trnGpCd1": "300",                                        # 열차그룹코드1 (열차 목록 값)
+            "dptRsStnCd1": train.dep_station_code,                    # 출발역코드1 (열차 목록 값)
+            "dptRsStnCdNm1": train.dep_station_name,            
+            "arvRsStnCd1": train.arr_station_code,	                  # 도착역코드1 (열차 목록 값)
+            "arvRsStnCdNm1": train.arr_station_name,
+            "dptDt1": train.dep_date,                                 # 출발일자1 (열차 목록 값)
+            "dptTm1": train.dep_time,                                 # 출발일자1 (열차 목록 값)
+            "arvTm1": train.arr_time,                                 # 도착일자1 (열차 목록 값)
+            "totPrnb": len(passengers),                               # 승차인원
+            "psgGridcnt": len(passengers),                            # 승차인원
+            "psgTpCd1": len(passengers),                              # 승차인원
+            "psgInfoPerPrnb1": len(passengers),                       # 승차인원
+            "trnNo1": "%05d" % int(train.train_number),               # 열차번호1 (열차 목록 값)
+            "runDt1": train.dep_date,                                 # 운행일자1 (열차 목록 값)
+            "psrmClCd1": "2" if is_special_seat == True else "1",     # 객실등급코드1 (1:일반실, 2:특실)
+            "dptStnConsOrdr1": train.dep_station_constitution_order,  # 출발역구성순서1 (열차 목록 값)
+            "arvStnConsOrdr1": train.arr_station_constitution_order,  # 도착역구성순서1 (열차 목록 값)
+            "dptStnRunOrdr1": train.dep_station_run_order,            # 출발역운행순서1 (열차 목록 값)
+            "arvStnRunOrdr1": train.arr_station_run_order,            # 도착역운행순서1 (열차 목록 값)
+            "trnGpCd": "109",                                         # 열차그룹코드
+            "mblPhone": mblPhone
+        }
+
+        r = self._session.post(url=url, data=data)
+        print(r.text)        
+        parser = SRTResponseData(r.text)
+
+        if not parser.success():
+            raise SRTResponseError(parser.message())
+
+        self._log(parser.message())
+        reservation_result = parser.get_all()["reservListMap"][0]
+
+        # find corresponding ticket and return it
+        tickets = self.get_reservations()
+        for ticket in tickets:
+            if ticket.reservation_number == reservation_result["pnrNo"]:
+                return ticket
+
+        # if ticket not found, it's an error
+        raise SRTError("Ticket not found: check reservation status")
+
+    def reserve_standby_option_settings(
+        self,
+        reservation: SRTReservation | int,
+        isAgreeSMS: bool,
+        isAgreeClassChange: bool,
+        telNo: str | None = None,
+    ) -> bool:
+        """예약대기 옵션을 적용 합니다.
+
+        >>> trains = srt.search_train("수서", "부산", "210101", "000000")
+        >>> srt.reserve_standby(trains[0])
+        >>> srt.reserve_standby_option_settings("1234567890", True, True, "010-1234-xxxx")
+
+        Args:
+            reservation (:class:`SRTReservation` or int): 예약 번호
+            isAgreeSMS (bool): SMS 수신 동의 여부
+            isAgreeClassChange (bool): 좌석등급 변경 동의 여부
+            telNo (str, optional): 휴대폰 번호
+        Returns:
+            bool: 예약대기 옵션 적용 성공 여부
+        """
+        if not self.is_login:
+            raise SRTNotLoggedInError()
+
+        if isinstance(reservation, SRTReservation):
+            reservation = reservation.reservation_number
+
+        url = SRT_STANDBY_OPTION
+
+        data = {
+            "pnrNo": reservation,
+            "psrmClChgFlg": "Y" if isAgreeClassChange else "N",
+            "smsSndFlg":  "Y" if isAgreeSMS else "N",
+            "telNo": telNo if isAgreeSMS else "",
+        }
+
+        r = self._session.post(url=url, data=data)
+
+        return r.status_code == 200
 
     def get_reservations(self, paid_only: bool = False) -> list[SRTReservation]:
         """전체 예약 정보를 얻습니다.

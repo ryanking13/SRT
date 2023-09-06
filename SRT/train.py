@@ -20,6 +20,11 @@ class SRTTrain(Train):
         self.arr_station_name = STATION_NAME[self.arr_station_code]
         self.general_seat_state = data["gnrmRsvPsbStr"]
         self.special_seat_state = data["sprmRsvPsbStr"]
+        self.arr_station_run_order = data["arvStnRunOrdr"]
+        self.arr_station_constitution_order = data["arvStnConsOrdr"]
+        self.arr_station_constitution_order = data["arvStnConsOrdr"]
+        self.dep_station_run_order = data["dptStnRunOrdr"]
+        self.dep_station_constitution_order = data["dptStnConsOrdr"]
 
     def __str__(self):
         return self.dump()
