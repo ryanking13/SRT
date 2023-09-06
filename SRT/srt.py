@@ -384,6 +384,10 @@ class SRT:
             passengers = [Adult()]
         passengers = Passenger.combine(passengers)
 
+        if passengers is not None:
+            passengersCount = len(passengers);
+        
+
         # 일반식 / 특실 좌석 선택 옵션에 따라 결정.
         is_special_seat = None
         if special_seat == SeatType.GENERAL_ONLY:  # 일반실만
@@ -419,10 +423,10 @@ class SRT:
             "dptDt1": train.dep_date,  # 출발일자1 (열차 목록 값)
             "dptTm1": train.dep_time,  # 출발일자1 (열차 목록 값)
             "arvTm1": train.arr_time,  # 도착일자1 (열차 목록 값)
-            "totPrnb": len(passengers),  # 승차인원
-            "psgGridcnt": len(passengers),  # 승차인원
-            "psgTpCd1": len(passengers),  # 승차인원
-            "psgInfoPerPrnb1": len(passengers),  # 승차인원
+            "totPrnb": passengersCount,  # 승차인원
+            "psgGridcnt": passengersCount,  # 승차인원
+            "psgTpCd1": passengersCount,  # 승차인원
+            "psgInfoPerPrnb1": passengersCount,  # 승차인원
             "trnNo1": "%05d" % int(train.train_number),  # 열차번호1 (열차 목록 값)
             "runDt1": train.dep_date,  # 운행일자1 (열차 목록 값)
             "psrmClCd1": "2"
