@@ -43,6 +43,7 @@ def test_search_train(srt):
 def test_get_reservations(srt):
     srt.get_reservations()
 
+
 def test_reserve_and_standby_option_settings(srt):
     dep = "수서"
     arr = "대전"
@@ -62,6 +63,7 @@ def test_reserve_and_standby_option_settings(srt):
         pytest.warns(Warning("Empty seat not found, skipping reservation test"))
 
     srt.reserve_standby_option_settings(reservation, True, True, "010-1234-5678")
+
 
 def test_reserve_and_cancel(srt, pytestconfig):
     pytestconfig.getoption("--full", skip=True)
