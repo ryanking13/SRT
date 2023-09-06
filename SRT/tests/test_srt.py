@@ -43,6 +43,25 @@ def test_search_train(srt):
 def test_get_reservations(srt):
     srt.get_reservations()
 
+def test_reserve_and_standby_option_settings(srt):
+    dep = "수서"
+    arr = "대전"
+    time = "000000"
+    time_limit = "120000"
+    date = (datetime.now() + timedelta(days=3)).strftime("%Y%m%d")
+
+    trains = srt.search_train(dep, arr, date, time, time_limit, available_only=False)
+    trains = list(filter(lambda t: t.reserve_standby_available(), trains))
+
+    assert len(trains) != 0
+
+    train = trains[0]
+    reservation = srt.reserve_standby(train)
+
+    if reservation is None:
+        pytest.warns(Warning("Empty seat not found, skipping reservation test"))
+
+    srt.reserve_standby_option_settings(reservation, True, True, "010-1234-5678")
 
 def test_reserve_and_cancel(srt, pytestconfig):
     pytestconfig.getoption("--full", skip=True)
