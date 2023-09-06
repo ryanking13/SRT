@@ -404,38 +404,40 @@ class SRT:
         url = SRT_RESERVE
         data = {
             "type": "1",
-            "jobId": "1102",                                          # 예약대기
+            "jobId": "1102",  # 예약대기
             "jrnyTpCd": "11",
             "jrnyCnt": "1",
-            "stlbTrnClsfCd1": train.train_code,      	              # 역무열차종별코드1 (열차 목록 값)
+            "stlbTrnClsfCd1": train.train_code,  # 역무열차종별코드1 (열차 목록 값)
             "stlbTrnClsfCd2": "05",
             "stndFlg": "N",
             "jrnySqno1": "001",
-            "trnGpCd1": "300",                                        # 열차그룹코드1 (열차 목록 값)
-            "dptRsStnCd1": train.dep_station_code,                    # 출발역코드1 (열차 목록 값)
-            "dptRsStnCdNm1": train.dep_station_name,            
-            "arvRsStnCd1": train.arr_station_code,	                  # 도착역코드1 (열차 목록 값)
+            "trnGpCd1": "300",  # 열차그룹코드1 (열차 목록 값)
+            "dptRsStnCd1": train.dep_station_code,  # 출발역코드1 (열차 목록 값)
+            "dptRsStnCdNm1": train.dep_station_name,
+            "arvRsStnCd1": train.arr_station_code,  # 도착역코드1 (열차 목록 값)
             "arvRsStnCdNm1": train.arr_station_name,
-            "dptDt1": train.dep_date,                                 # 출발일자1 (열차 목록 값)
-            "dptTm1": train.dep_time,                                 # 출발일자1 (열차 목록 값)
-            "arvTm1": train.arr_time,                                 # 도착일자1 (열차 목록 값)
-            "totPrnb": len(passengers),                               # 승차인원
-            "psgGridcnt": len(passengers),                            # 승차인원
-            "psgTpCd1": len(passengers),                              # 승차인원
-            "psgInfoPerPrnb1": len(passengers),                       # 승차인원
-            "trnNo1": "%05d" % int(train.train_number),               # 열차번호1 (열차 목록 값)
-            "runDt1": train.dep_date,                                 # 운행일자1 (열차 목록 값)
-            "psrmClCd1": "2" if is_special_seat == True else "1",     # 객실등급코드1 (1:일반실, 2:특실)
+            "dptDt1": train.dep_date,  # 출발일자1 (열차 목록 값)
+            "dptTm1": train.dep_time,  # 출발일자1 (열차 목록 값)
+            "arvTm1": train.arr_time,  # 도착일자1 (열차 목록 값)
+            "totPrnb": len(passengers),  # 승차인원
+            "psgGridcnt": len(passengers),  # 승차인원
+            "psgTpCd1": len(passengers),  # 승차인원
+            "psgInfoPerPrnb1": len(passengers),  # 승차인원
+            "trnNo1": "%05d" % int(train.train_number),  # 열차번호1 (열차 목록 값)
+            "runDt1": train.dep_date,  # 운행일자1 (열차 목록 값)
+            "psrmClCd1": "2"
+            if is_special_seat is True
+            else "1",  # 객실등급코드1 (1:일반실, 2:특실)
             "dptStnConsOrdr1": train.dep_station_constitution_order,  # 출발역구성순서1 (열차 목록 값)
             "arvStnConsOrdr1": train.arr_station_constitution_order,  # 도착역구성순서1 (열차 목록 값)
-            "dptStnRunOrdr1": train.dep_station_run_order,            # 출발역운행순서1 (열차 목록 값)
-            "arvStnRunOrdr1": train.arr_station_run_order,            # 도착역운행순서1 (열차 목록 값)
-            "trnGpCd": "109",                                         # 열차그룹코드
-            "mblPhone": mblPhone
+            "dptStnRunOrdr1": train.dep_station_run_order,  # 출발역운행순서1 (열차 목록 값)
+            "arvStnRunOrdr1": train.arr_station_run_order,  # 도착역운행순서1 (열차 목록 값)
+            "trnGpCd": "109",  # 열차그룹코드
+            "mblPhone": mblPhone,
         }
 
         r = self._session.post(url=url, data=data)
-        print(r.text)        
+        print(r.text)
         parser = SRTResponseData(r.text)
 
         if not parser.success():
@@ -485,7 +487,7 @@ class SRT:
         data = {
             "pnrNo": reservation,
             "psrmClChgFlg": "Y" if isAgreeClassChange else "N",
-            "smsSndFlg":  "Y" if isAgreeSMS else "N",
+            "smsSndFlg": "Y" if isAgreeSMS else "N",
             "telNo": telNo if isAgreeSMS else "",
         }
 
