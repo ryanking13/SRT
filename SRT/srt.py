@@ -44,7 +44,7 @@ RESULT_SUCCESS = "SUCC"
 RESULT_FAIL = "FAIL"
 
 RESERVE_JOBID = {
-    "PERSONAL": "1101", # 개인예약
+    "PERSONAL": "1101",  # 개인예약
     "STANDBY": "1102",  # 예약대기
 }
 
@@ -283,7 +283,7 @@ class SRT:
             train,
             passengers,
             special_seat,
-            window_seat = window_seat
+            window_seat=window_seat,
         )
 
     def reserve_standby(
@@ -291,7 +291,7 @@ class SRT:
         train: SRTTrain,
         passengers: list[Passenger] | None = None,
         special_seat: SeatType = SeatType.GENERAL_FIRST,
-        mblPhone: str | None = None
+        mblPhone: str | None = None,
     ) -> SRTReservation:
         """예약대기 신청 합니다.
 
@@ -309,13 +309,9 @@ class SRT:
         """
 
         return self._reserve(
-            RESERVE_JOBID["STANDBY"],
-            train,
-            passengers,
-            special_seat,
-            mblPhone = mblPhone
+            RESERVE_JOBID["STANDBY"], train, passengers, special_seat, mblPhone=mblPhone
         )
-    
+
     def _reserve(
         self,
         jobid: str,
@@ -420,7 +416,7 @@ class SRT:
                     "reserveType": "1",
                 }
             )
-        
+
         # jobid가 RESERVE_JOBID["PERSONAL"]일 경우, data에 windowSeat 추가
         if jobid == RESERVE_JOBID["PERSONAL"]:
             data.update(
