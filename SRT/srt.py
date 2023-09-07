@@ -30,6 +30,7 @@ SRT_RESERVE = f"{SRT_MOBILE}/arc/selectListArc05013_n.do"
 SRT_TICKETS = f"{SRT_MOBILE}/atc/selectListAtc14016_n.do"
 SRT_TICKET_INFO = f"{SRT_MOBILE}/ard/selectListArd02017_n.do?"
 SRT_CANCEL = f"{SRT_MOBILE}/ard/selectListArd02045_n.do"
+SRT_STANDBY_OPTION = f"{SRT_MOBILE}/ata/selectListAta01135_n.do"
 
 DEFAULT_HEADERS = {
     "User-Agent": (
@@ -41,6 +42,11 @@ DEFAULT_HEADERS = {
 
 RESULT_SUCCESS = "SUCC"
 RESULT_FAIL = "FAIL"
+
+RESERVE_JOBID = {
+    "PERSONAL": "1101",  # 개인예약
+    "STANDBY": "1102",  # 예약대기
+}
 
 
 class SRT:
@@ -271,6 +277,62 @@ class SRT:
         Returns:
             :class:`SRTReservation`: 예약 내역
         """
+
+        return self._reserve(
+            RESERVE_JOBID["PERSONAL"],
+            train,
+            passengers,
+            special_seat,
+            window_seat=window_seat,
+        )
+
+    def reserve_standby(
+        self,
+        train: SRTTrain,
+        passengers: list[Passenger] | None = None,
+        special_seat: SeatType = SeatType.GENERAL_FIRST,
+        mblPhone: str | None = None,
+    ) -> SRTReservation:
+        """예약대기 신청 합니다.
+
+        >>> trains = srt.search_train("수서", "부산", "210101", "000000")
+        >>> srt.reserve_standby(trains[0])
+
+        Args:
+            train (:class:`SRTrain`): 예약할 열차
+            passengers (list[:class:`Passenger`], optional): 예약 인원 (default: 어른 1명)
+            special_seat (:class:`SeatType`): 일반실/특실 선택 유형 (default: 일반실 우선)
+            mblPhone (str, optional): 휴대폰 번호
+
+        Returns:
+            :class:`SRTReservation`: 예약 내역
+        """
+
+        return self._reserve(
+            RESERVE_JOBID["STANDBY"], train, passengers, special_seat, mblPhone=mblPhone
+        )
+
+    def _reserve(
+        self,
+        jobid: str,
+        train: SRTTrain,
+        passengers: list[Passenger] | None = None,
+        special_seat: SeatType = SeatType.GENERAL_FIRST,
+        mblPhone: str | None = None,
+        window_seat: bool | None = None,
+    ) -> SRTReservation:
+        """예약 신청 요청 공통 함수
+
+        Args:
+            train (:class:`SRTrain`): 예약할 열차
+            passengers (list[:class:`Passenger`], optional): 예약 인원 (default: 어른 1명)
+            special_seat (:class:`SeatType`): 일반실/특실 선택 유형 (default: 일반실 우선)
+            mblPhone (str, optional): 휴대폰 번호 | jobid가 RESERVE_JOBID["STANDBY"]일 경우에만 사용
+            window_seat (bool, optional): 창가 자리 우선 예약 여부 | jobid가 RESERVE_JOBID["PERSONAL"]일 경우에만 사용
+
+        Returns:
+            :class:`SRTReservation`: 예약 내역
+        """
         if not self.is_login:
             raise SRTNotLoggedInError()
 
@@ -285,6 +347,9 @@ class SRT:
         if passengers is None:
             passengers = [Adult()]
         passengers = Passenger.combine(passengers)
+
+        if passengers is not None:
+            passengersCount = len(passengers)
 
         # 일반식 / 특실 좌석 선택 옵션에 따라 결정.
         is_special_seat = None
@@ -305,29 +370,60 @@ class SRT:
 
         url = SRT_RESERVE
         data = {
-            "reserveType": "11",
-            "jobId": "1101",  # 개인 예약
+            "jobId": jobid,
             "jrnyCnt": "1",
             "jrnyTpCd": "11",
             "jrnySqno1": "001",
             "stndFlg": "N",
             "trnGpCd1": "300",  # 열차그룹코드 (좌석선택은 SRT만 가능하기때문에 무조건 300을 셋팅한다)"
-            "stlbTrnClsfCd1": train.train_code,
-            "dptDt1": train.dep_date,
-            "dptTm1": train.dep_time,
-            "runDt1": train.dep_date,
-            "trnNo1": "%05d" % int(train.train_number),
-            "dptRsStnCd1": train.dep_station_code,
-            "dptRsStnCdNm1": train.dep_station_name,
-            "arvRsStnCd1": train.arr_station_code,
-            "arvRsStnCdNm1": train.arr_station_name,
+            "trnGpCd": "109",  # 열차그룹코드
+            "grpDv": "0",  # 단체 구분 (1: 단체)
+            "rtnDv": "0",  # 편도 구분 (0: 편도, 1: 왕복)
+            "stlbTrnClsfCd1": train.train_code,  # 역무열차종별코드1 (열차 목록 값)
+            "dptRsStnCd1": train.dep_station_code,  # 출발역코드1 (열차 목록 값)
+            "dptRsStnCdNm1": train.dep_station_name,  # 출발역이름1 (열차 목록 값)
+            "arvRsStnCd1": train.arr_station_code,  # 도착역코드1 (열차 목록 값)
+            "arvRsStnCdNm1": train.arr_station_name,  # 도착역이름1 (열차 목록 값)
+            "dptDt1": train.dep_date,  # 출발일자1 (열차 목록 값)
+            "dptTm1": train.dep_time,  # 출발일자1 (열차 목록 값)
+            "arvTm1": train.arr_time,  # 도착일자1 (열차 목록 값)
+            "totPrnb": passengersCount,  # 승차인원
+            "psgGridcnt": passengersCount,  # 승차인원
+            "psgTpCd1": passengersCount,  # 승차인원
+            "psgInfoPerPrnb1": passengersCount,  # 승차인원
+            "trnNo1": "%05d" % int(train.train_number),  # 열차번호1 (열차 목록 값)
+            "runDt1": train.dep_date,  # 운행일자1 (열차 목록 값)
+            "psrmClCd1": "2" if is_special_seat is True else "1",
+            "dptStnConsOrdr1": train.dep_station_constitution_order,  # 출발역구성순서1 (열차 목록 값)
+            "arvStnConsOrdr1": train.arr_station_constitution_order,  # 도착역구성순서1 (열차 목록 값)
+            "dptStnRunOrdr1": train.dep_station_run_order,  # 출발역운행순서1 (열차 목록 값)
+            "arvStnRunOrdr1": train.arr_station_run_order,  # 도착역운행순서1 (열차 목록 값)
+            "smkSeatAttCd1": "000",  # 흡연좌석속성코드1
+            "dirSeatAttCd1": "009",  # 방향좌석속성코드
+            "locSeatAttCd1": "000",  # 위치좌석속성코드1
+            "rqSeatAttCd1": "015",  # 요구좌석속성코드1
+            "etcSeatAttCd1": "000",  # 기타좌석속성코드1
+            "smkSeatAttCd2": "000",  # 흡연좌석속성코드2
+            "dirSeatAttCd2": "009",  # 방향좌석속성코드2
+            "rqSeatAttCd2": "015",  # 요구좌석속성코드2
+            "mblPhone": mblPhone,
         }
 
-        data.update(
-            Passenger.get_passenger_dict(
-                passengers, special_seat=is_special_seat, window_seat=window_seat
+        # jobid가 RESERVE_JOBID["PERSONAL"]일 경우, data에 reserveType 추가
+        if jobid == RESERVE_JOBID["PERSONAL"]:
+            data.update(
+                {
+                    "reserveType": "1",
+                }
             )
-        )
+
+        # jobid가 RESERVE_JOBID["PERSONAL"]일 경우, data에 windowSeat 추가
+        if jobid == RESERVE_JOBID["PERSONAL"]:
+            data.update(
+                Passenger.get_passenger_dict(
+                    passengers, special_seat=is_special_seat, window_seat=window_seat
+                )
+            )
 
         r = self._session.post(url=url, data=data)
         parser = SRTResponseData(r.text)
@@ -346,6 +442,46 @@ class SRT:
 
         # if ticket not found, it's an error
         raise SRTError("Ticket not found: check reservation status")
+
+    def reserve_standby_option_settings(
+        self,
+        reservation: SRTReservation | int,
+        isAgreeSMS: bool,
+        isAgreeClassChange: bool,
+        telNo: str | None = None,
+    ) -> bool:
+        """예약대기 옵션을 적용 합니다.
+
+        >>> trains = srt.search_train("수서", "부산", "210101", "000000")
+        >>> srt.reserve_standby(trains[0])
+        >>> srt.reserve_standby_option_settings("1234567890", True, True, "010-1234-xxxx")
+
+        Args:
+            reservation (:class:`SRTReservation` or int): 예약 번호
+            isAgreeSMS (bool): SMS 수신 동의 여부
+            isAgreeClassChange (bool): 좌석등급 변경 동의 여부
+            telNo (str, optional): 휴대폰 번호
+        Returns:
+            bool: 예약대기 옵션 적용 성공 여부
+        """
+        if not self.is_login:
+            raise SRTNotLoggedInError()
+
+        if isinstance(reservation, SRTReservation):
+            reservation = reservation.reservation_number
+
+        url = SRT_STANDBY_OPTION
+
+        data = {
+            "pnrNo": reservation,
+            "psrmClChgFlg": "Y" if isAgreeClassChange else "N",
+            "smsSndFlg": "Y" if isAgreeSMS else "N",
+            "telNo": telNo if isAgreeSMS else "",
+        }
+
+        r = self._session.post(url=url, data=data)
+
+        return r.status_code == 200
 
     def get_reservations(self, paid_only: bool = False) -> list[SRTReservation]:
         """전체 예약 정보를 얻습니다.
