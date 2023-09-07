@@ -1,0 +1,16 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    name: build
+    uses: ryanking13/SRT/.github/workflows/build.yml
+   
+  test:
+    name: test
+    needs: build
+    uses: ryanking13/SRT/.github/workflows/test.yml@master
