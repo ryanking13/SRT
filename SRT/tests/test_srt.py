@@ -44,7 +44,7 @@ def test_get_reservations(srt):
     srt.get_reservations()
 
 
-def test_reserve_and_standby_option_settings(srt):
+def test_reserve_and_standby_option_settings(srt, pytestconfig):
     pytestconfig.getoption("--full", skip=True)
     dep = "수서"
     arr = "대전"
