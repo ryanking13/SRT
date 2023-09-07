@@ -9,7 +9,7 @@ jobs:
   build:
     name: build
     uses: ./.github/workflows/build.yml
-   
+
   test:
     name: test
     needs: build
