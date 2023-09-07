@@ -5,6 +5,7 @@ on:
     workflows: ['Build']
     types:
       - completed
+  workflow_call:
 
 jobs:
   check:
