@@ -1,6 +1,8 @@
 from pathlib import Path
-from SRT.reservation import SRTReservation
+
 import pytest
+
+from SRT.reservation import SRTReservation
 
 mock_response_dir = Path(__file__).parent / "mock_responses"
 
@@ -114,14 +116,15 @@ mock_reservation = SRTReservation(
 # 결제 성공
 def test_payment_success(mock_server, httpserver):
     from SRT import SRT
-    from SRT.reservation import SRTReservation
 
     register_mock_response(httpserver, "/login", "login_success.json")
     register_mock_response(httpserver, "/payment", "payment_success.json")
 
     srt = SRT("010-1234-1234", "password")
 
-    assert srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+    assert srt.payment(
+        mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+    )
 
 
 # 결제 실패 - 입력이 잘못되었습니다
@@ -134,7 +137,9 @@ def test_payment_fail_bad_request(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 할부 불가 카드
@@ -147,7 +152,9 @@ def test_payment_fail_cant_installment(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 비밀번호 오류
@@ -160,7 +167,9 @@ def test_payment_fail_card_password(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 유효기간 경과 카드
@@ -173,7 +182,9 @@ def test_payment_fail_expired_card(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 주민번호 또는 사업자번호 오류
@@ -188,7 +199,9 @@ def test_payment_fail_invalid_auth_number(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 카드번호 오류
@@ -203,7 +216,9 @@ def test_payment_fail_invalid_card_number(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 유효기간 입력 오류
@@ -218,7 +233,9 @@ def test_payment_fail_invalid_expiration_date(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 취소된 예약
@@ -233,7 +250,9 @@ def test_payment_fail_invalid_reservation(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 한도 초과
@@ -246,7 +265,9 @@ def test_payment_fail_over_limit(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
 
 
 # 결제 실패 - 거래정지 카드
@@ -259,4 +280,6 @@ def test_payment_fail_suspension_card(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     with pytest.raises(SRTResponseError):
-        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+        srt.payment(
+            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        )
