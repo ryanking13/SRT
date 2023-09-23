@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import requests  # type: ignore[import]
 
+from . import constants
 from .constants import STATION_CODE
 from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
 from .passenger import Adult, Passenger
@@ -13,24 +14,6 @@ from .train import SRTTrain
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 PHONE_NUMBER_REGEX = re.compile(r"(\d{3})-(\d{3,4})-(\d{4})")
-
-SCHEME = "https"
-SRT_HOST = "app.srail.or.kr"
-SRT_PORT = "443"
-
-SRT_MOBILE = "{scheme}://{host}:{port}".format(
-    scheme=SCHEME, host=SRT_HOST, port=SRT_PORT
-)
-
-SRT_MAIN = f"{SRT_MOBILE}/main/main.do"
-SRT_LOGIN = f"{SRT_MOBILE}/apb/selectListApb01080_n.do"
-SRT_LOGOUT = f"{SRT_MOBILE}/login/loginOut.do"
-SRT_SEARCH_SCHEDULE = f"{SRT_MOBILE}/ara/selectListAra10007_n.do"
-SRT_RESERVE = f"{SRT_MOBILE}/arc/selectListArc05013_n.do"
-SRT_TICKETS = f"{SRT_MOBILE}/atc/selectListAtc14016_n.do"
-SRT_TICKET_INFO = f"{SRT_MOBILE}/ard/selectListArd02017_n.do?"
-SRT_CANCEL = f"{SRT_MOBILE}/ard/selectListArd02045_n.do"
-SRT_STANDBY_OPTION = f"{SRT_MOBILE}/ata/selectListAta01135_n.do"
 
 DEFAULT_HEADERS = {
     "User-Agent": (
@@ -119,14 +102,14 @@ class SRT:
         else:
             login_type = LOGIN_TYPES["MEMBERSHIP_ID"]
 
-        url = SRT_LOGIN
+        url = constants.API_ENDPOINTS["login"]
         data: dict[str, str] = {
             "auto": "Y",
             "check": "Y",
             "page": "menu",
             "deviceKey": "-",
             "customerYn": "",
-            "login_referer": SRT_MAIN,
+            "login_referer": constants.API_ENDPOINTS["main"],
             "srchDvCd": login_type,
             "srchDvNm": srt_id,
             "hmpgPwdCphd": srt_pw,
@@ -152,13 +135,15 @@ class SRT:
         if not self.is_login:
             return True
 
-        url = SRT_LOGOUT
+        url = constants.API_ENDPOINTS["logout"]
 
         r = self._session.post(url=url)
+        self._log(r.text)
 
         if not r.ok:
             raise SRTResponseError(r.text)
 
+        self.is_login = False
         return True
 
     def search_train(
@@ -197,7 +182,7 @@ class SRT:
         if time is None:
             time = "000000"
 
-        url = SRT_SEARCH_SCHEDULE
+        url = constants.API_ENDPOINTS["search_schedule"]
         data = {
             # course (1: 직통, 2: 환승, 3: 왕복)
             # TODO: support 환승, 왕복
@@ -368,7 +353,7 @@ class SRT:
             else:
                 is_special_seat = False
 
-        url = SRT_RESERVE
+        url = constants.API_ENDPOINTS["reserve"]
         data = {
             "jobId": jobid,
             "jrnyCnt": "1",
@@ -470,7 +455,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = SRT_STANDBY_OPTION
+        url = constants.API_ENDPOINTS["standby_option"]
 
         data = {
             "pnrNo": reservation,
@@ -495,7 +480,7 @@ class SRT:
         if not self.is_login:
             raise SRTNotLoggedInError()
 
-        url = SRT_TICKETS
+        url = constants.API_ENDPOINTS["tickets"]
         data = {"pageNo": "0"}
 
         r = self._session.post(url=url, data=data)
@@ -541,7 +526,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = SRT_TICKET_INFO
+        url = constants.API_ENDPOINTS["ticket_info"]
         data = {"pnrNo": reservation, "jrnySqno": "1"}
 
         r = self._session.post(url=url, data=data)
@@ -574,7 +559,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = SRT_CANCEL
+        url = constants.API_ENDPOINTS["cancel"]
         data = {"pnrNo": reservation, "jrnyCnt": "1", "rsvChgTno": "0"}
 
         r = self._session.post(url=url, data=data)

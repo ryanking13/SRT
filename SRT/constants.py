@@ -49,3 +49,16 @@ TRAIN_NAME = {
 }
 
 WINDOW_SEAT = {None: "000", True: "012", False: "013"}
+
+SRT_MOBILE = "https://app.srail.or.kr:443"
+API_ENDPOINTS = {
+    "main": f"{SRT_MOBILE}/main/main.do",
+    "login": f"{SRT_MOBILE}/apb/selectListApb01080_n.do",
+    "logout": f"{SRT_MOBILE}/login/loginOut.do",
+    "search_schedule": f"{SRT_MOBILE}/ara/selectListAra10007_n.do",
+    "reserve": f"{SRT_MOBILE}/arc/selectListArc05013_n.do",
+    "tickets": f"{SRT_MOBILE}/atc/selectListAtc14016_n.do",
+    "ticket_info": f"{SRT_MOBILE}/ard/selectListArd02017_n.do?",
+    "cancel": f"{SRT_MOBILE}/ard/selectListArd02045_n.do",
+    "standby_option": f"{SRT_MOBILE}/ata/selectListAta01135_n.do",
+}
