@@ -93,3 +93,49 @@ def test_reserve_and_cancel(srt, pytestconfig):
         pytest.warns(Warning("Empty seat not found, skipping reservation test"))
 
     srt.cancel(reservation)
+
+
+def test_reserve_and_payment(srt, pytestconfig):
+    pytestconfig.getoption("--full", skip=True)
+    dep = "수서"
+    arr = "대전"
+    time = "000000"
+
+    membership_number = "1234567890"
+    card_password = "12"
+    card_expire_date = "2209"
+    card_installment = 0
+    card_validation_number = "1234567890123"
+    card_number = "1234567890123456"
+    card_type = "J"
+
+    # loop until empty seat is found
+    reservation = None
+    for day in range(5, 30):
+        date = (datetime.now() + timedelta(days=day)).strftime("%Y%m%d")
+
+        trains = srt.search_train(dep, arr, date, time)
+
+        assert len(trains) != 0
+
+        for train in trains:
+            if train.general_seat_available():
+                reservation = srt.reserve(train)
+                break
+
+        if reservation is not None:
+            break
+
+    if reservation is None:
+        pytest.warns(Warning("Empty seat not found, skipping reservation test"))
+
+    srt.payment(
+        reservation,
+        membership_number,
+        card_password,
+        card_expire_date,
+        card_installment,
+        card_validation_number,
+        card_number,
+        card_type,
+    )

@@ -1,5 +1,5 @@
 from pathlib import Path
-
+from SRT.reservation import SRTReservation
 import pytest
 
 mock_response_dir = Path(__file__).parent / "mock_responses"
@@ -19,6 +19,7 @@ def mock_server(httpserver, monkeypatch):
         "ticket_info": httpserver.url_for("/ticket_info"),
         "cancel": httpserver.url_for("/cancel"),
         "standby_option": httpserver.url_for("/standby_option"),
+        "payment": httpserver.url_for("/payment"),
     }
 
     monkeypatch.setattr(
@@ -75,3 +76,187 @@ def test_logout(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
     srt.logout()
     assert not srt.is_login
+
+
+# 결제 테스트를 위한 mock reservation
+mock_reservation = SRTReservation(
+    {
+        "pnrNo": "000000000",
+        "tkSpecNum": "1",
+        "rcvdAmt": "36900",
+    },
+    {
+        "stlbTrnClsfCd": "00",
+        "trnNo": "0000",
+        "dptDt": "20231024",
+        "dptTm": "000000",
+        "dptRsStnCd": "0551",
+        "arvTm": "000000",
+        "arvRsStnCd": "0015",
+        "iseLmtDt": "20231024",
+        "iseLmtTm": "000000",
+        "stlFlg": "N",
+    },
+    [
+        {
+            "scarNo": "1",
+            "seatNo": "1",
+            "psrmClCd": "1",
+            "psgTpCd": "1",
+            "rcvdAmt": "36900",
+            "stdrPrc": "36900",
+            "dcntPrc": "600",
+        }
+    ],
+)
+
+
+# 결제 성공
+def test_payment_success(mock_server, httpserver):
+    from SRT import SRT
+    from SRT.reservation import SRTReservation
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(httpserver, "/payment", "payment_success.json")
+
+    srt = SRT("010-1234-1234", "password")
+
+    assert srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 입력이 잘못되었습니다
+def test_payment_fail_bad_request(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(httpserver, "/payment", "payment_fail_bad_request.json")
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 할부 불가 카드
+def test_payment_fail_cant_installment(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(httpserver, "/payment", "payment_fail_cant_installment.json")
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 비밀번호 오류
+def test_payment_fail_card_password(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(httpserver, "/payment", "payment_fail_card_password.json")
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 유효기간 경과 카드
+def test_payment_fail_expired_card(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(httpserver, "/payment", "payment_fail_expired_card.json")
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 주민번호 또는 사업자번호 오류
+def test_payment_fail_invalid_auth_number(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(
+        httpserver, "/payment", "payment_fail_invalid_auth_number.json"
+    )
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 카드번호 오류
+def test_payment_fail_invalid_card_number(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(
+        httpserver, "/payment", "payment_fail_invalid_card_number.json"
+    )
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 유효기간 입력 오류
+def test_payment_fail_invalid_expiration_date(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(
+        httpserver, "/payment", "payment_fail_invalid_expiration_date.json"
+    )
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 취소된 예약
+def test_payment_fail_invalid_reservation(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(
+        httpserver, "/payment", "payment_fail_invalid_reservation.json"
+    )
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 한도 초과
+def test_payment_fail_over_limit(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(httpserver, "/payment", "payment_fail_over_limit.json")
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")
+
+
+# 결제 실패 - 거래정지 카드
+def test_payment_fail_suspension_card(mock_server, httpserver):
+    from SRT import SRT, SRTResponseError
+
+    register_mock_response(httpserver, "/login", "login_success.json")
+    register_mock_response(httpserver, "/payment", "payment_fail_suspension_card.json")
+
+    srt = SRT("010-1234-1234", "password")
+
+    with pytest.raises(SRTResponseError):
+        srt.payment(mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J")

@@ -1,0 +1,192 @@
+{
+  "ERROR_MSG": "",
+  "ERROR_CODE": "0",
+  "outDataSets": {
+    "dsOutput3": [
+      {
+        "TKLIST_KEY": 0,
+        "dcntKndNm": null,
+        "DCNTLIST_KEY": 0
+      }
+    ],
+    "dsOutput2": [
+      {
+        "trnNo1": "",
+        "rcvdAmt": "00000036900",
+        "seatNo1": "",
+        "arvDt1": "",
+        "scarNo": 2,
+        "crwPwd": "000000000000000000",
+        "jrnyTpCd": "11",
+        "tkPrc": 36900,
+        "dptRsStnNmEn": "Suseo",
+        "trnGpNm1": "",
+        "arvTm1": "",
+        "dptTm": "053000",
+        "entNm": "",
+        "dptRsStnNm2": "",
+        "TKLIST_KEY": 0,
+        "dptRsStnNm1": "",
+        "arvDt": "20231024",
+        "psrmClCdNm": "일반실",
+        "trnClsfNm": "SRT",
+        "trnGpNm": "SRT",
+        "rmkCont": "신용000000",
+        "trnGpCd": "300",
+        "scarNo1": 0,
+        "psgTpCdNm": "어른",
+        "arvTm": "071100",
+        "dptRsStnNmKo": "수서",
+        "arvRsStnNm1": "",
+        "trnClsfNm1": "",
+        "dcntGroupGridcnt": 0,
+        "tkSqno": 0,
+        "psrmClCdNm1": "",
+        "tkKndCdNm": "스마트티켓",
+        "arvRsStnNmEn": "Dongdaegu",
+        "arvRsStnNm2": "",
+        "dlayDscpFlg": "N",
+        "saleSqno": 10000,
+        "arvRsStnNmKo": "동대구",
+        "stdrPrc": "00000037500",
+        "dptDt1": "",
+        "dptDt": "20231024",
+        "trnNo": "00301",
+        "seatNo": "10A",
+        "tkRetNo": "0000000000000000",
+        "mogoNm": "",
+        "dcntAmt": "00000000600",
+        "dptTm1": "",
+        "saleDt": "20230923"
+      }
+    ],
+    "dsOutput1": [
+      {
+        "pontDvCd": "",
+        "apvDt": "20230923",
+        "stlSqno": "00000000001",
+        "stlCrCrdNo": "0000000000000000",
+        "stlApvTm": "145030",
+        "stlMnsCd": "02",
+        "mnsStlAmt": "36900",
+        "apvNo": "00000000"
+      }
+    ],
+    "dsOutput0": [
+      {
+        "tkNum": 1,
+        "buyPsNm": "김철수",
+        "totPrc": "00000036900",
+        "acmMlgNum": 0,
+        "strResult": "SUCC",
+        "cgPsId": "korail",
+        "stlAmt": "36900",
+        "totNewStlAmt": "00000000036900",
+        "pnrNo": "000000000000000",
+        "msgCd": "IRT000000",
+        "wctNo": "00000",
+        "totRcvdAmt": "0000000000036900",
+        "totDcntAmt": 600,
+        "rmkCont": "",
+        "msgTxt": "정상발매처리,정상발권처리",
+        "stlMnsCd": "02",
+        "uuid": "APP0000000000000000000000000000000",
+        "apvNo": "00000000"
+      }
+    ]
+  },
+  "dsResultMap": {
+    "dsOutput3": [
+      {
+        "TKLIST_KEY": 0,
+        "dcntKndNm": null,
+        "DCNTLIST_KEY": 0
+      }
+    ],
+    "dsOutput2": [
+      {
+        "trnNo1": "",
+        "rcvdAmt": "00000036900",
+        "seatNo1": "",
+        "arvDt1": "",
+        "scarNo": 2,
+        "crwPwd": "000000000000000000",
+        "jrnyTpCd": "11",
+        "tkPrc": 36900,
+        "dptRsStnNmEn": "Suseo",
+        "trnGpNm1": "",
+        "arvTm1": "",
+        "dptTm": "053000",
+        "entNm": "",
+        "dptRsStnNm2": "",
+        "TKLIST_KEY": 0,
+        "dptRsStnNm1": "",
+        "arvDt": "20231024",
+        "psrmClCdNm": "일반실",
+        "trnClsfNm": "SRT",
+        "trnGpNm": "SRT",
+        "rmkCont": "신용000000",
+        "trnGpCd": "300",
+        "scarNo1": 0,
+        "psgTpCdNm": "어른",
+        "arvTm": "071100",
+        "dptRsStnNmKo": "수서",
+        "arvRsStnNm1": "",
+        "trnClsfNm1": "",
+        "dcntGroupGridcnt": 0,
+        "tkSqno": 0,
+        "psrmClCdNm1": "",
+        "tkKndCdNm": "스마트티켓",
+        "arvRsStnNmEn": "Dongdaegu",
+        "arvRsStnNm2": "",
+        "dlayDscpFlg": "N",
+        "saleSqno": 10000,
+        "arvRsStnNmKo": "동대구",
+        "stdrPrc": "00000037500",
+        "dptDt1": "",
+        "dptDt": "20231024",
+        "trnNo": "00301",
+        "seatNo": "10A",
+        "tkRetNo": "0000000000000000",
+        "mogoNm": "",
+        "dcntAmt": "00000000600",
+        "dptTm1": "",
+        "saleDt": "20230923"
+      }
+    ],
+    "dsOutput1": [
+      {
+        "pontDvCd": "",
+        "apvDt": "20230923",
+        "stlSqno": "00000000001",
+        "stlCrCrdNo": "0000000000000000",
+        "stlApvTm": "145030",
+        "stlMnsCd": "02",
+        "mnsStlAmt": "36900",
+        "apvNo": "00000000"
+      }
+    ],
+    "dsOutput0": [
+      {
+        "tkNum": 1,
+        "buyPsNm": "김철수",
+        "totPrc": "00000036900",
+        "acmMlgNum": 0,
+        "strResult": "SUCC",
+        "cgPsId": "korail",
+        "stlAmt": "36900",
+        "totNewStlAmt": "00000000036900",
+        "pnrNo": "000000000000000",
+        "msgCd": "IRT000000",
+        "wctNo": "00000",
+        "totRcvdAmt": "0000000000036900",
+        "totDcntAmt": 600,
+        "rmkCont": "",
+        "msgTxt": "정상발매처리,정상발권처리",
+        "stlMnsCd": "02",
+        "uuid": "APP0000000000000000000000000000000",
+        "apvNo": "00000000"
+      }
+    ]
+  }
+}

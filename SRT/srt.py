@@ -1,3 +1,4 @@
+import json
 import re
 from datetime import datetime, timedelta
 
@@ -126,6 +127,7 @@ class SRT:
             raise SRTLoginError(r.json()["MSG"])
 
         self.is_login = True
+        self.membership_number = json.loads(r.text).get("userMap").get("MB_CRD_NO")
 
         return True
 
@@ -142,6 +144,9 @@ class SRT:
 
         if not r.ok:
             raise SRTResponseError(r.text)
+
+        self.is_login = False
+        self.membership_number = None
 
         self.is_login = False
         return True
@@ -569,5 +574,85 @@ class SRT:
             raise SRTResponseError(parser.message())
 
         self._log(parser.message())
+
+        return True
+
+    def payment(
+        self,
+        reservation: SRTReservation,
+        card_password: str,
+        card_expire_date: str,
+        card_installment: int,
+        card_validation_number: str,
+        card_number: str,
+        card_type: str = "J",
+    ) -> bool:
+        """결제합니다.
+
+        >>> reservation = srt.reserve(train)
+        >>> srt.payment(reservation, "12", "1221", 0, "981204", "1234567890123456", "J")
+
+        Args:
+            reservation (:class:`SRTReservation`): 예약 내역
+            card_password (str): 카드비밀번호 앞 2자리
+            card_expire_date (str): 카드유효기간(YYMM)
+            card_installment (int): 할부선택 (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24)
+            card_validation_number (str): 생년월일 or 사업자번호
+            card_number (str): 결제신용카드번호1
+            card_type (str): 카드타입 (J : 개인, S : 법인)
+
+        Returns:
+            bool: 결제 성공 여부
+        """
+        if not self.is_login:
+            raise SRTNotLoggedInError()
+
+        url = constants.API_ENDPOINTS["payment"]
+
+        data = {
+            "stlDmnDt": datetime.now().strftime("%Y%m%d"),  # 날짜 (yyyyMMdd)
+            "mbCrdNo": self.membership_number,  # 회원번호
+            "stlMnsSqno1": "1",  # 결제수단 일련번호1 (1고정값인듯)
+            "ststlGridcnt": "1",  # 결제수단건수 (1고정값인듯)
+            "totNewStlAmt": reservation.total_cost,  # 총 신규 결제금액
+            "athnDvCd1": card_type,  # 카드타입 (J : 개인, S : 법인)
+            "vanPwd1": card_password,  # 카드비밀번호 앞 2자리
+            "crdVlidTrm1": card_expire_date,  # 카드유효기간(YYMM)
+            "stlMnsCd1": "02",  # 결제수단코드1: (02:신용카드, 11:전자지갑, 12:포인트)
+            "rsvChgTno": "0",  # 예약변경번호 (0 고정값인듯)
+            "chgMcs": "0",  # 변경마이크로초 (0고정값인듯)
+            "ismtMnthNum1": card_installment,  # 할부선택 (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24)
+            "ctlDvCd": "3102",  # 조정구분코드(3102 고정값인듯)
+            "cgPsId": "korail",  # korail 고정
+            "pnrNo": reservation.reservation_number,  # 예약번호
+            "totPrnb": reservation.seat_count,  # 승차인원
+            "mnsStlAmt1": reservation.total_cost,  # 결제금액1
+            "crdInpWayCd1": "@",  # 카드입력방식코드 (@: 신용카드/ok포인트, "": 전자지갑)
+            "athnVal1": card_validation_number,  # 생년월일/사업자번호
+            "stlCrCrdNo1": card_number,  # 결제신용카드번호1
+            "jrnyCnt": "1",  # 여정수(1 고정)
+            "strJobId": "3102",  # 업무구분코드(3102 고정값인듯)
+            "inrecmnsGridcnt": "1",  # 1 고정값인듯
+            "dptTm": reservation.dep_time,  # 출발시간
+            "arvTm": reservation.arr_time,  # 도착시간
+            "dptStnConsOrdr2": "000000",  # 출발역구성순서2 (000000 고정)
+            "arvStnConsOrdr2": "000000",  # 도착역구성순서2 (000000 고정)
+            "trnGpCd": "300",  # 열차그룹코드(300 고정)
+            "pageNo": "-",  # 페이지번호(- 고정)
+            "rowCnt": "-",  # 한페이지당건수(- 고정)
+            "pageUrl": "",  # 페이지URL (빈값 고정)
+        }
+
+        r = self._session.post(url=url, data=data)
+
+        parser = json.loads(r.text)
+
+        if (
+            parser.get("outDataSets").get("dsOutput0")[0].get("strResult")
+            == RESULT_FAIL
+        ):
+            raise SRTResponseError(
+                parser.get("outDataSets").get("dsOutput0")[0].get("msgTxt")
+            )
 
         return True

@@ -1,0 +1,22 @@
+{
+  "ERROR_MSG": "",
+  "ERROR_CODE": "0",
+  "outDataSets": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV08315",
+        "strResult": "FAIL",
+        "msgTxt": "유효기간을 잘못입력하셨습니다."
+      }
+    ]
+  },
+  "dsResultMap": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV08315",
+        "strResult": "FAIL",
+        "msgTxt": "유효기간을 잘못입력하셨습니다."
+      }
+    ]
+  }
+}

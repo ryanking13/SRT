@@ -1,0 +1,22 @@
+{
+  "ERROR_MSG": "",
+  "ERROR_CODE": "0",
+  "outDataSets": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRT200178",
+        "strResult": "FAIL",
+        "msgTxt": "취소된 여정이므로 발매할 수 없습니다.<br>비회원은 다시 예약하셔야합니다."
+      }
+    ]
+  },
+  "dsResultMap": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRT200178",
+        "strResult": "FAIL",
+        "msgTxt": "취소된 여정이므로 발매할 수 없습니다.<br>비회원은 다시 예약하셔야합니다."
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "ERROR_MSG": "",
+  "ERROR_CODE": "0",
+  "outDataSets": {
+    "dsOutput0": [
+      {
+        "msgCd": "WZZ000001",
+        "strResult": "FAIL",
+        "msgTxt": "% 입력이 잘못되었습니다."
+      }
+    ]
+  },
+  "dsResultMap": {
+    "dsOutput0": [
+      {
+        "msgCd": "WZZ000001",
+        "strResult": "FAIL",
+        "msgTxt": "% 입력이 잘못되었습니다."
+      }
+    ]
+  }
+}

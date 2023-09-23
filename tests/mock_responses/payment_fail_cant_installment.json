@@ -1,0 +1,22 @@
+{
+  "ERROR_MSG": "",
+  "ERROR_CODE": "0",
+  "outDataSets": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV07574",
+        "strResult": "FAIL",
+        "msgTxt": "할부불가카드"
+      }
+    ]
+  },
+  "dsResultMap": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV07574",
+        "strResult": "FAIL",
+        "msgTxt": "할부불가카드"
+      }
+    ]
+  }
+}
