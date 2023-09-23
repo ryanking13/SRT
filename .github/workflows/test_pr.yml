@@ -1,0 +1,40 @@
+name: Test PR
+
+on:
+  pull_request_target:
+
+jobs:
+  authorize:
+    environment:
+      ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository && 'external' || 'internal' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: true
+  test:
+    needs: authorize
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install SRT
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Run tests
+        env:
+          SRT_PASSWORD: ${{ secrets.SRT_PASSWORD }}
+          SRT_USERNAME: ${{ secrets.SRT_USERNAME }}
+        run: |
+          pytest tests -x -v
