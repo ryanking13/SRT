@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import requests  # type: ignore[import]
 
-from .constants import STATION_CODE
+from .constants import STATION_CODE, API_ENDPOINTS
 from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
 from .passenger import Adult, Passenger
 from .reservation import SRTReservation, SRTTicket
@@ -13,24 +13,6 @@ from .train import SRTTrain
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 PHONE_NUMBER_REGEX = re.compile(r"(\d{3})-(\d{3,4})-(\d{4})")
-
-SCHEME = "https"
-SRT_HOST = "app.srail.or.kr"
-SRT_PORT = "443"
-
-SRT_MOBILE = "{scheme}://{host}:{port}".format(
-    scheme=SCHEME, host=SRT_HOST, port=SRT_PORT
-)
-
-SRT_MAIN = f"{SRT_MOBILE}/main/main.do"
-SRT_LOGIN = f"{SRT_MOBILE}/apb/selectListApb01080_n.do"
-SRT_LOGOUT = f"{SRT_MOBILE}/login/loginOut.do"
-SRT_SEARCH_SCHEDULE = f"{SRT_MOBILE}/ara/selectListAra10007_n.do"
-SRT_RESERVE = f"{SRT_MOBILE}/arc/selectListArc05013_n.do"
-SRT_TICKETS = f"{SRT_MOBILE}/atc/selectListAtc14016_n.do"
-SRT_TICKET_INFO = f"{SRT_MOBILE}/ard/selectListArd02017_n.do?"
-SRT_CANCEL = f"{SRT_MOBILE}/ard/selectListArd02045_n.do"
-SRT_STANDBY_OPTION = f"{SRT_MOBILE}/ata/selectListAta01135_n.do"
 
 DEFAULT_HEADERS = {
     "User-Agent": (
@@ -119,7 +101,7 @@ class SRT:
         else:
             login_type = LOGIN_TYPES["MEMBERSHIP_ID"]
 
-        url = SRT_LOGIN
+        url = API_ENDPOINTS["login"]
         data: dict[str, str] = {
             "auto": "Y",
             "check": "Y",
@@ -152,7 +134,7 @@ class SRT:
         if not self.is_login:
             return True
 
-        url = SRT_LOGOUT
+        url = API_ENDPOINTS["logout"]
 
         r = self._session.post(url=url)
 
@@ -197,7 +179,7 @@ class SRT:
         if time is None:
             time = "000000"
 
-        url = SRT_SEARCH_SCHEDULE
+        url = API_ENDPOINTS["search_schedule"]
         data = {
             # course (1: 직통, 2: 환승, 3: 왕복)
             # TODO: support 환승, 왕복
@@ -368,7 +350,7 @@ class SRT:
             else:
                 is_special_seat = False
 
-        url = SRT_RESERVE
+        url = API_ENDPOINTS["reserve"]
         data = {
             "jobId": jobid,
             "jrnyCnt": "1",
@@ -470,7 +452,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = SRT_STANDBY_OPTION
+        url = API_ENDPOINTS["standby_option"]
 
         data = {
             "pnrNo": reservation,
@@ -495,7 +477,7 @@ class SRT:
         if not self.is_login:
             raise SRTNotLoggedInError()
 
-        url = SRT_TICKETS
+        url = API_ENDPOINTS["tickets"]
         data = {"pageNo": "0"}
 
         r = self._session.post(url=url, data=data)
@@ -541,7 +523,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = SRT_TICKET_INFO
+        url = API_ENDPOINTS["ticket_info"]
         data = {"pnrNo": reservation, "jrnySqno": "1"}
 
         r = self._session.post(url=url, data=data)
@@ -574,7 +556,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = SRT_CANCEL
+        url = API_ENDPOINTS["cancel"]
         data = {"pnrNo": reservation, "jrnyCnt": "1", "rsvChgTno": "0"}
 
         r = self._session.post(url=url, data=data)
