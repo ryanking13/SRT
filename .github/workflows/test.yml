@@ -14,7 +14,7 @@ jobs:
       max-parallel: 4
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.11"]
 
     steps:
       - uses: actions/checkout@v3
@@ -24,15 +24,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
+      - name: Install SRT
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -e ".[test]"
 
       - name: Run tests
         env:
           SRT_PASSWORD: ${{ secrets.SRT_PASSWORD }}
           SRT_USERNAME: ${{ secrets.SRT_USERNAME }}
         run: |
-          pip install pytest
-          pytest SRT -x -v
+          pytest tests -x -v
