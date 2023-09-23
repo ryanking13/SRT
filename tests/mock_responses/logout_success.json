@@ -1,0 +1,13 @@
+{
+    "commandMap": {
+        "isEnableUpdate": "N",
+        "isForceUpdate": "N",
+        "AOS_VERSION": "1.0.5",
+        "iOS_VERSION": "1.0.5"
+    },
+    "userMap": {
+        "USER_DV": "",
+        "wctNo": "",
+        "uuid": ""
+    }
+}

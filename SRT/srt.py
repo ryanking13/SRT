@@ -3,13 +3,14 @@ from datetime import datetime, timedelta
 
 import requests  # type: ignore[import]
 
-from .constants import STATION_CODE, API_ENDPOINTS
+from .constants import STATION_CODE
 from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
 from .passenger import Adult, Passenger
 from .reservation import SRTReservation, SRTTicket
 from .response_data import SRTResponseData
 from .seat_type import SeatType
 from .train import SRTTrain
+from . import constants
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 PHONE_NUMBER_REGEX = re.compile(r"(\d{3})-(\d{3,4})-(\d{4})")
@@ -101,14 +102,14 @@ class SRT:
         else:
             login_type = LOGIN_TYPES["MEMBERSHIP_ID"]
 
-        url = API_ENDPOINTS["login"]
+        url = constants.API_ENDPOINTS["login"]
         data: dict[str, str] = {
             "auto": "Y",
             "check": "Y",
             "page": "menu",
             "deviceKey": "-",
             "customerYn": "",
-            "login_referer": SRT_MAIN,
+            "login_referer": constants.API_ENDPOINTS["main"],
             "srchDvCd": login_type,
             "srchDvNm": srt_id,
             "hmpgPwdCphd": srt_pw,
@@ -134,13 +135,15 @@ class SRT:
         if not self.is_login:
             return True
 
-        url = API_ENDPOINTS["logout"]
+        url = constants.API_ENDPOINTS["logout"]
 
         r = self._session.post(url=url)
+        self._log(r.text)
 
         if not r.ok:
             raise SRTResponseError(r.text)
 
+        self.is_login = False
         return True
 
     def search_train(
@@ -179,7 +182,7 @@ class SRT:
         if time is None:
             time = "000000"
 
-        url = API_ENDPOINTS["search_schedule"]
+        url = constants.API_ENDPOINTS["search_schedule"]
         data = {
             # course (1: 직통, 2: 환승, 3: 왕복)
             # TODO: support 환승, 왕복
@@ -350,7 +353,7 @@ class SRT:
             else:
                 is_special_seat = False
 
-        url = API_ENDPOINTS["reserve"]
+        url = constants.API_ENDPOINTS["reserve"]
         data = {
             "jobId": jobid,
             "jrnyCnt": "1",
@@ -452,7 +455,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = API_ENDPOINTS["standby_option"]
+        url = constants.API_ENDPOINTS["standby_option"]
 
         data = {
             "pnrNo": reservation,
@@ -477,7 +480,7 @@ class SRT:
         if not self.is_login:
             raise SRTNotLoggedInError()
 
-        url = API_ENDPOINTS["tickets"]
+        url = constants.API_ENDPOINTS["tickets"]
         data = {"pageNo": "0"}
 
         r = self._session.post(url=url, data=data)
@@ -523,7 +526,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = API_ENDPOINTS["ticket_info"]
+        url = constants.API_ENDPOINTS["ticket_info"]
         data = {"pnrNo": reservation, "jrnySqno": "1"}
 
         r = self._session.post(url=url, data=data)
@@ -556,7 +559,7 @@ class SRT:
         if isinstance(reservation, SRTReservation):
             reservation = reservation.reservation_number
 
-        url = API_ENDPOINTS["cancel"]
+        url = constants.API_ENDPOINTS["cancel"]
         data = {"pnrNo": reservation, "jrnyCnt": "1", "rsvChgTno": "0"}
 
         r = self._session.post(url=url, data=data)
