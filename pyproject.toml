@@ -27,6 +27,13 @@ Changelog = "https://github.com/ryanking13/SRT/blob/master/CHANGELOG.md"
 [project.scripts]
 srt-reserve = "SRT.cli.reserve:main"
 
+[project.optional-dependencies]
+test = [
+  "pytest",
+  "pytest-httpserver",
+]
+
+
 [tool.hatch.version]
 source = "vcs"
 
