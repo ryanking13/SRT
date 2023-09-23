@@ -1,11 +1,14 @@
 from pathlib import Path
+
 import pytest
 
 mock_response_dir = Path(__file__).parent / "mock_responses"
 
+
 @pytest.fixture
 def mock_server(httpserver, monkeypatch):
     from SRT import constants
+
     endpoints = {
         "main": httpserver.url_for("/main"),
         "login": httpserver.url_for("/login"),
