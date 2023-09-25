@@ -148,7 +148,6 @@ class SRT:
         self.is_login = False
         self.membership_number = None
 
-        self.is_login = False
         return True
 
     def search_train(
@@ -580,25 +579,25 @@ class SRT:
     def payment(
         self,
         reservation: SRTReservation,
-        card_password: str,
-        card_expire_date: str,
-        card_installment: int,
-        card_validation_number: str,
         card_number: str,
+        card_password: str,
+        card_validation_number: str,
+        card_expire_date: str,
+        card_installment: int = 0,
         card_type: str = "J",
     ) -> bool:
         """결제합니다.
 
         >>> reservation = srt.reserve(train)
-        >>> srt.payment(reservation, "12", "1221", 0, "981204", "1234567890123456", "J")
+        >>> srt.payment(reservation, "1234567890123456", "12", "981204", "2309", 0, "J")
 
         Args:
             reservation (:class:`SRTReservation`): 예약 내역
+            card_number (str): 결제신용카드번호 (하이픈(-) 제외)
             card_password (str): 카드비밀번호 앞 2자리
+            card_validation_number (str): 생년월일 (card_type이 J인 경우) || 사업자번호 (card_type이 S인 경우)
             card_expire_date (str): 카드유효기간(YYMM)
             card_installment (int): 할부선택 (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24)
-            card_validation_number (str): 생년월일 or 사업자번호
-            card_number (str): 결제신용카드번호1
             card_type (str): 카드타입 (J : 개인, S : 법인)
 
         Returns:
