@@ -166,7 +166,9 @@ def test_payment_fail_card_password(mock_server, httpserver):
 
     srt = SRT("010-1234-1234", "password")
 
-    with pytest.raises(SRTResponseError, match="비밀번호오류<br><br>사용하신 각 신용카드사의 고객센터로 문의 바랍니다."):
+    with pytest.raises(
+        SRTResponseError, match="비밀번호오류<br><br>사용하신 각 신용카드사의 고객센터로 문의 바랍니다."
+    ):
         srt.payment(
             mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
         )
@@ -249,7 +251,9 @@ def test_payment_fail_invalid_reservation(mock_server, httpserver):
 
     srt = SRT("010-1234-1234", "password")
 
-    with pytest.raises(SRTResponseError, match="취소된 여정이므로 발매할 수 없습니다.<br>비회원은 다시 예약하셔야합니다."):
+    with pytest.raises(
+        SRTResponseError, match="취소된 여정이므로 발매할 수 없습니다.<br>비회원은 다시 예약하셔야합니다."
+    ):
         srt.payment(
             mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
         )
