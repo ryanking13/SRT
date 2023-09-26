@@ -1,0 +1,22 @@
+{
+  "ERROR_MSG": "",
+  "ERROR_CODE": "0",
+  "outDataSets": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV06006",
+        "strResult": "FAIL",
+        "msgTxt": "주민번호 또는 사업자번호 오류입니다."
+      }
+    ]
+  },
+  "dsResultMap": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV06006",
+        "strResult": "FAIL",
+        "msgTxt": "주민번호 또는 사업자번호 오류입니다."
+      }
+    ]
+  }
+}

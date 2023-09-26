@@ -1,0 +1,22 @@
+{
+  "ERROR_MSG": "",
+  "ERROR_CODE": "0",
+  "outDataSets": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV08037",
+        "strResult": "FAIL",
+        "msgTxt": "카드번호오류"
+      }
+    ]
+  },
+  "dsResultMap": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV08037",
+        "strResult": "FAIL",
+        "msgTxt": "카드번호오류"
+      }
+    ]
+  }
+}

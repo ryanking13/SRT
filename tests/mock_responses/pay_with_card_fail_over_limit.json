@@ -1,0 +1,22 @@
+{
+  "ERROR_MSG": "",
+  "ERROR_CODE": "0",
+  "outDataSets": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV08326",
+        "strResult": "FAIL",
+        "msgTxt": "사용한도초과"
+      }
+    ]
+  },
+  "dsResultMap": {
+    "dsOutput0": [
+      {
+        "msgCd": "WRTV08326",
+        "strResult": "FAIL",
+        "msgTxt": "사용한도초과"
+      }
+    ]
+  }
+}

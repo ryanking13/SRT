@@ -61,4 +61,5 @@ API_ENDPOINTS = {
     "ticket_info": f"{SRT_MOBILE}/ard/selectListArd02017_n.do?",
     "cancel": f"{SRT_MOBILE}/ard/selectListArd02045_n.do",
     "standby_option": f"{SRT_MOBILE}/ata/selectListAta01135_n.do",
+    "payment": f"{SRT_MOBILE}/ata/selectListAta09036_n.do",
 }
