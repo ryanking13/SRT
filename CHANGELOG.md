@@ -1,5 +1,15 @@
 ## Unreleased
 
+## v2.3.0 (2023/09/26)
+
+- 카드 결제 기능 추가
+  ([#249](https://github.com/ryanking13/SRT/pull/249))
+
+## v2.2.0 (2023/08/22)
+
+- 예약 대기 기능 추가
+  ([#247](https://github.com/ryanking13/SRT/pull/247))
+
 ## v2.1.0 (2023/08/15)
 
 - [SRT 열차운행 조정 알림](https://etk.srail.kr/cms/article/view.do?postNo=554&pageId=TK0502000000)에 따른 신규 정차역 코드 및 이름 추가.
