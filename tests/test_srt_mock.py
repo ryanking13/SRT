@@ -123,7 +123,12 @@ def test_pay_with_card_success(mock_server, httpserver):
     srt = SRT("010-1234-1234", "password")
 
     assert srt.pay_with_card(
-        mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+        mock_reservation,
+        number="0000000000000000",
+        password="12",
+        expire_date="1221",
+        installment=0,
+        card_type="J",
     )
 
 
@@ -140,7 +145,12 @@ def test_pay_with_card_fail_bad_request(mock_server, httpserver):
 
     with pytest.raises(SRTResponseError, match="% 입력이 잘못되었습니다."):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -157,7 +167,12 @@ def test_pay_with_card_fail_cant_installment(mock_server, httpserver):
 
     with pytest.raises(SRTResponseError, match="할부불가카드"):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -176,7 +191,12 @@ def test_pay_with_card_fail_card_password(mock_server, httpserver):
         SRTResponseError, match="비밀번호오류<br><br>사용하신 각 신용카드사의 고객센터로 문의 바랍니다."
     ):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -193,7 +213,12 @@ def test_pay_with_card_fail_expired_card(mock_server, httpserver):
 
     with pytest.raises(SRTResponseError, match="유효기간경과카드"):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -210,7 +235,12 @@ def test_pay_with_card_fail_invalid_auth_number(mock_server, httpserver):
 
     with pytest.raises(SRTResponseError, match="주민번호 또는 사업자번호 오류입니다."):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -227,7 +257,12 @@ def test_pay_with_card_fail_invalid_card_number(mock_server, httpserver):
 
     with pytest.raises(SRTResponseError, match="카드번호오류"):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -244,7 +279,12 @@ def test_pay_with_card_fail_invalid_expiration_date(mock_server, httpserver):
 
     with pytest.raises(SRTResponseError, match="유효기간을 잘못입력하셨습니다."):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -263,7 +303,12 @@ def test_pay_with_card_fail_invalid_reservation(mock_server, httpserver):
         SRTResponseError, match="취소된 여정이므로 발매할 수 없습니다.<br>비회원은 다시 예약하셔야합니다."
     ):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -278,7 +323,12 @@ def test_pay_with_card_fail_over_limit(mock_server, httpserver):
 
     with pytest.raises(SRTResponseError, match="사용한도초과"):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
 
 
@@ -295,5 +345,10 @@ def test_pay_with_card_fail_suspension_card(mock_server, httpserver):
 
     with pytest.raises(SRTResponseError, match="거래정지카드"):
         srt.pay_with_card(
-            mock_reservation, "12", "1221", 0, "981204", "0000000000000000", "J"
+            mock_reservation,
+            number="0000000000000000",
+            password="12",
+            expire_date="1221",
+            installment=0,
+            card_type="J",
         )
