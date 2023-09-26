@@ -576,11 +576,11 @@ class SRT:
 
         return True
 
-    def payment(
+    def pay_with_card(
         self,
         reservation: SRTReservation,
-        card_number: str,
-        card_password: str,
+        number: str,
+        password: str,
         card_validation_number: str,
         card_expire_date: str,
         card_installment: int = 0,
@@ -589,12 +589,12 @@ class SRT:
         """결제합니다.
 
         >>> reservation = srt.reserve(train)
-        >>> srt.payment(reservation, "1234567890123456", "12", "981204", "2309", 0, "J")
+        >>> srt.pay_with_card(reservation, "1234567890123456", "12", "981204", "2309", 0, "J")
 
         Args:
             reservation (:class:`SRTReservation`): 예약 내역
-            card_number (str): 결제신용카드번호 (하이픈(-) 제외)
-            card_password (str): 카드비밀번호 앞 2자리
+            number (str): 결제신용카드번호 (하이픈(-) 제외)
+            password (str): 카드비밀번호 앞 2자리
             card_validation_number (str): 생년월일 (card_type이 J인 경우) || 사업자번호 (card_type이 S인 경우)
             card_expire_date (str): 카드유효기간(YYMM)
             card_installment (int): 할부선택 (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24)
@@ -615,7 +615,7 @@ class SRT:
             "ststlGridcnt": "1",  # 결제수단건수 (1고정값인듯)
             "totNewStlAmt": reservation.total_cost,  # 총 신규 결제금액
             "athnDvCd1": card_type,  # 카드타입 (J : 개인, S : 법인)
-            "vanPwd1": card_password,  # 카드비밀번호 앞 2자리
+            "vanPwd1": password,  # 카드비밀번호 앞 2자리
             "crdVlidTrm1": card_expire_date,  # 카드유효기간(YYMM)
             "stlMnsCd1": "02",  # 결제수단코드1: (02:신용카드, 11:전자지갑, 12:포인트)
             "rsvChgTno": "0",  # 예약변경번호 (0 고정값인듯)
@@ -628,7 +628,7 @@ class SRT:
             "mnsStlAmt1": reservation.total_cost,  # 결제금액1
             "crdInpWayCd1": "@",  # 카드입력방식코드 (@: 신용카드/ok포인트, "": 전자지갑)
             "athnVal1": card_validation_number,  # 생년월일/사업자번호
-            "stlCrCrdNo1": card_number,  # 결제신용카드번호1
+            "stlCrCrdNo1": number,  # 결제신용카드번호1
             "jrnyCnt": "1",  # 여정수(1 고정)
             "strJobId": "3102",  # 업무구분코드(3102 고정값인듯)
             "inrecmnsGridcnt": "1",  # 1 고정값인듯

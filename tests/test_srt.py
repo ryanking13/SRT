@@ -95,18 +95,18 @@ def test_reserve_and_cancel(srt, pytestconfig):
     srt.cancel(reservation)
 
 
-def test_reserve_and_payment(srt, pytestconfig):
+def test_reserve_and_pay_with_card(srt, pytestconfig):
     pytestconfig.getoption("--full", skip=True)
     dep = "수서"
     arr = "대전"
     time = "000000"
 
     membership_number = "1234567890"
-    card_password = "12"
+    password = "12"
     card_expire_date = "2209"
     card_installment = 0
     card_validation_number = "1234567890123"
-    card_number = "1234567890123456"
+    number = "1234567890123456"
     card_type = "J"
 
     # loop until empty seat is found
@@ -129,13 +129,13 @@ def test_reserve_and_payment(srt, pytestconfig):
     if reservation is None:
         pytest.warns(Warning("Empty seat not found, skipping reservation test"))
 
-    srt.payment(
+    srt.pay_with_card(
         reservation,
         membership_number,
-        card_password,
+        password,
         card_expire_date,
         card_installment,
         card_validation_number,
-        card_number,
+        number,
         card_type,
     )
