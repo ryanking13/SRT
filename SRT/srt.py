@@ -581,9 +581,9 @@ class SRT:
         reservation: SRTReservation,
         number: str,
         password: str,
-        card_validation_number: str,
-        card_expire_date: str,
-        card_installment: int = 0,
+        validation_number: str,
+        expire_date: str,
+        installment: int = 0,
         card_type: str = "J",
     ) -> bool:
         """결제합니다.
@@ -595,9 +595,9 @@ class SRT:
             reservation (:class:`SRTReservation`): 예약 내역
             number (str): 결제신용카드번호 (하이픈(-) 제외)
             password (str): 카드비밀번호 앞 2자리
-            card_validation_number (str): 생년월일 (card_type이 J인 경우) || 사업자번호 (card_type이 S인 경우)
-            card_expire_date (str): 카드유효기간(YYMM)
-            card_installment (int): 할부선택 (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24)
+            validation_number (str): 생년월일 (card_type이 J인 경우) || 사업자번호 (card_type이 S인 경우)
+            expire_date (str): 카드유효기간(YYMM)
+            installment (int): 할부선택 (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24)
             card_type (str): 카드타입 (J : 개인, S : 법인)
 
         Returns:
@@ -616,18 +616,18 @@ class SRT:
             "totNewStlAmt": reservation.total_cost,  # 총 신규 결제금액
             "athnDvCd1": card_type,  # 카드타입 (J : 개인, S : 법인)
             "vanPwd1": password,  # 카드비밀번호 앞 2자리
-            "crdVlidTrm1": card_expire_date,  # 카드유효기간(YYMM)
+            "crdVlidTrm1": expire_date,  # 카드유효기간(YYMM)
             "stlMnsCd1": "02",  # 결제수단코드1: (02:신용카드, 11:전자지갑, 12:포인트)
             "rsvChgTno": "0",  # 예약변경번호 (0 고정값인듯)
             "chgMcs": "0",  # 변경마이크로초 (0고정값인듯)
-            "ismtMnthNum1": card_installment,  # 할부선택 (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24)
+            "ismtMnthNum1": installment,  # 할부선택 (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24)
             "ctlDvCd": "3102",  # 조정구분코드(3102 고정값인듯)
             "cgPsId": "korail",  # korail 고정
             "pnrNo": reservation.reservation_number,  # 예약번호
             "totPrnb": reservation.seat_count,  # 승차인원
             "mnsStlAmt1": reservation.total_cost,  # 결제금액1
             "crdInpWayCd1": "@",  # 카드입력방식코드 (@: 신용카드/ok포인트, "": 전자지갑)
-            "athnVal1": card_validation_number,  # 생년월일/사업자번호
+            "athnVal1": validation_number,  # 생년월일/사업자번호
             "stlCrCrdNo1": number,  # 결제신용카드번호1
             "jrnyCnt": "1",  # 여정수(1 고정)
             "strJobId": "3102",  # 업무구분코드(3102 고정값인듯)
