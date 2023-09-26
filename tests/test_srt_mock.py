@@ -132,7 +132,9 @@ def test_pay_with_card_fail_bad_request(mock_server, httpserver):
     from SRT import SRT, SRTResponseError
 
     register_mock_response(httpserver, "/login", "login_success.json")
-    register_mock_response(httpserver, "/payment", "pay_with_card_fail_bad_request.json")
+    register_mock_response(
+        httpserver, "/payment", "pay_with_card_fail_bad_request.json"
+    )
 
     srt = SRT("010-1234-1234", "password")
 
@@ -147,7 +149,9 @@ def test_pay_with_card_fail_cant_installment(mock_server, httpserver):
     from SRT import SRT, SRTResponseError
 
     register_mock_response(httpserver, "/login", "login_success.json")
-    register_mock_response(httpserver, "/payment", "pay_with_card_fail_cant_installment.json")
+    register_mock_response(
+        httpserver, "/payment", "pay_with_card_fail_cant_installment.json"
+    )
 
     srt = SRT("010-1234-1234", "password")
 
@@ -162,7 +166,9 @@ def test_pay_with_card_fail_card_password(mock_server, httpserver):
     from SRT import SRT, SRTResponseError
 
     register_mock_response(httpserver, "/login", "login_success.json")
-    register_mock_response(httpserver, "/payment", "pay_with_card_fail_card_password.json")
+    register_mock_response(
+        httpserver, "/payment", "pay_with_card_fail_card_password.json"
+    )
 
     srt = SRT("010-1234-1234", "password")
 
@@ -179,7 +185,9 @@ def test_pay_with_card_fail_expired_card(mock_server, httpserver):
     from SRT import SRT, SRTResponseError
 
     register_mock_response(httpserver, "/login", "login_success.json")
-    register_mock_response(httpserver, "/payment", "pay_with_card_fail_expired_card.json")
+    register_mock_response(
+        httpserver, "/payment", "pay_with_card_fail_expired_card.json"
+    )
 
     srt = SRT("010-1234-1234", "password")
 
@@ -279,7 +287,9 @@ def test_pay_with_card_fail_suspension_card(mock_server, httpserver):
     from SRT import SRT, SRTResponseError
 
     register_mock_response(httpserver, "/login", "login_success.json")
-    register_mock_response(httpserver, "/payment", "pay_with_card_fail_suspension_card.json")
+    register_mock_response(
+        httpserver, "/payment", "pay_with_card_fail_suspension_card.json"
+    )
 
     srt = SRT("010-1234-1234", "password")
 
