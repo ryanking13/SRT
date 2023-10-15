@@ -33,4 +33,4 @@ jobs:
         SRT_USERNAME: ${{ secrets.SRT_USERNAME }}
       run: |
         pip install pytest
-        pytest SRT -x
+        pytest tests -x
