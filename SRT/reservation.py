@@ -32,15 +32,8 @@ class SRTTicket:
 
     def dump(self):
         d = (
-            "{car}호차 {seat} ({seat_type}) {passenger_type} "
-            "[{price}원({discount}원 할인)]"
-        ).format(
-            car=self.car,
-            seat=self.seat,
-            seat_type=self.seat_type,
-            passenger_type=self.passenger_type,
-            price=self.price,
-            discount=self.discount,
+            f"{self.car}호차 {self.seat} ({self.seat_type}) {self.passenger_type} "
+            f"[{self.price}원({self.discount}원 할인)]"
         )
 
         return d
