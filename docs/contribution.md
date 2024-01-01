@@ -17,8 +17,7 @@ export SRT_PASSWORD=<YOUR_SRT_PASSWORD>
 # set SRT_USERNAME=<YOUR_SRT_USERNAME>
 # set SRT_PASSWORD=<YOUR_SRT_PASSWORD>
 
-pip install -r requirements/test.txt
-pip install -r requirements.txt
+pip install -e ".[test]"
 
 black SRT
 pytest SRT -v -x

@@ -12,7 +12,6 @@ readme = "README.md"
 requires-python = ">= 3.10"
 dependencies = [
     "requests",
-    "PyInquirer",
 ]
 dynamic = [
     "version",
@@ -24,18 +23,19 @@ Homepage = "https://github.com/ryanking13/SRT"
 "Bug Tracker" = "https://github.com/ryanking13/SRT/issues"
 Changelog = "https://github.com/ryanking13/SRT/blob/master/CHANGELOG.md"
 
-[project.scripts]
-srt-reserve = "SRT.cli.reserve:main"
-
 [project.optional-dependencies]
 test = [
   "pytest",
   "pytest-httpserver",
+  "black",
 ]
 
 
 [tool.hatch.version]
 source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["SRT"]
 
 [tool.ruff]
 select = [
