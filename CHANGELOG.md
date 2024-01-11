@@ -1,6 +1,11 @@
 ## Unreleased
 
-- CLI 스크립트 삭제
+## v2.4.0 (2024/01/11)
+
+- ITX-마음 열차 추가
+  ([#257](https://github.com/ryanking13/SRT/pull/257))
+- 사용되지 않는 CLI 스크립트 삭제
+  ([#256](https://github.com/ryanking13/SRT/pull/256))
 
 ## v2.3.0 (2023/09/26)
 
