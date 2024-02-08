@@ -1,6 +1,6 @@
 import json
 
-from .errors import SRTResponseError
+from .errors import SRTError, SRTResponseError
 
 
 class SRTResponseData:
@@ -25,7 +25,15 @@ class SRTResponseData:
         return json.dumps(self._json)
 
     def _parse(self):
-        self._status = self._json["resultMap"][0]
+        if "resultMap" in self._json:
+            self._status = self._json["resultMap"][0]
+            return
+
+        if "ErrorCode" in self._json and "ErrorMsg" in self._json:
+            raise SRTResponseError(
+                f'Undefined result status "[{self._json["ErrorCode"]}]: {self._json["ErrorMsg"]}"'
+            )
+        raise SRTError(f"Unexpected case [{self._json}")
 
     def success(self):
         result = self._status.get("strResult", None)
