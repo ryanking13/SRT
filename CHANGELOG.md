@@ -1,4 +1,6 @@
 ## Unreleased
+- Add exception handling
+  ([#259](https://github.com/ryanking13/SRT/issues/259))
 
 ## v2.4.0 (2024/01/11)
 

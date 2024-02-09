@@ -19,7 +19,7 @@ export SRT_PASSWORD=<YOUR_SRT_PASSWORD>
 
 pip install -e ".[test]"
 
-black SRT
+pre-commit run --all-files
 pytest SRT -v -x
 
 # For full test

@@ -126,6 +126,10 @@ class SRT:
             self.is_login = False
             raise SRTLoginError(r.json()["MSG"])
 
+        if "Your IP Address Blocked due to abnormal access." in r.text:
+            self.is_login = False
+            raise SRTLoginError(r.text.strip())
+
         self.is_login = True
         self.membership_number = json.loads(r.text).get("userMap").get("MB_CRD_NO")
 
