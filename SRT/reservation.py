@@ -69,31 +69,14 @@ class SRTReservation:
 
     def dump(self):
         d = (
-            "[{name}] "
-            "{month}월 {day}일, "
-            "{dep}~{arr}"
-            "({dep_hour}:{dep_min}~{arr_hour}:{arr_min}) "
-            "{cost}원({seats}석)"
-        ).format(
-            name=self.train_name,
-            month=self.dep_date[4:6],
-            day=self.dep_date[6:8],
-            dep=self.dep_station_name,
-            arr=self.arr_station_name,
-            dep_hour=self.dep_time[0:2],
-            dep_min=self.dep_time[2:4],
-            arr_hour=self.arr_time[0:2],
-            arr_min=self.arr_time[2:4],
-            cost=self.total_cost,
-            seats=self.seat_count,
+            f"[{self.train_name}] "
+            f"{self.dep_date[4:6]}월 {self.dep_date[6:8]}일, "
+            f"{self.dep_station_name}~{self.arr_station_name}"
+            f"({self.dep_time[0:2]}:{self.dep_time[2:4]}~{self.arr_time[0:2]}:{self.arr_time[2:4]}) "
+            f"{self.total_cost}원({self.seat_count}석)"
         )
         if not self.paid:
-            d += (", 구입기한 {pay_month}월 {pay_day}일 {pay_hour}:{pay_min}").format(
-                pay_month=self.payment_date[4:6],
-                pay_day=self.payment_date[6:8],
-                pay_hour=self.payment_time[0:2],
-                pay_min=self.payment_time[2:4],
-            )
+            d += f", 구입기한 {self.payment_date[4:6]}월 {self.payment_date[6:8]}일 {self.payment_time[0:2]}:{self.payment_time[2:4]}"
         return d
 
     @property
