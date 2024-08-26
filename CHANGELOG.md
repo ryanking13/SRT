@@ -1,9 +1,14 @@
 ## Unreleased
 
+## v2.5.0 (2024/08/26)
+
+- 잘못된 승객 타입이 지정되는 문제 수정
+  ([#267](https://github.com/ryanking13/SRT/pull/267))
+
 ## v2.4.1 (2024/02/09)
 
 - Add exception handling
-  ([#259](https://github.com/ryanking13/SRT/issues/259))
+  ([#259](https://github.com/ryanking13/SRT/pull/259))
 
 ## v2.4.0 (2024/01/11)
 
