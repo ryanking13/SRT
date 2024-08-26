@@ -28,7 +28,7 @@ class Passenger(metaclass=abc.ABCMeta):
             return self.__class__(count=new_count)
 
     @classmethod
-    def combine(cls, passengers):
+    def combine(cls, passengers: list["Passenger"]) -> list["Passenger"]:
         if list(filter(lambda x: not isinstance(x, Passenger), passengers)):
             raise TypeError("Passengers must be based on Passenger")
 
@@ -69,7 +69,7 @@ class Passenger(metaclass=abc.ABCMeta):
         return str(total_count)
 
     @staticmethod
-    def get_passenger_dict(passengers, special_seat=False, window_seat=None):
+    def get_passenger_dict(passengers, special_seat=False, window_seat=None) -> dict[str, str]:
         if list(filter(lambda x: not isinstance(x, Passenger), passengers)):
             raise TypeError("Passengers must be based on Passenger")
 
