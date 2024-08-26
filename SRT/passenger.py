@@ -21,7 +21,7 @@ class Passenger(metaclass=abc.ABCMeta):
     def __repr__(self):
         return f"{self.name} {self.count}명"
 
-    def __add__(self, other):
+    def __add__(self, other: "Passenger") -> "Passenger":
         assert isinstance(other, self.__class__)
         if self.type_code == other.type_code:
             new_count = self.count + other.count
@@ -36,15 +36,13 @@ class Passenger(metaclass=abc.ABCMeta):
         combined_passengers = []
         while tmp_passengers:
             passenger = tmp_passengers.pop()
-            same_class = []
+            same_class: list[Passenger] = []
             for p in tmp_passengers:
                 if isinstance(p, passenger.__class__):
                     same_class.append(p)
 
-            new_passenger = None
-            if not same_class:
-                new_passenger = passenger
-            else:
+            new_passenger = passenger
+            if same_class:
                 for same in same_class:
                     new_passenger = passenger + same
                     tmp_passengers.remove(same)
