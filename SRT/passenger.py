@@ -22,10 +22,15 @@ class Passenger(metaclass=abc.ABCMeta):
         return f"{self.name} {self.count}명"
 
     def __add__(self, other: "Passenger") -> "Passenger":
-        assert isinstance(other, self.__class__)
+        if not isinstance(other, self.__class__):
+            raise TypeError("Passenger types must be the same")
+        
         if self.type_code == other.type_code:
             new_count = self.count + other.count
             return self.__class__(count=new_count)
+
+        raise ValueError("Passenger types must be the same")
+    
 
     @classmethod
     def combine(cls, passengers: list["Passenger"]) -> list["Passenger"]:
