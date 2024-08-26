@@ -69,7 +69,9 @@ class Passenger(metaclass=abc.ABCMeta):
         return str(total_count)
 
     @staticmethod
-    def get_passenger_dict(passengers, special_seat=False, window_seat=None) -> dict[str, str]:
+    def get_passenger_dict(
+        passengers, special_seat=False, window_seat=None
+    ) -> dict[str, str]:
         if list(filter(lambda x: not isinstance(x, Passenger), passengers)):
             raise TypeError("Passengers must be based on Passenger")
 

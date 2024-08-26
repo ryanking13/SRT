@@ -1,8 +1,16 @@
-from SRT.passenger import Adult, Child, Senior, Disability1To3, Disability4To6, Passenger
+from SRT.passenger import (
+    Adult,
+    Child,
+    Disability1To3,
+    Disability4To6,
+    Passenger,
+    Senior,
+)
+
 
 def test_get_passenger_dict():
     passengers = [
-        Adult(), 
+        Adult(),
         Child(),
         Child(),
     ]
@@ -34,5 +42,3 @@ def test_get_passenger_dict():
     assert data["psgInfoPerPrnb2"] == "1"
     assert data["psgTpCd3"] == "3"
     assert data["psgInfoPerPrnb3"] == "1"
-
-
