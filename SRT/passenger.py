@@ -77,21 +77,22 @@ class Passenger(metaclass=abc.ABCMeta):
             "totPrnb": Passenger.total_count(passengers),
             "psgGridcnt": str(len(passengers)),
         }
-        for i, passenger in enumerate(passengers):
-            data[f"psgTpCd{i + 1}"] = passenger.type_code
-            data[f"psgInfoPerPrnb{i + 1}"] = str(passenger.count)
+        for _, passenger in enumerate(passengers):
+            code = passenger.type_code
+            data[f"psgTpCd{code}"] = passenger.type_code
+            data[f"psgInfoPerPrnb{code}"] = str(passenger.count)
             # seat location ('000': 기본, '012': 창측, '013': 복도측)
-            data[f"locSeatAttCd{i + 1}"] = WINDOW_SEAT[window_seat]
+            data[f"locSeatAttCd{code}"] = WINDOW_SEAT[window_seat]
             # seat requirement ('015': 일반, '021': 휠체어)
             # TODO: 선택 가능하게
-            data[f"rqSeatAttCd{i + 1}"] = "015"
+            data[f"rqSeatAttCd{code}"] = "015"
             # seat direction ('009': 정방향)
-            data[f"dirSeatAttCd{i + 1}"] = "009"
+            data[f"dirSeatAttCd{code}"] = "009"
 
-            data[f"smkSeatAttCd{i + 1}"] = "000"
-            data[f"etcSeatAttCd{i + 1}"] = "000"
+            data[f"smkSeatAttCd{code}"] = "000"
+            data[f"etcSeatAttCd{code}"] = "000"
             # seat type: ('1': 일반실, '2': 특실)
-            data[f"psrmClCd{i + 1}"] = "2" if special_seat else "1"
+            data[f"psrmClCd{code}"] = "2" if special_seat else "1"
 
         return data
 

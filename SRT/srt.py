@@ -395,10 +395,6 @@ class SRT:
             "dirSeatAttCd1": "009",  # 방향좌석속성코드
             "locSeatAttCd1": "000",  # 위치좌석속성코드1
             "rqSeatAttCd1": "015",  # 요구좌석속성코드1
-            "etcSeatAttCd1": "000",  # 기타좌석속성코드1
-            "smkSeatAttCd2": "000",  # 흡연좌석속성코드2
-            "dirSeatAttCd2": "009",  # 방향좌석속성코드2
-            "rqSeatAttCd2": "015",  # 요구좌석속성코드2
             "mblPhone": mblPhone,
         }
 
@@ -410,13 +406,11 @@ class SRT:
                 }
             )
 
-        # jobid가 RESERVE_JOBID["PERSONAL"]일 경우, data에 windowSeat 추가
-        if jobid == RESERVE_JOBID["PERSONAL"]:
-            data.update(
-                Passenger.get_passenger_dict(
-                    passengers, special_seat=is_special_seat, window_seat=window_seat
-                )
+        data.update(
+            Passenger.get_passenger_dict(
+                passengers, special_seat=is_special_seat, window_seat=window_seat
             )
+        )
 
         r = self._session.post(url=url, data=data)
         parser = SRTResponseData(r.text)
