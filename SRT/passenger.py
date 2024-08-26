@@ -36,14 +36,11 @@ class Passenger(metaclass=abc.ABCMeta):
         combined_passengers = []
         while tmp_passengers:
             passenger = tmp_passengers.pop()
-            same_class = list(
-                filter(
-                    lambda x, base_passenger=passenger: isinstance(
-                        x, base_passenger.__class__
-                    ),
-                    tmp_passengers,
-                )
-            )
+            same_class = []
+            for p in tmp_passengers:
+                if isinstance(p, passenger.__class__):
+                    same_class.append(p)
+
             new_passenger = None
             if not same_class:
                 new_passenger = passenger
