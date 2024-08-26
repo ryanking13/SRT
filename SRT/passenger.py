@@ -21,14 +21,18 @@ class Passenger(metaclass=abc.ABCMeta):
     def __repr__(self):
         return f"{self.name} {self.count}명"
 
-    def __add__(self, other):
-        assert isinstance(other, self.__class__)
+    def __add__(self, other: "Passenger") -> "Passenger":
+        if not isinstance(other, self.__class__):
+            raise TypeError("Passenger types must be the same")
+
         if self.type_code == other.type_code:
             new_count = self.count + other.count
             return self.__class__(count=new_count)
 
+        raise ValueError("Passenger types must be the same")
+
     @classmethod
-    def combine(cls, passengers):
+    def combine(cls, passengers: list["Passenger"]) -> list["Passenger"]:
         if list(filter(lambda x: not isinstance(x, Passenger), passengers)):
             raise TypeError("Passengers must be based on Passenger")
 
@@ -36,18 +40,13 @@ class Passenger(metaclass=abc.ABCMeta):
         combined_passengers = []
         while tmp_passengers:
             passenger = tmp_passengers.pop()
-            same_class = list(
-                filter(
-                    lambda x, base_passenger=passenger: isinstance(
-                        x, base_passenger.__class__
-                    ),
-                    tmp_passengers,
-                )
-            )
-            new_passenger = None
-            if not same_class:
-                new_passenger = passenger
-            else:
+            same_class: list[Passenger] = []
+            for p in tmp_passengers:
+                if isinstance(p, passenger.__class__):
+                    same_class.append(p)
+
+            new_passenger = passenger
+            if same_class:
                 for same in same_class:
                     new_passenger = passenger + same
                     tmp_passengers.remove(same)
@@ -69,7 +68,9 @@ class Passenger(metaclass=abc.ABCMeta):
         return str(total_count)
 
     @staticmethod
-    def get_passenger_dict(passengers, special_seat=False, window_seat=None):
+    def get_passenger_dict(
+        passengers, special_seat=False, window_seat=None
+    ) -> dict[str, str]:
         if list(filter(lambda x: not isinstance(x, Passenger), passengers)):
             raise TypeError("Passengers must be based on Passenger")
 
@@ -77,21 +78,22 @@ class Passenger(metaclass=abc.ABCMeta):
             "totPrnb": Passenger.total_count(passengers),
             "psgGridcnt": str(len(passengers)),
         }
-        for i, passenger in enumerate(passengers):
-            data[f"psgTpCd{i + 1}"] = passenger.type_code
-            data[f"psgInfoPerPrnb{i + 1}"] = str(passenger.count)
+        for _, passenger in enumerate(passengers):
+            code = passenger.type_code
+            data[f"psgTpCd{code}"] = passenger.type_code
+            data[f"psgInfoPerPrnb{code}"] = str(passenger.count)
             # seat location ('000': 기본, '012': 창측, '013': 복도측)
-            data[f"locSeatAttCd{i + 1}"] = WINDOW_SEAT[window_seat]
+            data[f"locSeatAttCd{code}"] = WINDOW_SEAT[window_seat]
             # seat requirement ('015': 일반, '021': 휠체어)
             # TODO: 선택 가능하게
-            data[f"rqSeatAttCd{i + 1}"] = "015"
+            data[f"rqSeatAttCd{code}"] = "015"
             # seat direction ('009': 정방향)
-            data[f"dirSeatAttCd{i + 1}"] = "009"
+            data[f"dirSeatAttCd{code}"] = "009"
 
-            data[f"smkSeatAttCd{i + 1}"] = "000"
-            data[f"etcSeatAttCd{i + 1}"] = "000"
+            data[f"smkSeatAttCd{code}"] = "000"
+            data[f"etcSeatAttCd{code}"] = "000"
             # seat type: ('1': 일반실, '2': 특실)
-            data[f"psrmClCd{i + 1}"] = "2" if special_seat else "1"
+            data[f"psrmClCd{code}"] = "2" if special_seat else "1"
 
         return data
 
