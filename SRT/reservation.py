@@ -12,13 +12,21 @@ class SRTTicket:
         "5": "어린이",
     }
 
+    DISCOUNT_TYPE = {
+        '000': '어른/청소년',
+        '201': '어린이',
+        '301': '경로',
+        '205': '장애 1~3급',
+        '206': '장애 4~6급',
+    }
+    
     def __init__(self, data):
         self.car = data["scarNo"]
         self.seat = data["seatNo"]
         self.seat_type_code = data["psrmClCd"]
         self.seat_type = self.SEAT_TYPE[self.seat_type_code]
-        self.passenger_type_code = data["psgTpCd"]
-        self.passenger_type = self.PASSENGER_TYPE[self.passenger_type_code]
+        self.passenger_type_code = data["dcntKndCd"]
+        self.passenger_type = self.DISCOUNT_TYPE[self.passenger_type_code]
 
         self.price = int(data["rcvdAmt"])
         self.original_price = int(data["stdrPrc"])
