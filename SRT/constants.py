@@ -64,3 +64,8 @@ API_ENDPOINTS = {
     "standby_option": f"{SRT_MOBILE}/ata/selectListAta01135_n.do",
     "payment": f"{SRT_MOBILE}/ata/selectListAta09036_n.do",
 }
+
+USER_AGENT = (
+    "Mozilla/5.0 (Linux; Android 5.1.1; LGM-V300K Build/N2G47H) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Version/4.0 Chrome/39.0.0.0 Mobile Safari/537.36SRT-APP-Android V.1.0.6"
+)

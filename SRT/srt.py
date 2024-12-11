@@ -5,22 +5,20 @@ from datetime import datetime, timedelta
 import requests  # type: ignore[import]
 
 from . import constants
-from .constants import STATION_CODE
+from .constants import STATION_CODE, USER_AGENT
 from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
 from .passenger import Adult, Passenger
 from .reservation import SRTReservation, SRTTicket
 from .response_data import SRTResponseData
 from .seat_type import SeatType
 from .train import SRTTrain
+from .netfunnel import NetFunnelHelper
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 PHONE_NUMBER_REGEX = re.compile(r"(\d{3})-(\d{3,4})-(\d{4})")
 
 DEFAULT_HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Linux; Android 5.1.1; LGM-V300K Build/N2G47H) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Version/4.0 Chrome/39.0.0.0 Mobile Safari/537.36SRT-APP-Android V.1.0.6"
-    ),
+    "User-Agent": USER_AGENT,
     "Accept": "application/json",
 }
 
@@ -52,6 +50,7 @@ class SRT:
     ) -> None:
         self._session = requests.session()
         self._session.headers.update(DEFAULT_HEADERS)
+        self._netfunnelHelper = NetFunnelHelper()
 
         self.srt_id: str = srt_id
         self.srt_pw: str = srt_pw
@@ -190,6 +189,10 @@ class SRT:
         if time is None:
             time = "000000"
 
+        # netfunnel 요청을 보내서 열차 목록을 가져온다.
+        netfunnelKey = self._netfunnelHelper.get_netfunnel_key()
+        self._netfunnelHelper.set_complete(netfunnelKey)
+
         url = constants.API_ENDPOINTS["search_schedule"]
         data = {
             # course (1: 직통, 2: 환승, 3: 왕복)
@@ -210,6 +213,7 @@ class SRT:
             "arvRsStnCd": arr_code,
             # departure station code
             "dptRsStnCd": dep_code,
+            "netfunnelKey": netfunnelKey,
         }
 
         r = self._session.post(url=url, data=data)
