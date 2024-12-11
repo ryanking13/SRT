@@ -7,12 +7,12 @@ import requests  # type: ignore[import]
 from . import constants
 from .constants import STATION_CODE, USER_AGENT
 from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
+from .netfunnel import NetFunnelHelper
 from .passenger import Adult, Passenger
 from .reservation import SRTReservation, SRTTicket
 from .response_data import SRTResponseData
 from .seat_type import SeatType
 from .train import SRTTrain
-from .netfunnel import NetFunnelHelper
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 PHONE_NUMBER_REGEX = re.compile(r"(\d{3})-(\d{3,4})-(\d{4})")

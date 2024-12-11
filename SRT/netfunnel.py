@@ -1,7 +1,9 @@
-import requests
 import time
 
+import requests
+
 from .constants import SRT_MOBILE, USER_AGENT
+
 
 class NetFunnelHelper:
     NETFUNNEL_URL = "http://nf.letskorail.com/ts.wseq"
@@ -13,15 +15,15 @@ class NetFunnelHelper:
 
     DEFAULT_HEADERS = {
         "User-Agent": USER_AGENT,
-        "Accept": "*/*", 
+        "Accept": "*/*",
         "Accept-Language": "ko,en;q=0.9,en-US;q=0.8",
         "Cache-Control": "no-cache",
         "Connection": "keep-alive",
-        "Pragma": "no-cache", 
+        "Pragma": "no-cache",
         "Referer": SRT_MOBILE,
         "Sec-Fetch-Dest": "script",
         "Sec-Fetch-Mode": "no-cors",
-        "Sec-Fetch-Site": "cross-site"
+        "Sec-Fetch-Site": "cross-site",
     }
 
     def __init__(self):
@@ -36,7 +38,7 @@ class NetFunnelHelper:
                 "opcode": self.OP_CODE["getTidchkEnter"],
                 "nfid": "0",
                 "prefix": f"NetFunnel.gRtype={self.OP_CODE['getTidchkEnter']};",
-                "sid": "service_1", 
+                "sid": "service_1",
                 "aid": "act_10",
                 "js": "true",
                 str(timestamp): "",
@@ -46,7 +48,7 @@ class NetFunnelHelper:
         key_start = response.find("key=") + 4
         key_end = response.find("&", key_start)
         return response[key_start:key_end]
-    
+
     def set_complete(self, key: str):
         timestamp = int(time.time() * 1000)
         self.session.get(
@@ -54,7 +56,7 @@ class NetFunnelHelper:
             params={
                 "opcode": self.OP_CODE["setComplete"],
                 "key": key,
-                "nfid": "0", 
+                "nfid": "0",
                 "prefix": f"NetFunnel.gRtype={self.OP_CODE['setComplete']};",
                 "js": "true",
                 str(timestamp): "",
