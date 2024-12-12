@@ -7,6 +7,7 @@ from SRT.netfunnel import NetFunnelHelper, SRTNetFunnelError
 def helper():
     return NetFunnelHelper()
 
+
 def test_get_netfunnel_key_success(helper):
     try:
         key = helper._get_netfunnel_key(True)
@@ -23,6 +24,7 @@ def test_set_complete_success(helper):
         raise AssertionError() from e
     assert True
 
+
 def test_extract_netfunnel_key_success(helper):
     key = "C75890BD44561ED79DFA180832F2D016F95C9F7BE965B2"
     response = f"""
@@ -32,4 +34,3 @@ NetFunnel.gControl._showResult();
 """
     key = helper._extract_netfunnel_key(response)
     assert key == key
-

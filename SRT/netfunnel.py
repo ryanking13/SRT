@@ -36,7 +36,7 @@ class NetFunnelHelper:
         key = self._get_netfunnel_key(use_cache)
         self._set_complete(key)
         return key
-    
+
     def _get_netfunnel_key(self, use_cache: bool):
         """
         NetFunnel 키를 요청합니다.
@@ -98,7 +98,7 @@ class NetFunnelHelper:
             )
         except Exception as e:
             raise SRTNetFunnelError(e) from e
-        
+
     def _get_timestamp_for_netfunnel(self):
         return int(time.time() * 1000)
 
@@ -118,10 +118,10 @@ class NetFunnelHelper:
         key_start = response.find("key=")
         if key_start == -1:
             raise SRTNetFunnelError("NetFunnel key not found in response")
-            
+
         key_start += 4  # "key=" length
         key_end = response.find("&", key_start)
         if key_end == -1:
             raise SRTNetFunnelError("Invalid NetFunnel key format in response")
-            
+
         return response[key_start:key_end]

@@ -167,7 +167,7 @@ class SRT:
         date: str | None = None,
         time: str | None = None,
         time_limit: str | None = None,
-        available_only: bool = True
+        available_only: bool = True,
     ) -> list[SRTTrain]:
         """주어진 출발지에서 도착지로 향하는 SRT 열차를 검색합니다.
 
@@ -204,11 +204,11 @@ class SRT:
             time_limit=time_limit,
             arr_code=arr_code,
             dep_code=dep_code,
-            available_only=available_only
+            available_only=available_only,
         )
 
         return trains
-    
+
     def _search_train(
         self,
         dep: str,
@@ -221,7 +221,7 @@ class SRT:
         available_only: bool = True,
         use_netfunnel_cache: bool = True,
     ) -> list[SRTTrain]:
-        """ netfunnel_key를 발급받아 열차를 검색하는 내부 함수입니다.
+        """netfunnel_key를 발급받아 열차를 검색하는 내부 함수입니다.
 
         Args:
             dep (str): 출발역
