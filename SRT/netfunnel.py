@@ -71,8 +71,8 @@ class NetFunnelHelper:
 
             return netfunnel_key
         except Exception as e:
-            raise SRTNetFunnelError(e)
-
+            raise SRTNetFunnelError(e) from e
+    
     def set_complete(self, key: str):
         """
         NetFunnel 완료 요청을 보냅니다.
@@ -97,4 +97,4 @@ class NetFunnelHelper:
                 params=params,
             )
         except Exception as e:
-            raise SRTNetFunnelError(e)
+            raise SRTNetFunnelError(e) from e
