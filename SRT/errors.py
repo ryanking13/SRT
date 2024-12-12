@@ -24,3 +24,11 @@ class SRTDuplicateError(SRTResponseError):
 class SRTNotLoggedInError(SRTError):
     def __init__(self):
         super().__init__("Not logged in")
+
+
+class SRTNetFunnelError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+    def __str__(self):
+        return self.msg

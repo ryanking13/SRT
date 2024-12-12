@@ -46,11 +46,11 @@ class SRT:
     """
 
     def __init__(
-        self, srt_id: str, srt_pw: str, auto_login: bool = True, verbose: bool = False
+        self, srt_id: str, srt_pw: str, auto_login: bool = True, verbose: bool = False, netfunnelHelper: NetFunnelHelper = NetFunnelHelper()
     ) -> None:
         self._session = requests.session()
         self._session.headers.update(DEFAULT_HEADERS)
-        self._netfunnelHelper = NetFunnelHelper()
+        self._netfunnelHelper = netfunnelHelper
 
         self.srt_id: str = srt_id
         self.srt_pw: str = srt_pw
@@ -161,6 +161,7 @@ class SRT:
         time: str | None = None,
         time_limit: str | None = None,
         available_only: bool = True,
+        use_netfunnel_cache: bool = True,
     ) -> list[SRTTrain]:
         """주어진 출발지에서 도착지로 향하는 SRT 열차를 검색합니다.
 
@@ -171,6 +172,7 @@ class SRT:
             time (str, optional): 출발 시각 (hhmmss) (default: 0시 0분 0초)
             time_limit (str, optional): 출발 시각 조회 한도 (hhmmss)
             available_only (bool, optional): 매진되지 않은 열차만 검색합니다 (default: True)
+            use_netfunnel_cache (bool, optional): netfunnel 캐시 사용 여부, 사용하지 않으면 요청 시마다 새로 netfunnel 키를 요청합니다 (default: True)
 
         Returns:
             list[:class:`SRTTrain`]: 열차 리스트
@@ -189,8 +191,7 @@ class SRT:
         if time is None:
             time = "000000"
 
-        # netfunnel 요청을 보내서 열차 목록을 가져온다.
-        netfunnelKey = self._netfunnelHelper.get_netfunnel_key()
+        netfunnelKey = self._netfunnelHelper.get_netfunnel_key(use_netfunnel_cache)
         self._netfunnelHelper.set_complete(netfunnelKey)
 
         url = constants.API_ENDPOINTS["search_schedule"]
@@ -220,7 +221,19 @@ class SRT:
         parser = SRTResponseData(r.text)
 
         if not parser.success():
-            raise SRTResponseError(parser.message())
+            message = parser.message()
+            if "정상적인 경로로 접근 부탁드립니다." in message:
+                return self.search_train(
+                    dep=dep,
+                    arr=arr,
+                    date=date,
+                    time=time,
+                    time_limit=time_limit,
+                    available_only=available_only,
+                    use_netfunnel_cache=False
+                )
+            else:
+                raise SRTResponseError(message)
 
         self._log(parser.message())
         all_trains = parser.get_all()["outDataSets"]["dsOutput1"]
