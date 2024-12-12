@@ -46,11 +46,18 @@ class SRT:
     """
 
     def __init__(
-        self, srt_id: str, srt_pw: str, auto_login: bool = True, verbose: bool = False, netfunnelHelper: NetFunnelHelper | None = None
+        self,
+        srt_id: str,
+        srt_pw: str,
+        auto_login: bool = True,
+        verbose: bool = False,
+        netfunnelHelper: NetFunnelHelper | None = None,
     ) -> None:
         self._session = requests.session()
         self._session.headers.update(DEFAULT_HEADERS)
-        self._netfunnelHelper = netfunnelHelper if netfunnelHelper is not None else NetFunnelHelper()
+        self._netfunnelHelper = (
+            netfunnelHelper if netfunnelHelper is not None else NetFunnelHelper()
+        )
 
         self.srt_id: str = srt_id
         self.srt_pw: str = srt_pw
