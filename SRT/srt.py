@@ -46,7 +46,12 @@ class SRT:
     """
 
     def __init__(
-        self, srt_id: str, srt_pw: str, auto_login: bool = True, verbose: bool = False, netfunnelHelper: NetFunnelHelper = NetFunnelHelper()
+        self,
+        srt_id: str,
+        srt_pw: str,
+        auto_login: bool = True,
+        verbose: bool = False,
+        netfunnelHelper: NetFunnelHelper = NetFunnelHelper(),
     ) -> None:
         self._session = requests.session()
         self._session.headers.update(DEFAULT_HEADERS)
@@ -230,7 +235,7 @@ class SRT:
                     time=time,
                     time_limit=time_limit,
                     available_only=available_only,
-                    use_netfunnel_cache=False
+                    use_netfunnel_cache=False,
                 )
             else:
                 raise SRTResponseError(message)

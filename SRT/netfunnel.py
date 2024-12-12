@@ -5,11 +5,12 @@ import requests
 from .constants import SRT_MOBILE, USER_AGENT
 from .errors import SRTNetFunnelError
 
+
 class NetFunnelHelper:
     NETFUNNEL_URL = "http://nf.letskorail.com/ts.wseq"
 
     OP_CODE = {
-        "getTidchkEnter": "5101", 
+        "getTidchkEnter": "5101",
         "setComplete": "5004",
     }
 
@@ -41,7 +42,7 @@ class NetFunnelHelper:
         Returns:
             str: NetFunnel 키
         """
-        
+
         if use_cache and self._cachedNetfunnelKey is not None:
             return self._cachedNetfunnelKey
 
@@ -51,7 +52,7 @@ class NetFunnelHelper:
             "opcode": self.OP_CODE["getTidchkEnter"],
             "nfid": "0",
             "prefix": f"NetFunnel.gRtype={self.OP_CODE['getTidchkEnter']};",
-            "sid": "service_1", 
+            "sid": "service_1",
             "aid": "act_10",
             "js": "true",
             str(timestamp): "",
@@ -71,7 +72,7 @@ class NetFunnelHelper:
             return netfunnel_key
         except Exception as e:
             raise SRTNetFunnelError(e)
-    
+
     def set_complete(self, key: str):
         """
         NetFunnel 완료 요청을 보냅니다.
@@ -97,4 +98,3 @@ class NetFunnelHelper:
             )
         except Exception as e:
             raise SRTNetFunnelError(e)
-
