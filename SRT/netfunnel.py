@@ -32,7 +32,12 @@ class NetFunnelHelper:
         self.session.headers.update(self.DEFAULT_HEADERS)
         self._cachedNetfunnelKey = None
 
-    def get_netfunnel_key(self, use_cache: bool):
+    def generate_netfunnel_key(self, use_cache: bool):
+        key = self._get_netfunnel_key(use_cache)
+        self._set_complete(key)
+        return key
+    
+    def _get_netfunnel_key(self, use_cache: bool):
         """
         NetFunnel 키를 요청합니다.
 
@@ -46,8 +51,6 @@ class NetFunnelHelper:
         if use_cache and self._cachedNetfunnelKey is not None:
             return self._cachedNetfunnelKey
 
-        timestamp = int(time.time() * 1000)
-
         params = {
             "opcode": self.OP_CODE["getTidchkEnter"],
             "nfid": "0",
@@ -55,7 +58,7 @@ class NetFunnelHelper:
             "sid": "service_1",
             "aid": "act_10",
             "js": "true",
-            str(timestamp): "",
+            self._get_timestamp_for_netfunnel(): "",
         }
 
         try:
@@ -63,24 +66,21 @@ class NetFunnelHelper:
                 self.NETFUNNEL_URL,
                 params=params,
             ).text
-
-            key_start = response.find("key=") + 4
-            key_end = response.find("&", key_start)
-            netfunnel_key = response[key_start:key_end]
-            self._cachedNetfunnelKey = netfunnel_key
-
-            return netfunnel_key
         except Exception as e:
             raise SRTNetFunnelError(e) from e
 
-    def set_complete(self, key: str):
+        netfunnel_key = self._extract_netfunnel_key(response)
+        self._cachedNetfunnelKey = netfunnel_key
+
+        return netfunnel_key
+
+    def _set_complete(self, key: str):
         """
         NetFunnel 완료 요청을 보냅니다.
 
         Args:
             key (str): NetFunnel 키
         """
-        timestamp = int(time.time() * 1000)
 
         params = {
             "opcode": self.OP_CODE["setComplete"],
@@ -88,7 +88,7 @@ class NetFunnelHelper:
             "nfid": "0",
             "prefix": f"NetFunnel.gRtype={self.OP_CODE['setComplete']};",
             "js": "true",
-            str(timestamp): "",
+            self._get_timestamp_for_netfunnel(): "",
         }
 
         try:
@@ -98,3 +98,30 @@ class NetFunnelHelper:
             )
         except Exception as e:
             raise SRTNetFunnelError(e) from e
+        
+    def _get_timestamp_for_netfunnel(self):
+        return int(time.time() * 1000)
+
+    def _extract_netfunnel_key(self, response: str):
+        """
+        NetFunnel 키를 추출합니다.
+
+        Args:
+            response (str): NetFunnel 응답
+
+        Returns:
+            str: NetFunnel 키
+
+        Raises:
+            SRTNetFunnelError: NetFunnel 키를 찾을 수 없는 경우
+        """
+        key_start = response.find("key=")
+        if key_start == -1:
+            raise SRTNetFunnelError("NetFunnel key not found in response")
+            
+        key_start += 4  # "key=" length
+        key_end = response.find("&", key_start)
+        if key_end == -1:
+            raise SRTNetFunnelError("Invalid NetFunnel key format in response")
+            
+        return response[key_start:key_end]

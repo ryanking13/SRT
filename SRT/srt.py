@@ -167,8 +167,7 @@ class SRT:
         date: str | None = None,
         time: str | None = None,
         time_limit: str | None = None,
-        available_only: bool = True,
-        use_netfunnel_cache: bool = True,
+        available_only: bool = True
     ) -> list[SRTTrain]:
         """주어진 출발지에서 도착지로 향하는 SRT 열차를 검색합니다.
 
@@ -179,7 +178,6 @@ class SRT:
             time (str, optional): 출발 시각 (hhmmss) (default: 0시 0분 0초)
             time_limit (str, optional): 출발 시각 조회 한도 (hhmmss)
             available_only (bool, optional): 매진되지 않은 열차만 검색합니다 (default: True)
-            use_netfunnel_cache (bool, optional): netfunnel 캐시 사용 여부, 사용하지 않으면 요청 시마다 새로 netfunnel 키를 요청합니다 (default: True)
 
         Returns:
             list[:class:`SRTTrain`]: 열차 리스트
@@ -198,8 +196,49 @@ class SRT:
         if time is None:
             time = "000000"
 
-        netfunnelKey = self._netfunnelHelper.get_netfunnel_key(use_netfunnel_cache)
-        self._netfunnelHelper.set_complete(netfunnelKey)
+        trains = self._search_train(
+            dep=dep,
+            arr=arr,
+            date=date,
+            time=time,
+            time_limit=time_limit,
+            arr_code=arr_code,
+            dep_code=dep_code,
+            available_only=available_only
+        )
+
+        return trains
+    
+    def _search_train(
+        self,
+        dep: str,
+        arr: str,
+        date: str | None = None,
+        time: str | None = None,
+        time_limit: str | None = None,
+        arr_code: str | None = None,
+        dep_code: str | None = None,
+        available_only: bool = True,
+        use_netfunnel_cache: bool = True,
+    ) -> list[SRTTrain]:
+        """ netfunnel_key를 발급받아 열차를 검색하는 내부 함수입니다.
+
+        Args:
+            dep (str): 출발역
+            arr (str): 도착역
+            date (str, optional): 출발 날짜 (yyyyMMdd) (default: 당일)
+            time (str, optional): 출발 시각 (hhmmss) (default: 0시 0분 0초)
+            time_limit (str, optional): 출발 시각 조회 한도 (hhmmss)
+            arr_code (str, optional): 도착역 코드
+            dep_code (str, optional): 출발역 코드
+            available_only (bool, optional): 매진되지 않은 열차만 검색합니다 (default: True)
+            use_netfunnel_cache (bool, optional): netfunnel 캐시 사용 여부, 사용하지 않으면 요청 시마다 새로 netfunnel 키를 요청합니다 (default: True)
+
+        Returns:
+            list[:class:`SRTTrain`]: 열차 리스트
+        """
+
+        netfunnelKey = self._netfunnelHelper.generate_netfunnel_key(use_netfunnel_cache)
 
         url = constants.API_ENDPOINTS["search_schedule"]
         data = {
@@ -228,18 +267,21 @@ class SRT:
         parser = SRTResponseData(r.text)
 
         if not parser.success():
-            message = parser.message()
-            if "정상적인 경로로 접근 부탁드립니다." in message:
-                return self.search_train(
+            message_code = parser.message_code()
+            if message_code == "NET000001":
+                return self._search_train(
                     dep=dep,
                     arr=arr,
                     date=date,
                     time=time,
                     time_limit=time_limit,
+                    arr_code=arr_code,
+                    dep_code=dep_code,
                     available_only=available_only,
                     use_netfunnel_cache=False,
                 )
             else:
+                message = parser.message()
                 raise SRTResponseError(message)
 
         self._log(parser.message())
