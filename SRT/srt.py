@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import requests  # type: ignore[import]
 
 from . import constants
-from .constants import STATION_CODE, USER_AGENT, INVALID_NETFUNNEL_KEY
+from .constants import INVALID_NETFUNNEL_KEY, STATION_CODE, USER_AGENT
 from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
 from .netfunnel import NetFunnelHelper
 from .passenger import Adult, Passenger
