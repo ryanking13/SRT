@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import requests  # type: ignore[import]
 
 from . import constants
-from .constants import STATION_CODE, USER_AGENT
+from .constants import STATION_CODE, USER_AGENT, INVALID_NETFUNNEL_KEY
 from .errors import SRTError, SRTLoginError, SRTNotLoggedInError, SRTResponseError
 from .netfunnel import NetFunnelHelper
 from .passenger import Adult, Passenger
@@ -205,6 +205,7 @@ class SRT:
             arr_code=arr_code,
             dep_code=dep_code,
             available_only=available_only,
+            use_netfunnel_cache=True,
         )
 
         return trains
@@ -268,7 +269,7 @@ class SRT:
 
         if not parser.success():
             message_code = parser.message_code()
-            if message_code == "NET000001":
+            if message_code == use_netfunnel_cache and INVALID_NETFUNNEL_KEY:
                 return self._search_train(
                     dep=dep,
                     arr=arr,
