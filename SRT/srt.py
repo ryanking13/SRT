@@ -39,6 +39,7 @@ class SRT:
         srt_pw (str): SRT 계정 패스워드
         auto_login (bool): :func:`login` 함수 호출 여부
         verbose (bool): 디버깅용 로그 출력 여부
+        netfunnel_helper (NetFunnelHelper, optional): netfunnel 키 를 관리합니다. 자세한 사항은 `advanced.md`의 '여러 SRT 간, netFunnelKey 공유하기'를 참고하세요
 
     >>> srt = SRT("1234567890", YOUR_PASSWORD) # with membership number
     >>> srt = SRT("def6488@gmail.com", YOUR_PASSWORD) # with email
@@ -51,12 +52,12 @@ class SRT:
         srt_pw: str,
         auto_login: bool = True,
         verbose: bool = False,
-        netfunnelHelper: NetFunnelHelper | None = None,
+        netfunnel_helper: NetFunnelHelper | None = None,
     ) -> None:
         self._session = requests.session()
         self._session.headers.update(DEFAULT_HEADERS)
-        self._netfunnelHelper = (
-            netfunnelHelper if netfunnelHelper is not None else NetFunnelHelper()
+        self.netfunnel_helper = (
+            netfunnel_helper if netfunnel_helper is not None else NetFunnelHelper()
         )
 
         self.srt_id: str = srt_id
@@ -239,7 +240,7 @@ class SRT:
             list[:class:`SRTTrain`]: 열차 리스트
         """
 
-        netfunnelKey = self._netfunnelHelper.generate_netfunnel_key(use_netfunnel_cache)
+        netfunnelKey = self.netfunnel_helper.generate_netfunnel_key(use_netfunnel_cache)
 
         url = constants.API_ENDPOINTS["search_schedule"]
         data = {
