@@ -1,6 +1,14 @@
 ## Unreleased
 
-## v2.6.0 (2024/12/13)
+## v2.6.1 (2024/12/13)
+
+- netfunnel 관련 오류 재수정
+  ([#276](https://github.com/ryanking13/SRT/pull/276))
+
+- 신규 열차 및 역이 추가되었을 때 오류가 발생하지 않도록 수정
+  ([#276](https://github.com/ryanking13/SRT/pull/276))
+
+## v2.6.0 (2024/12/13) [yanked]
 
 - netfunnel 관련 오류 수정
   ([#272](https://github.com/ryanking13/SRT/pull/272))
