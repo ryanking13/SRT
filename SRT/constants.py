@@ -64,3 +64,10 @@ API_ENDPOINTS = {
     "standby_option": f"{SRT_MOBILE}/ata/selectListAta01135_n.do",
     "payment": f"{SRT_MOBILE}/ata/selectListAta09036_n.do",
 }
+
+USER_AGENT = (
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0_1 like Mac OS X) AppleWebKit/605.1.15 "
+    "(KHTML, like Gecko) Mobile/15E148 SRT-APP-iOS V.2.0.18"
+)
+
+INVALID_NETFUNNEL_KEY = "NET000001"
