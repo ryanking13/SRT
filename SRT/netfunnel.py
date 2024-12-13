@@ -125,7 +125,6 @@ class NetFunnelHelper:
 
             nwait = netfunnel_resp.get("nwait") or "<unknown>"
 
-
             print(f"대기인원: {nwait}명")
 
             # 1 sec
@@ -135,7 +134,6 @@ class NetFunnelHelper:
             return self._wait_until_complete(key, nwait)
         else:
             return key
-
 
     def _set_complete(self, key: str):
         """
@@ -162,13 +160,16 @@ class NetFunnelHelper:
 
             netfunnel_resp = NetFunnelResponse.parse(resp.text)
             if netfunnel_resp.get("status") != self.WAIT_STATUS_PASS:
-                raise SRTNetFunnelError(f"Failed to complete NetFunnel: {netfunnel_resp}")
+                raise SRTNetFunnelError(
+                    f"Failed to complete NetFunnel: {netfunnel_resp}"
+                )
 
         except Exception as e:
             raise SRTNetFunnelError(e) from e
 
     def _get_timestamp_for_netfunnel(self):
         return int(time.time() * 1000)
+
 
 class NetFunnelResponse:
     """
@@ -219,7 +220,9 @@ class NetFunnelResponse:
                 results = top_level_key[len(cls.RESULT_KEY) + 1 :].strip("'").split(":")
 
                 if len(results) != 3:
-                    raise SRTNetFunnelError(f"Invalid NetFunnel response format: {response}")
+                    raise SRTNetFunnelError(
+                        f"Invalid NetFunnel response format: {response}"
+                    )
 
                 code, status, result = results
                 data["next_code"] = code  # dunno what this is...
@@ -239,5 +242,3 @@ class NetFunnelResponse:
 
     def __str__(self):
         return self.response
-
-

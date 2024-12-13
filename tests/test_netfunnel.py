@@ -1,6 +1,6 @@
 import pytest
 
-from SRT.netfunnel import NetFunnelHelper, SRTNetFunnelError, NetFunnelResponse
+from SRT.netfunnel import NetFunnelHelper, NetFunnelResponse, SRTNetFunnelError
 
 
 @pytest.fixture(scope="module")
