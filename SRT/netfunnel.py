@@ -118,13 +118,12 @@ class NetFunnelHelper:
 
         netfunnel_resp = NetFunnelResponse.parse(resp.text)
 
-        if netfunnel_resp.get("status") != self.WAIT_STATUS_PASS:
-            key = netfunnel_resp.get("key")
-            if key is None:
-                raise SRTNetFunnelError("NetFunnel key not found in response")
+        nwait = netfunnel_resp.get("nwait")
+        key = netfunnel_resp.get("key")
+        if key is None:
+            raise SRTNetFunnelError("NetFunnel key not found in response")
 
-            nwait = netfunnel_resp.get("nwait") or "<unknown>"
-
+        if nwait and nwait != "0":
             print(f"대기인원: {nwait}명")
 
             # 1 sec
@@ -158,14 +157,14 @@ class NetFunnelHelper:
                 params=params,
             )
 
-            netfunnel_resp = NetFunnelResponse.parse(resp.text)
-            if netfunnel_resp.get("status") != self.WAIT_STATUS_PASS:
-                raise SRTNetFunnelError(
-                    f"Failed to complete NetFunnel: {netfunnel_resp}"
-                )
-
         except Exception as e:
             raise SRTNetFunnelError(e) from e
+
+        netfunnel_resp = NetFunnelResponse.parse(resp.text)
+        if netfunnel_resp.get("status") != self.WAIT_STATUS_PASS:
+            raise SRTNetFunnelError(
+                f"Failed to complete NetFunnel: {netfunnel_resp}"
+            )
 
     def _get_timestamp_for_netfunnel(self):
         return int(time.time() * 1000)
