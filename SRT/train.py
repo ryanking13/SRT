@@ -8,16 +8,16 @@ class Train:
 class SRTTrain(Train):
     def __init__(self, data):
         self.train_code = data["stlbTrnClsfCd"]
-        self.train_name = TRAIN_NAME[self.train_code]
+        self.train_name = TRAIN_NAME.get(self.train_code, "알 수 없는 열차 코드 (업데이트 필요)")
         self.train_number = data["trnNo"]
         self.dep_date = data["dptDt"]
         self.dep_time = data["dptTm"]
         self.dep_station_code = data["dptRsStnCd"]
-        self.dep_station_name = STATION_NAME[self.dep_station_code]
+        self.dep_station_name = STATION_NAME.get(self.dep_station_code, "알 수 없는 역 코드 (업데이트 필요)")
         self.arr_date = data["arvDt"]
         self.arr_time = data["arvTm"]
         self.arr_station_code = data["arvRsStnCd"]
-        self.arr_station_name = STATION_NAME[self.arr_station_code]
+        self.arr_station_name = STATION_NAME.get(self.arr_station_code, "알 수 없는 역 코드 (업데이트 필요)")
         self.general_seat_state = data["gnrmRsvPsbStr"]
         self.special_seat_state = data["sprmRsvPsbStr"]
         self.reserve_wait_possible_code = data["rsvWaitPsbCd"]

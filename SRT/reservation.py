@@ -46,15 +46,15 @@ class SRTReservation:
         self.seat_count = train["tkSpecNum"]
 
         self.train_code = pay["stlbTrnClsfCd"]
-        self.train_name = TRAIN_NAME[self.train_code]
+        self.train_name = TRAIN_NAME.get(self.train_code, "알 수 없는 열차 코드 (업데이트 필요)")
         self.train_number = pay["trnNo"]
         self.dep_date = pay["dptDt"]
         self.dep_time = pay["dptTm"]
         self.dep_station_code = pay["dptRsStnCd"]
-        self.dep_station_name = STATION_NAME[self.dep_station_code]
+        self.dep_station_name = STATION_NAME.get(self.dep_station_code, "알 수 없는 역 코드 (업데이트 필요)")
         self.arr_time = pay["arvTm"]
         self.arr_station_code = pay["arvRsStnCd"]
-        self.arr_station_name = STATION_NAME[self.arr_station_code]
+        self.arr_station_name = STATION_NAME.get(self.arr_station_code, "알 수 없는 역 코드 (업데이트 필요)")
         self.payment_date = pay["iseLmtDt"]
         self.payment_time = pay["iseLmtTm"]
 

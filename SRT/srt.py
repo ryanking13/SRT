@@ -270,7 +270,9 @@ class SRT:
 
         if not parser.success():
             message_code = parser.message_code()
-            if message_code == use_netfunnel_cache and INVALID_NETFUNNEL_KEY:
+            if message_code == INVALID_NETFUNNEL_KEY and use_netfunnel_cache:
+                self._log(f"Invalid netfunnel key: {netfunnelKey}, regenerating...")
+
                 return self._search_train(
                     dep=dep,
                     arr=arr,
