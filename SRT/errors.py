@@ -1,9 +1,10 @@
 class SRTError(Exception):
-    def __init__(self, msg):
+    def __init__(self, msg, code: str | None = None):
         self.msg = msg
+        self.code: str | None = code
 
     def __str__(self):
-        return self.msg
+        return self.msg + (f" [{self.code}]" if self.code else "")
 
 
 class SRTLoginError(SRTError):
@@ -12,8 +13,8 @@ class SRTLoginError(SRTError):
 
 
 class SRTResponseError(SRTError):
-    def __init__(self, msg):
-        super().__init__(msg)
+    def __init__(self, msg, code: str | None = None):
+        super().__init__(msg, code)
 
 
 class SRTDuplicateError(SRTResponseError):

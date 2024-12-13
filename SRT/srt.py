@@ -286,7 +286,7 @@ class SRT:
                 )
             else:
                 message = parser.message()
-                raise SRTResponseError(message)
+                raise SRTResponseError(message, message_code)
 
         self._log(parser.message())
         all_trains = parser.get_all()["outDataSets"]["dsOutput1"]
