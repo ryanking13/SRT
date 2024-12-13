@@ -1,5 +1,10 @@
 ## Unreleased
 
+## v2.6.0 (2024/12/13)
+
+- netfunnel 관련 오류 수정
+  ([#272](https://github.com/ryanking13/SRT/pull/272))
+
 ## v2.5.0 (2024/08/26)
 
 - 잘못된 승객 타입이 지정되는 문제 수정
