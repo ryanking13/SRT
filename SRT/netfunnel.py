@@ -11,8 +11,12 @@ class NetFunnelHelper:
 
     OP_CODE = {
         "getTidchkEnter": "5101",
+        "chkEnter": "5002",
         "setComplete": "5004",
     }
+
+    WAIT_STATUS_PASS = "200"  # No need to wait
+    WAIT_STATUS_FAIL = "201"  # Need to wait
 
     DEFAULT_HEADERS = {
         "User-Agent": USER_AGENT,
@@ -30,7 +34,7 @@ class NetFunnelHelper:
     def __init__(self):
         self.session = requests.session()
         self.session.headers.update(self.DEFAULT_HEADERS)
-        self._cachedNetfunnelKey = None
+        self._cached_key = None
 
     def generate_netfunnel_key(self, use_cache: bool):
         key = self._get_netfunnel_key(use_cache)
@@ -48,8 +52,8 @@ class NetFunnelHelper:
             str: NetFunnel 키
         """
 
-        if use_cache and self._cachedNetfunnelKey is not None:
-            return self._cachedNetfunnelKey
+        if use_cache and self._cached_key is not None:
+            return self._cached_key
 
         params = {
             "opcode": self.OP_CODE["getTidchkEnter"],
@@ -62,17 +66,73 @@ class NetFunnelHelper:
         }
 
         try:
-            response = self.session.get(
+            resp = self.session.get(
                 self.NETFUNNEL_URL,
                 params=params,
-            ).text
+            )
         except Exception as e:
             raise SRTNetFunnelError(e) from e
 
-        netfunnel_key = self._extract_netfunnel_key(response)
-        self._cachedNetfunnelKey = netfunnel_key
+        netfunnel_resp = NetFunnelResponse.parse(resp.text)
+
+        netfunnel_key = netfunnel_resp.get("key")
+        if netfunnel_key is None:
+            raise SRTNetFunnelError("NetFunnel key not found in response")
+
+        if netfunnel_resp.get("status") == self.WAIT_STATUS_FAIL:
+            # TODO: better logging
+            print("접속자가 많아 대기열에 들어갑니다.")
+
+            nwait = netfunnel_resp.get("nwait") or "<unknown>"
+
+            netfunnel_key = self._wait_until_complete(netfunnel_key, nwait)
+
+        self._cached_key = netfunnel_key
 
         return netfunnel_key
+
+    def _wait_until_complete(self, key: str, nwait: str) -> str:
+        """
+        NetFunnel이 완료될 때까지 대기합니다.
+        """
+
+        params = {
+            "opcode": self.OP_CODE["chkEnter"],
+            "key": key,
+            "nfid": "0",
+            "prefix": f"NetFunnel.gRtype={self.OP_CODE['chkEnter']};",
+            "ttl": 1,
+            "sid": "service_1",
+            "aid": "act_10",
+            "js": "true",
+            self._get_timestamp_for_netfunnel(): "",
+        }
+
+        try:
+            resp = self.session.get(
+                self.NETFUNNEL_URL,
+                params=params,
+            )
+        except Exception as e:
+            raise SRTNetFunnelError(e) from e
+
+        netfunnel_resp = NetFunnelResponse.parse(resp.text)
+
+        nwait_ = netfunnel_resp.get("nwait")
+        key_ = netfunnel_resp.get("key")
+        if key_ is None:
+            raise SRTNetFunnelError("NetFunnel key not found in response")
+
+        if nwait_ and nwait_ != "0":
+            print(f"대기인원: {nwait_}명")
+
+            # 1 sec
+            # TODO: find how to calculate the re-try interval
+            time.sleep(1)
+
+            return self._wait_until_complete(key_, nwait_)
+        else:
+            return key
 
     def _set_complete(self, key: str):
         """
@@ -92,36 +152,90 @@ class NetFunnelHelper:
         }
 
         try:
-            self.session.get(
+            resp = self.session.get(
                 self.NETFUNNEL_URL,
                 params=params,
             )
+
         except Exception as e:
             raise SRTNetFunnelError(e) from e
+
+        netfunnel_resp = NetFunnelResponse.parse(resp.text)
+        if netfunnel_resp.get("status") != self.WAIT_STATUS_PASS:
+            raise SRTNetFunnelError(f"Failed to complete NetFunnel: {netfunnel_resp}")
 
     def _get_timestamp_for_netfunnel(self):
         return int(time.time() * 1000)
 
-    def _extract_netfunnel_key(self, response: str):
+
+class NetFunnelResponse:
+    """
+    Represents a NetFunnel response.
+    """
+
+    OP_CODE_KEY = "NetFunnel.gRtype"
+    RESULT_KEY = "NetFunnel.gControl.result"
+
+    RESULT_SUBKEYS = [
+        "key",
+        "nwait",
+        "nnext",
+        "tps",
+        "ttl",
+        "ip",
+        "port",
+        "msg",
+    ]
+
+    def __init__(self, response: str, data: dict[str, str]):
+        self.response = response
+        self.data = data
+
+    @classmethod
+    def parse(cls, response: str) -> "NetFunnelResponse":
         """
-        NetFunnel 키를 추출합니다.
+        The factory method to create a NetFunnelResponse object from a response string.
 
-        Args:
-            response (str): NetFunnel 응답
+        the response string will be in the format of:
 
-        Returns:
-            str: NetFunnel 키
-
-        Raises:
-            SRTNetFunnelError: NetFunnel 키를 찾을 수 없는 경우
+        ```
+        NetFunnel.gRtype=5101;
+        NetFunnel.gControl.result='5002:201:key=<key>&nwait=3&nnext=1&tps=11.247706&ttl=1&ip=<ip>&port=80';
+        NetFunnel.gControl._showResult();
+        ```
         """
-        key_start = response.find("key=")
-        if key_start == -1:
-            raise SRTNetFunnelError("NetFunnel key not found in response")
 
-        key_start += 4  # "key=" length
-        key_end = response.find("&", key_start)
-        if key_end == -1:
-            raise SRTNetFunnelError("Invalid NetFunnel key format in response")
+        top_level_keys = [r.strip() for r in response.split(";")]
 
-        return response[key_start:key_end]
+        data: dict[str, str] = {}
+        for top_level_key in top_level_keys:
+
+            if top_level_key.startswith(cls.OP_CODE_KEY):
+                data["opcode"] = top_level_key[len(cls.OP_CODE_KEY) + 1 :]
+
+            if top_level_key.startswith(cls.RESULT_KEY):
+                results = top_level_key[len(cls.RESULT_KEY) + 1 :].strip("'").split(":")
+
+                if len(results) != 3:
+                    raise SRTNetFunnelError(
+                        f"Invalid NetFunnel response format: {response}"
+                    )
+
+                code, status, result = results
+                data["next_code"] = code  # dunno what this is...
+                data["status"] = status
+
+                result_keys = result.split("&")
+                for key in result_keys:
+                    for subkey in cls.RESULT_SUBKEYS:
+                        if key.startswith(subkey):
+                            data[subkey] = key.split("=")[1]
+                            break
+
+        return cls(response, data)
+
+    def get(self, key: str) -> str | None:
+        return self.data.get(key)
+
+    def __str__(self):
+        return self.response
