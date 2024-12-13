@@ -162,9 +162,7 @@ class NetFunnelHelper:
 
         netfunnel_resp = NetFunnelResponse.parse(resp.text)
         if netfunnel_resp.get("status") != self.WAIT_STATUS_PASS:
-            raise SRTNetFunnelError(
-                f"Failed to complete NetFunnel: {netfunnel_resp}"
-            )
+            raise SRTNetFunnelError(f"Failed to complete NetFunnel: {netfunnel_resp}")
 
     def _get_timestamp_for_netfunnel(self):
         return int(time.time() * 1000)
