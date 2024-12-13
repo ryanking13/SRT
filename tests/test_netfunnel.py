@@ -1,12 +1,12 @@
 from SRT.netfunnel import NetFunnelHelper, NetFunnelResponse
 
 
-def test_get_netfunnel_key_success(helper):
+def test_get_netfunnel_key_success():
     helper = NetFunnelHelper()
     helper._get_netfunnel_key()
 
 
-def test_set_complete_success(helper):
+def test_set_complete_success():
     helper = NetFunnelHelper()
     key = helper._get_netfunnel_key()
     helper._set_complete(key)
