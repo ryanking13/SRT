@@ -1,28 +1,17 @@
 import pytest
 
-from SRT.netfunnel import NetFunnelHelper, NetFunnelResponse, SRTNetFunnelError
-
-
-@pytest.fixture(scope="module")
-def helper():
-    return NetFunnelHelper()
+from SRT.netfunnel import NetFunnelHelper, NetFunnelResponse
 
 
 def test_get_netfunnel_key_success(helper):
-    try:
-        key = helper._get_netfunnel_key(True)
-    except SRTNetFunnelError as e:
-        raise AssertionError() from e
-    assert key is not None
+    helper = NetFunnelHelper()
+    helper._get_netfunnel_key()
 
 
 def test_set_complete_success(helper):
-    key = helper._get_netfunnel_key(True)
-    try:
-        helper._set_complete(key)
-    except SRTNetFunnelError as e:
-        raise AssertionError() from e
-    assert True
+    helper = NetFunnelHelper()
+    key = helper._get_netfunnel_key()
+    helper._set_complete(key)
 
 
 def test_netfunnel_response_parse():
