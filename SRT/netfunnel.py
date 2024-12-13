@@ -234,7 +234,7 @@ class NetFunnelResponse:
 
         return cls(response, data)
 
-    def get(self, key: str) -> None:
+    def get(self, key: str) -> str | None:
         return self.data.get(key)
 
     def __str__(self):
