@@ -66,8 +66,8 @@ API_ENDPOINTS = {
 }
 
 USER_AGENT = (
-    "Mozilla/5.0 (Linux; Android 5.1.1; LGM-V300K Build/N2G47H) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Version/4.0 Chrome/39.0.0.0 Mobile Safari/537.36SRT-APP-Android V.1.0.6"
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0_1 like Mac OS X) AppleWebKit/605.1.15 "
+    "(KHTML, like Gecko) Mobile/15E148 SRT-APP-iOS V.2.0.18"
 )
 
 INVALID_NETFUNNEL_KEY = "NET000001"
