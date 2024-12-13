@@ -118,19 +118,19 @@ class NetFunnelHelper:
 
         netfunnel_resp = NetFunnelResponse.parse(resp.text)
 
-        nwait = netfunnel_resp.get("nwait")
-        key = netfunnel_resp.get("key")
-        if key is None:
+        nwait_ = netfunnel_resp.get("nwait")
+        key_ = netfunnel_resp.get("key")
+        if key_ is None:
             raise SRTNetFunnelError("NetFunnel key not found in response")
 
-        if nwait and nwait != "0":
-            print(f"대기인원: {nwait}명")
+        if nwait_ and nwait_ != "0":
+            print(f"대기인원: {nwait_}명")
 
             # 1 sec
             # TODO: find how to calculate the re-try interval
             time.sleep(1)
 
-            return self._wait_until_complete(key, nwait)
+            return self._wait_until_complete(key_, nwait_)
         else:
             return key
 
