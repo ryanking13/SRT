@@ -164,7 +164,7 @@ class NetFunnelHelper:
         netfunnel_resp = NetFunnelResponse.parse(resp.text)
         if netfunnel_resp.get("status") not in [
             self.WAIT_STATUS_PASS,
-            self.ALREADY_COPLETED,
+            self.ALREADY_COMPLETED,
         ]:
             raise SRTNetFunnelError(f"Failed to complete NetFunnel: {netfunnel_resp}")
 
