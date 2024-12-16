@@ -17,7 +17,7 @@ class NetFunnelHelper:
 
     WAIT_STATUS_PASS = "200"  # No need to wait
     WAIT_STATUS_FAIL = "201"  # Need to wait
-    ALREADY_COMPLETED = "502" # already completed(set-complete)
+    ALREADY_COMPLETED = "502"  # already completed(set-complete)
 
     DEFAULT_HEADERS = {
         "User-Agent": USER_AGENT,
@@ -162,7 +162,10 @@ class NetFunnelHelper:
             raise SRTNetFunnelError(e) from e
 
         netfunnel_resp = NetFunnelResponse.parse(resp.text)
-        if netfunnel_resp.get("status") not in [self.WAIT_STATUS_PASS, self.ALREADY_COPLETED]:
+        if netfunnel_resp.get("status") not in [
+            self.WAIT_STATUS_PASS,
+            self.ALREADY_COPLETED,
+        ]:
             raise SRTNetFunnelError(f"Failed to complete NetFunnel: {netfunnel_resp}")
 
     def _get_timestamp_for_netfunnel(self):
