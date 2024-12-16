@@ -452,8 +452,8 @@ class SRT:
             "arvTm1": train.arr_time,  # 도착일자1 (열차 목록 값)
             "totPrnb": passengersCount,  # 승차인원
             "psgGridcnt": passengersCount,  # 승차인원
-            "psgTpCd1": passengersCount,  # 승차인원
-            "psgInfoPerPrnb1": passengersCount,  # 승차인원
+            "psgTpCd1": "0",  # 승객종류1 인원수 (psgTpCd1~5)
+            "psgInfoPerPrnb1": "0",  # 승객종류1 인원수 (psgInfoPerPrnb1~5)
             "trnNo1": "%05d" % int(train.train_number),  # 열차번호1 (열차 목록 값)
             "runDt1": train.dep_date,  # 운행일자1 (열차 목록 값)
             "psrmClCd1": "2" if is_special_seat is True else "1",
