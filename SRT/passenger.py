@@ -93,7 +93,7 @@ class Passenger(metaclass=abc.ABCMeta):
             data[f"smkSeatAttCd{psgidx}"] = "000"
             data[f"etcSeatAttCd{psgidx}"] = "000"
             # seat type: ('1': 일반실, '2': 특실)
-            data[f"psrmClCd{code}"] = "2" if special_seat else "1"
+            data[f"psrmClCd{psgidx}"] = "2" if special_seat else "1"
 
         return data
 
