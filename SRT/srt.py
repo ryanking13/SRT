@@ -461,10 +461,17 @@ class SRT:
             "arvStnConsOrdr1": train.arr_station_constitution_order,  # 도착역구성순서1 (열차 목록 값)
             "dptStnRunOrdr1": train.dep_station_run_order,  # 출발역운행순서1 (열차 목록 값)
             "arvStnRunOrdr1": train.arr_station_run_order,  # 도착역운행순서1 (열차 목록 값)
+            #간편예매에서 사용되는 항목, 일반 승차권 예매에서는 고정값
             "smkSeatAttCd1": "000",  # 흡연좌석속성코드1
-            "dirSeatAttCd1": "009",  # 방향좌석속성코드
+            "dirSeatAttCd1": "009",  # 방향좌석속성코드1
             "locSeatAttCd1": "000",  # 위치좌석속성코드1
             "rqSeatAttCd1": "015",  # 요구좌석속성코드1
+            "etcSeatAttCd1": "000",
+            "smkSeatAttCd2": "000",  # 흡연좌석속성코드2
+            "dirSeatAttCd2": "009",  # 방향좌석속성코드2
+            "locSeatAttCd2": "000",  # 위치좌석속성코드2
+            "rqSeatAttCd2": "015",  # 요구좌석속성코드2
+            "etcSeatAttCd2": "000",
             "mblPhone": mblPhone,
         }
 
@@ -472,7 +479,7 @@ class SRT:
         if jobid == RESERVE_JOBID["PERSONAL"]:
             data.update(
                 {
-                    "reserveType": "1",
+                    "reserveType": "11",
                 }
             )
 
