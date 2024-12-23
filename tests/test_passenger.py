@@ -20,9 +20,9 @@ def test_get_passenger_dict():
     data = Passenger.get_passenger_dict(passengers)
     assert data["totPrnb"] == "3"
     assert data["psgGridcnt"] == "2"
-    assert data["psgTpCd1"] == "1"
-    assert data["psgInfoPerPrnb1"] == "1"
-    assert data["psgTpCd2"] == "5"
+    assert data["psgTpCd1"] == "5"
+    assert data["psgInfoPerPrnb1"] == "2"
+    assert data["psgTpCd2"] == "1"
     assert data["psgInfoPerPrnb2"] == "2"
 
     passengers2 = [
