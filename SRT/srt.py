@@ -411,9 +411,6 @@ class SRT:
             passengers = [Adult()]
         passengers = Passenger.combine(passengers)
 
-        if passengers is not None:
-            passengersCount = len(passengers)
-
         # 일반식 / 특실 좌석 선택 옵션에 따라 결정.
         is_special_seat = None
         if special_seat == SeatType.GENERAL_ONLY:  # 일반실만
