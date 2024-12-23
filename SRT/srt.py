@@ -450,28 +450,12 @@ class SRT:
             "dptDt1": train.dep_date,  # 출발일자1 (열차 목록 값)
             "dptTm1": train.dep_time,  # 출발일자1 (열차 목록 값)
             "arvTm1": train.arr_time,  # 도착일자1 (열차 목록 값)
-            "totPrnb": passengersCount,  # 승차인원
-            "psgGridcnt": passengersCount,  # 승차인원
-            "psgTpCd1": "0",  # 승객종류1 passenger.code (psgTpCd1~5, 1~5)
-            "psgInfoPerPrnb1": "0",  # 승객종류1 인원수 (psgInfoPerPrnb1~5)
             "trnNo1": "%05d" % int(train.train_number),  # 열차번호1 (열차 목록 값)
             "runDt1": train.dep_date,  # 운행일자1 (열차 목록 값)
-            "psrmClCd1": "2" if is_special_seat is True else "1",
             "dptStnConsOrdr1": train.dep_station_constitution_order,  # 출발역구성순서1 (열차 목록 값)
             "arvStnConsOrdr1": train.arr_station_constitution_order,  # 도착역구성순서1 (열차 목록 값)
             "dptStnRunOrdr1": train.dep_station_run_order,  # 출발역운행순서1 (열차 목록 값)
             "arvStnRunOrdr1": train.arr_station_run_order,  # 도착역운행순서1 (열차 목록 값)
-            # 간편예매에서 사용되는 항목, 일반 승차권 예매에서는 고정값
-            "smkSeatAttCd1": "000",  # 흡연좌석속성코드1
-            "dirSeatAttCd1": "009",  # 방향좌석속성코드1
-            "locSeatAttCd1": "000",  # 위치좌석속성코드1
-            "rqSeatAttCd1": "015",  # 요구좌석속성코드1
-            "etcSeatAttCd1": "000",
-            "smkSeatAttCd2": "000",  # 흡연좌석속성코드2
-            "dirSeatAttCd2": "009",  # 방향좌석속성코드2
-            "locSeatAttCd2": "000",  # 위치좌석속성코드2
-            "rqSeatAttCd2": "015",  # 요구좌석속성코드2
-            "etcSeatAttCd2": "000",
             "mblPhone": mblPhone,
         }
 
