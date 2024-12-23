@@ -411,9 +411,6 @@ class SRT:
             passengers = [Adult()]
         passengers = Passenger.combine(passengers)
 
-        if passengers is not None:
-            passengersCount = len(passengers)
-
         # 일반식 / 특실 좌석 선택 옵션에 따라 결정.
         is_special_seat = None
         if special_seat == SeatType.GENERAL_ONLY:  # 일반실만
@@ -450,21 +447,12 @@ class SRT:
             "dptDt1": train.dep_date,  # 출발일자1 (열차 목록 값)
             "dptTm1": train.dep_time,  # 출발일자1 (열차 목록 값)
             "arvTm1": train.arr_time,  # 도착일자1 (열차 목록 값)
-            "totPrnb": passengersCount,  # 승차인원
-            "psgGridcnt": passengersCount,  # 승차인원
-            "psgTpCd1": passengersCount,  # 승차인원
-            "psgInfoPerPrnb1": passengersCount,  # 승차인원
             "trnNo1": "%05d" % int(train.train_number),  # 열차번호1 (열차 목록 값)
             "runDt1": train.dep_date,  # 운행일자1 (열차 목록 값)
-            "psrmClCd1": "2" if is_special_seat is True else "1",
             "dptStnConsOrdr1": train.dep_station_constitution_order,  # 출발역구성순서1 (열차 목록 값)
             "arvStnConsOrdr1": train.arr_station_constitution_order,  # 도착역구성순서1 (열차 목록 값)
             "dptStnRunOrdr1": train.dep_station_run_order,  # 출발역운행순서1 (열차 목록 값)
             "arvStnRunOrdr1": train.arr_station_run_order,  # 도착역운행순서1 (열차 목록 값)
-            "smkSeatAttCd1": "000",  # 흡연좌석속성코드1
-            "dirSeatAttCd1": "009",  # 방향좌석속성코드
-            "locSeatAttCd1": "000",  # 위치좌석속성코드1
-            "rqSeatAttCd1": "015",  # 요구좌석속성코드1
             "mblPhone": mblPhone,
         }
 
@@ -472,7 +460,7 @@ class SRT:
         if jobid == RESERVE_JOBID["PERSONAL"]:
             data.update(
                 {
-                    "reserveType": "1",
+                    "reserveType": "11",
                 }
             )
 
