@@ -36,9 +36,9 @@ def test_get_passenger_dict():
     data = Passenger.get_passenger_dict(passengers2)
     assert data["totPrnb"] == "3"
     assert data["psgGridcnt"] == "3"
-    assert data["psgTpCd1"] == "2"
+    assert data["psgTpCd1"] == "3"
     assert data["psgInfoPerPrnb1"] == "1"
-    assert data["psgTpCd2"] == "3"
+    assert data["psgTpCd2"] == "4"
     assert data["psgInfoPerPrnb2"] == "1"
-    assert data["psgTpCd3"] == "4"
+    assert data["psgTpCd3"] == "2"
     assert data["psgInfoPerPrnb3"] == "1"
