@@ -5,13 +5,13 @@ import random as rd
 import sys
 import os
 
-ID = '아이디'
+ID = '아이디/회원번호'
 PASSWORD = '비밀번호'
-DEPARTURE = '익산'
-ARRIVAL = '수서'
-TARGET_DATE = '20240918'
-START_TIME = '140000'
-LIMIT_TIME = '220000'
+DEPARTURE = '출발지'
+ARRIVAL = '도착지'
+TARGET_DATE = '20241220'
+START_TIME = '170000'
+LIMIT_TIME = '200000'
 
 def play_sound():
     sound_file = '../Sound/sound1.mp3'
