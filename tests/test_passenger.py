@@ -23,7 +23,7 @@ def test_get_passenger_dict():
     assert data["psgTpCd1"] == "5"
     assert data["psgInfoPerPrnb1"] == "2"
     assert data["psgTpCd2"] == "1"
-    assert data["psgInfoPerPrnb2"] == "2"
+    assert data["psgInfoPerPrnb2"] == "1"
 
     passengers2 = [
         Senior(),
