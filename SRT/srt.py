@@ -347,6 +347,7 @@ class SRT:
             passengers,
             special_seat,
             window_seat=window_seat,
+            use_netfunnel_cache=True,
         )
 
     def reserve_standby(
@@ -383,6 +384,7 @@ class SRT:
         special_seat: SeatType = SeatType.GENERAL_FIRST,
         mblPhone: str | None = None,
         window_seat: bool | None = None,
+        use_netfunnel_cache: bool = True,
     ) -> SRTReservation:
         """예약 신청 요청 공통 함수
 
@@ -392,6 +394,7 @@ class SRT:
             special_seat (:class:`SeatType`): 일반실/특실 선택 유형 (default: 일반실 우선)
             mblPhone (str, optional): 휴대폰 번호 | jobid가 RESERVE_JOBID["STANDBY"]일 경우에만 사용
             window_seat (bool, optional): 창가 자리 우선 예약 여부 | jobid가 RESERVE_JOBID["PERSONAL"]일 경우에만 사용
+            use_netfunnel_cache (bool, optional): netfunnel 캐시 사용 여부, 사용하지 않으면 요청 시마다 새로 netfunnel 키를 요청합니다 (default: True)
 
         Returns:
             :class:`SRTReservation`: 예약 내역
@@ -428,6 +431,8 @@ class SRT:
             else:
                 is_special_seat = False
 
+        netfunnelKey = self.netfunnel_helper.generate_netfunnel_key(use_netfunnel_cache)
+
         url = constants.API_ENDPOINTS["reserve"]
         data = {
             "jobId": jobid,
@@ -454,6 +459,7 @@ class SRT:
             "dptStnRunOrdr1": train.dep_station_run_order,  # 출발역운행순서1 (열차 목록 값)
             "arvStnRunOrdr1": train.arr_station_run_order,  # 도착역운행순서1 (열차 목록 값)
             "mblPhone": mblPhone,
+            "netfunnelKey": netfunnelKey,
         }
 
         # jobid가 RESERVE_JOBID["PERSONAL"]일 경우, data에 reserveType 추가
