@@ -3,7 +3,7 @@
 ## v2.6.3 (2024/12/27)
 
 - netfunnel 관련 토큰 발급 오류 수정
-  ([#278](https://github.com/ryanking13/SRT/pull/278))
+  ([#283](https://github.com/ryanking13/SRT/pull/283))
 
 ## v2.6.2 (2024/12/23)
 
