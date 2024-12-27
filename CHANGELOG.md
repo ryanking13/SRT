@@ -1,5 +1,10 @@
 ## Unreleased
 
+## v2.6.3 (2024/12/27)
+
+- netfunnel 관련 토큰 발급 오류 수정
+  ([#283](https://github.com/ryanking13/SRT/pull/283))
+
 ## v2.6.2 (2024/12/23)
 
 - netfunnel 관련 토큰 발급이 이미 완료된 경우에 대한 처리

@@ -133,7 +133,7 @@ class NetFunnelHelper:
 
             return self._wait_until_complete(key_, nwait_)
         else:
-            return key
+            return key_
 
     def _set_complete(self, key: str):
         """
