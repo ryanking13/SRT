@@ -1,5 +1,13 @@
 ## Unreleased
 
+## v2.6.4 (2025/01/05)
+
+- 예매시 netfunnel 관련 오류 수정
+  ([#280](https://github.com/ryanking13/SRT/pull/280))
+
+- 경주역 역명 업데이트
+  ([#285](https://github.com/ryanking13/SRT/pull/285))
+
 ## v2.6.3 (2024/12/27)
 
 - netfunnel 관련 토큰 발급 오류 수정
