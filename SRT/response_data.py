@@ -48,6 +48,7 @@ class SRTResponseData:
 
     def message(self):
         return self._status.get("msgTxt", "")
+
     def message_code(self):
         return self._status.get("msgCd", "")
 
