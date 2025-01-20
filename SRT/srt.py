@@ -269,7 +269,9 @@ class SRT:
         try:
             parser = SRTResponseData(r.text)
         except Exception as e:
-            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
+            raise SRTResponseError(
+                f"Failed to reserve: invalid response ({r.text})"
+            ) from e
 
         if not parser.success():
             message_code = parser.message_code()
@@ -305,7 +307,9 @@ class SRT:
             try:
                 parser = SRTResponseData(r.text)
             except Exception as e:
-                raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
+                raise SRTResponseError(
+                    f"Failed to reserve: invalid response ({r.text})"
+                ) from e
 
             # When there is no more train, return code will be FAIL
             if not parser.success():
@@ -486,7 +490,9 @@ class SRT:
         try:
             parser = SRTResponseData(r.text)
         except Exception as e:
-            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
+            raise SRTResponseError(
+                f"Failed to reserve: invalid response ({r.text})"
+            ) from e
 
         if not parser.success():
             raise SRTResponseError(parser.message())
@@ -562,7 +568,9 @@ class SRT:
         try:
             parser = SRTResponseData(r.text)
         except Exception as e:
-            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
+            raise SRTResponseError(
+                f"Failed to reserve: invalid response ({r.text})"
+            ) from e
 
         if not parser.success():
             raise SRTResponseError(parser.message())
@@ -613,7 +621,9 @@ class SRT:
         try:
             parser = SRTResponseData(r.text)
         except Exception as e:
-            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
+            raise SRTResponseError(
+                f"Failed to reserve: invalid response ({r.text})"
+            ) from e
 
         if not parser.success():
             raise SRTResponseError(parser.message())
@@ -649,7 +659,9 @@ class SRT:
         try:
             parser = SRTResponseData(r.text)
         except Exception as e:
-            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
+            raise SRTResponseError(
+                f"Failed to reserve: invalid response ({r.text})"
+            ) from e
 
         if not parser.success():
             raise SRTResponseError(parser.message())
