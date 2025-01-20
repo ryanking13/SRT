@@ -1,5 +1,10 @@
 ## Unreleased
 
+## v2.6.5 (2025/01/20)
+
+- 오류 로그 출력 추간
+  ([#292](https://github.com/ryanking13/SRT/pull/292))
+
 ## v2.6.4 (2025/01/05)
 
 - 예매시 netfunnel 관련 오류 수정
