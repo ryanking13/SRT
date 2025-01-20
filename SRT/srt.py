@@ -266,7 +266,10 @@ class SRT:
         }
 
         r = self._session.post(url=url, data=data)
-        parser = SRTResponseData(r.text)
+        try:
+            parser = SRTResponseData(r.text)
+        except Exception as e:
+            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
 
         if not parser.success():
             message_code = parser.message_code()
@@ -299,7 +302,10 @@ class SRT:
             next_dep_time = last_dep_time + timedelta(seconds=1)
             data["dptTm"] = next_dep_time.strftime("%H%M%S")
             r = self._session.post(url=url, data=data)
-            parser = SRTResponseData(r.text)
+            try:
+                parser = SRTResponseData(r.text)
+            except Exception as e:
+                raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
 
             # When there is no more train, return code will be FAIL
             if not parser.success():
@@ -477,7 +483,10 @@ class SRT:
         )
 
         r = self._session.post(url=url, data=data)
-        parser = SRTResponseData(r.text)
+        try:
+            parser = SRTResponseData(r.text)
+        except Exception as e:
+            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
 
         if not parser.success():
             raise SRTResponseError(parser.message())
@@ -550,7 +559,10 @@ class SRT:
         data = {"pageNo": "0"}
 
         r = self._session.post(url=url, data=data)
-        parser = SRTResponseData(r.text)
+        try:
+            parser = SRTResponseData(r.text)
+        except Exception as e:
+            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
 
         if not parser.success():
             raise SRTResponseError(parser.message())
@@ -598,7 +610,10 @@ class SRT:
         data = {"pnrNo": reservation, "jrnySqno": "1"}
 
         r = self._session.post(url=url, data=data)
-        parser = SRTResponseData(r.text)
+        try:
+            parser = SRTResponseData(r.text)
+        except Exception as e:
+            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
 
         if not parser.success():
             raise SRTResponseError(parser.message())
@@ -631,7 +646,10 @@ class SRT:
         data = {"pnrNo": reservation, "jrnyCnt": "1", "rsvChgTno": "0"}
 
         r = self._session.post(url=url, data=data)
-        parser = SRTResponseData(r.text)
+        try:
+            parser = SRTResponseData(r.text)
+        except Exception as e:
+            raise SRTResponseError(f"Failed to reserve: invalid response ({r.text})") from e
 
         if not parser.success():
             raise SRTResponseError(parser.message())
