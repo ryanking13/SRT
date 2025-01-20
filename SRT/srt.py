@@ -270,7 +270,7 @@ class SRT:
             parser = SRTResponseData(r.text)
         except Exception as e:
             raise SRTResponseError(
-                f"Failed to reserve: invalid response ({r.text})"
+                f"Failed to decode: invalid response ({r.text})"
             ) from e
 
         if not parser.success():
@@ -308,7 +308,7 @@ class SRT:
                 parser = SRTResponseData(r.text)
             except Exception as e:
                 raise SRTResponseError(
-                    f"Failed to reserve: invalid response ({r.text})"
+                    f"Failed to decode: invalid response ({r.text})"
                 ) from e
 
             # When there is no more train, return code will be FAIL
@@ -491,7 +491,7 @@ class SRT:
             parser = SRTResponseData(r.text)
         except Exception as e:
             raise SRTResponseError(
-                f"Failed to reserve: invalid response ({r.text})"
+                f"Failed to decode: invalid response ({r.text})"
             ) from e
 
         if not parser.success():
@@ -569,7 +569,7 @@ class SRT:
             parser = SRTResponseData(r.text)
         except Exception as e:
             raise SRTResponseError(
-                f"Failed to reserve: invalid response ({r.text})"
+                f"Failed to decode: invalid response ({r.text})"
             ) from e
 
         if not parser.success():
@@ -622,7 +622,7 @@ class SRT:
             parser = SRTResponseData(r.text)
         except Exception as e:
             raise SRTResponseError(
-                f"Failed to reserve: invalid response ({r.text})"
+                f"Failed to decode: invalid response ({r.text})"
             ) from e
 
         if not parser.success():
@@ -660,7 +660,7 @@ class SRT:
             parser = SRTResponseData(r.text)
         except Exception as e:
             raise SRTResponseError(
-                f"Failed to reserve: invalid response ({r.text})"
+                f"Failed to decode: invalid response ({r.text})"
             ) from e
 
         if not parser.success():
