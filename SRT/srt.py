@@ -300,6 +300,10 @@ class SRT:
         # Note: updated api returns subarray of all trains,
         #       therefore, to retrieve all trains, retry unless there are no more trains
         while trains:
+            # Break if the last train's departure time is over the time_limit
+            if time_limit and trains[-1].dep_time > time_limit:
+                break
+
             last_dep_time = datetime.strptime(trains[-1].dep_time, "%H%M%S")
             next_dep_time = last_dep_time + timedelta(seconds=1)
             data["dptTm"] = next_dep_time.strftime("%H%M%S")
