@@ -127,6 +127,7 @@ class NetFunnelHelper:
 
             if nwait_ and nwait_ != "0":
                 print(f"대기인원: {nwait_}명")
+                # TODO: find how to calculate the re-try interval
                 time.sleep(1)
                 key = key_
             else:
