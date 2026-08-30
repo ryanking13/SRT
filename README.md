@@ -1,5 +1,5 @@
 > [!NOTE]
-> KTX + SRT 통합으로 SRT 별도 예매가 중단됨에 따라 Archive 합니다
+> KTX + SRT 통합으로 SRT 별도 예매가 중단됨에 따라 더 이상 지원되지 않습니다
 
 
 # SRT
