@@ -97,43 +97,41 @@ class NetFunnelHelper:
         NetFunnel이 완료될 때까지 대기합니다.
         """
 
-        params = {
-            "opcode": self.OP_CODE["chkEnter"],
-            "key": key,
-            "nfid": "0",
-            "prefix": f"NetFunnel.gRtype={self.OP_CODE['chkEnter']};",
-            "ttl": 1,
-            "sid": "service_1",
-            "aid": "act_10",
-            "js": "true",
-            self._get_timestamp_for_netfunnel(): "",
-        }
+        while True:
+            params = {
+                "opcode": self.OP_CODE["chkEnter"],
+                "key": key,
+                "nfid": "0",
+                "prefix": f"NetFunnel.gRtype={self.OP_CODE['chkEnter']};",
+                "ttl": 1,
+                "sid": "service_1",
+                "aid": "act_10",
+                "js": "true",
+                self._get_timestamp_for_netfunnel(): "",
+            }
 
-        try:
-            resp = self.session.get(
-                self.NETFUNNEL_URL,
-                params=params,
-            )
-        except Exception as e:
-            raise SRTNetFunnelError(e) from e
+            try:
+                resp = self.session.get(
+                    self.NETFUNNEL_URL,
+                    params=params,
+                )
+            except Exception as e:
+                raise SRTNetFunnelError(e) from e
 
-        netfunnel_resp = NetFunnelResponse.parse(resp.text)
+            netfunnel_resp = NetFunnelResponse.parse(resp.text)
 
-        nwait_ = netfunnel_resp.get("nwait")
-        key_ = netfunnel_resp.get("key")
-        if key_ is None:
-            raise SRTNetFunnelError("NetFunnel key not found in response")
+            nwait_ = netfunnel_resp.get("nwait")
+            key_ = netfunnel_resp.get("key")
+            if key_ is None:
+                raise SRTNetFunnelError("NetFunnel key not found in response")
 
-        if nwait_ and nwait_ != "0":
-            print(f"대기인원: {nwait_}명")
-
-            # 1 sec
-            # TODO: find how to calculate the re-try interval
-            time.sleep(1)
-
-            return self._wait_until_complete(key_, nwait_)
-        else:
-            return key_
+            if nwait_ and nwait_ != "0":
+                print(f"대기인원: {nwait_}명")
+                # TODO: find how to calculate the re-try interval
+                time.sleep(1)
+                key = key_
+            else:
+                return key_
 
     def _set_complete(self, key: str):
         """
