@@ -1,3 +1,7 @@
+> [!NOTE]
+> KTX + SRT 통합으로 SRT 별도 예매가 중단됨에 따라 Archive 합니다
+
+
 # SRT
 
 ![github actions badge](https://github.com/ryanking13/SRT/workflows/Test/badge.svg)
